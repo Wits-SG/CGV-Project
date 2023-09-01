@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TimeMS, TimeS } from './lib/types/misc.type';
+import { TimeS } from './lib/types/misc.type';
 import { changeScene, initScene, scene } from './SceneLoader';
 
 initScene();
@@ -16,11 +16,12 @@ let switchFlag = false;
 function mainUpdateLoop(totalTime: TimeS) {
 	requestAnimationFrame( mainUpdateLoop );
 
-  const deltaTime = (totalTime - prevTime) / 1000 as TimeMS; // Convert to milliseconds
+  const deltaTime = (totalTime - prevTime) / 1000 as TimeS; 
   prevTime = totalTime;
 
-  scene.update(deltaTime);
+  scene.update(deltaTime); // Call the current scenes overriden update function
 
+  // Simple Scene switching demo
   if (!switchFlag && totalTime % 10000 >= 5000) {
     changeScene('demo 2');
     switchFlag = true;
@@ -32,5 +33,5 @@ function mainUpdateLoop(totalTime: TimeS) {
   renderer.render( scene.root, camera );
 }
 
-
+// Start the game loop
 mainUpdateLoop(0);

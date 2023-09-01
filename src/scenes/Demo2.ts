@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Scene } from "../lib/types/scene.type";
-import { TimeMS } from '../lib/types/misc.type';
+import { TimeS } from '../lib/types/misc.type';
 
 export class Demo2 extends Scene {
     cube!: THREE.Mesh;
@@ -17,7 +17,7 @@ export class Demo2 extends Scene {
         this.root.add( this.cube );
     }
 
-    update(deltaTime: TimeMS): void {
+    update(deltaTime: TimeS): void {
         this.cube.rotation.x += 1 * deltaTime;
         this.cube.rotation.y += 1 * deltaTime;
     }
