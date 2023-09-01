@@ -25,6 +25,7 @@ const sceneLoader = () => {
 }
 
 export const changeScene = (newScene: string) => {
+    newScene = newScene.trim();
     newScene = newScene.replace(' ', '-');
     newScene = newScene.toUpperCase();
 

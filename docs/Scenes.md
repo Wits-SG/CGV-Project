@@ -38,14 +38,10 @@ You should list out all the objects required by the scene to function here.
 
 ### Constructor
 
-This function needs to call super with the Scene name specified. This registers the scene with the SceneManager allowing for Scene Switching using the API in `SceneLoader.ts`.
+This function needs to call super with the Scene name specified. This registers the scene with the SceneManager allowing for Scene Switching using the API in `SceneLoader.ts`. (It will in the future. For now you must go manually add the scene to the scene loader. Follow the currently existing code exactly and if there is any confusion contact Brendan Griffiths (@orwellian225))
 
 The correct naming convention for Scense is SCREAMING-KEBAB-CASE
-eg.
-```
-EXAMPLE-SCENE-1
-EXAMPLE-SCENE-2
-```
+eg. `EXAMPLE-SCENE-1 EXAMPLE-SCENE-2`
 
 However, the scene registration will follow the below steps to try convert any provided name to the required convention.
 
@@ -58,4 +54,4 @@ This function constructs the inital layout of a scene and is called only once, w
 
 ### Update
 
-This function gets called every frame. It is used to add an dynamic elements used by the scene.
+This function gets called every frame. It is used to animate any dynamic elements used by the scene.
