@@ -1,11 +1,9 @@
 import * as THREE from 'three';
 import { TimeMS, TimeS } from './lib/types/misc.type';
-import { Demo1 } from './scenes/Demo1';
-import { Demo2 } from './scenes/Demo2';
+import { changeScene, initScene, scene } from './SceneLoader';
 
-let scene = new Demo1;
+initScene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-scene.load();
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -24,12 +22,10 @@ function mainUpdateLoop(totalTime: TimeS) {
   scene.update(deltaTime);
 
   if (!switchFlag && totalTime % 10000 >= 5000) {
-    scene = new Demo2;
-    scene.load();
+    changeScene('demo 2');
     switchFlag = true;
   } else if (switchFlag && totalTime % 10000 < 5000) {
-    scene = new Demo1;
-    scene.load();
+    changeScene('demo 1');
     switchFlag = false;
   }
 
