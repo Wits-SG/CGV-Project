@@ -1,24 +1,22 @@
-import * as THREE from 'three';
 import { Scene } from "../lib/types/scene.type";
 import { TimeS } from '../lib/types/misc.type';
+import { DemoConstruct1 } from '../constructs/DemoConstruct1';
 
 export class Demo1 extends Scene {
-    cube!: THREE.Mesh;
+    demoConstruct!: DemoConstruct1;
 
     constructor() {
         super('Demo 1');
     }
 
     build(): void {
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        this.cube = new THREE.Mesh( geometry, material );
+        this.demoConstruct = new DemoConstruct1();
+        this.demoConstruct.load();
 
-        this.root.add( this.cube );
+        this.root.add( this.demoConstruct.root );
     }
 
     update(deltaTime: TimeS): void {
-        this.cube.rotation.x += 1 * deltaTime;
-        this.cube.rotation.y += 1 * deltaTime;
+        this.demoConstruct.update(deltaTime);
     }
 }
