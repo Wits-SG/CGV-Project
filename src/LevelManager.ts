@@ -1,4 +1,4 @@
-import { Level } from "./lib/types/level.type";
+import { Level } from "./types/level.type";
 import { Demo1 } from "./levels/Demo1";
 import { Demo2 } from "./levels/Demo2";
 
@@ -33,4 +33,5 @@ export const changeLevel = (levelID: string) => {
  */
 export const initLevel = () => {
     changeLevel(availableLevels[0].id);
+
 }

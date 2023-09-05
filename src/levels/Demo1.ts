@@ -1,5 +1,5 @@
-import { Level } from "../lib/types/level.type";
-import { TimeS } from '../lib/types/misc.type';
+import { Level } from "../types/level.type";
+import { TimeS } from '../types/misc.type';
 import { DemoConstruct1 } from '../constructs/DemoConstruct1';
 import { changeLevel } from "../LevelManager";
 

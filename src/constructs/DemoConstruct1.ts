@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { Construct } from '../lib/types/construct.type';
-import { TimeS } from '../lib/types/misc.type';
+import { Construct } from '../types/construct.type';
+import { TimeS } from '../types/misc.type';
 import { DemoConstruct2 } from './DemoConstruct2';
 
 export class DemoConstruct1 extends Construct {
