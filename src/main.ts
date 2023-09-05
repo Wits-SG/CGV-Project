@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { TimeS } from './lib/types/misc.type';
-import { changeScene, initScene, scene } from './SceneLoader';
+import { initLevel, level} from './LevelManager';
 
-initScene();
+initLevel();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 const renderer = new THREE.WebGLRenderer();
@@ -12,25 +12,15 @@ document.body.appendChild( renderer.domElement );
 camera.position.z = 5;
 
 let prevTime = 0;
-let switchFlag = false;
 function mainUpdateLoop(totalTime: TimeS) {
 	requestAnimationFrame( mainUpdateLoop );
 
   const deltaTime = (totalTime - prevTime) / 1000 as TimeS; 
   prevTime = totalTime;
 
-  scene.update(deltaTime); // Call the current scenes overriden update function
+  level.update(deltaTime); // Call the current scenes overriden update function
 
-  // Simple Scene switching demo
-  if (!switchFlag && totalTime % 10000 >= 5000) {
-    changeScene('demo 2');
-    switchFlag = true;
-  } else if (switchFlag && totalTime % 10000 < 5000) {
-    changeScene('demo 1');
-    switchFlag = false;
-  }
-
-  renderer.render( scene.root, camera );
+  renderer.render( level.root, camera );
 }
 
 // Start the game loop
