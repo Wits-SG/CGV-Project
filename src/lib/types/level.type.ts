@@ -1,19 +1,26 @@
 import * as THREE from 'three';
 import { TimeS } from './misc.type';
 
-export abstract class Scene {
+export abstract class Level {
+    public id!: string;
     public name!: string;
+    public description!: string;
     public root!: THREE.Scene;
 
     /**
      * @description The constructor registers the scene with the SceneLoader
-     * @param name - The string identifier of the Scene. Will try to convert it to SCREAMING-KEBAB-CASE
+     * @param id - The string identifier of the Level. Will try to convert it to SCREAMING-KEBAB-CASE
+     * @param name - The name of a Level
+     * @param description - The description of a level
      */
-    constructor(name: string) {
-        name = name.trim();
-        name = name.replaceAll(" ", "-");
-        name = name.toUpperCase();
+    constructor(id: string, name: string, description: string) {
+        id = id.trim();
+        id = id.replaceAll(" ", "-");
+        id = id.toUpperCase();
+
+        this.id = id;
         this.name = name;
+        this.description = description;
     }
 
     /**
