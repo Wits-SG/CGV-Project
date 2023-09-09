@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { Level } from "../lib/types/level.type";
-import { TimeS } from '../lib/types/misc.type';
+import { Level } from "../types/level.type";
+import { TimeS } from '../types/misc.type';
 import { changeLevel } from '../LevelManager';
 
 export class Demo2 extends Level {
