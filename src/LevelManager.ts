@@ -1,12 +1,13 @@
 import { Level } from "./types/level.type";
 import { Demo1 } from "./levels/Demo1";
 import { Demo2 } from "./levels/Demo2";
+import { PhysicsDemo } from "./levels/PhysiscsDemo";
 
 export let level!: Level; // Current level object
 
 // A list of all avaliable levels 
 const availableLevels: Array<Level> = [
-    new Demo1(), new Demo2()
+    new PhysicsDemo(), new Demo1(), new Demo2()
 ];
 
 /**
