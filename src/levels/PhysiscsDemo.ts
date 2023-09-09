@@ -57,8 +57,6 @@ export class PhysicsDemo extends Level {
         this.root.add( this.ball );
     }
 
-    update(deltaTime: number): void {
-        // console.log("ball", this.ball.position);
-    }
+    update(): void {}
 
 }

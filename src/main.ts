@@ -1,4 +1,5 @@
-import AmmoLib from './ammo/ammo.js';
+//@ts-ignore
+import AmmoLib from './ammo/ammo.js'; 
 import * as THREE from 'three';
 import { initLevel, level} from './LevelManager';
 import { initPhysics, physUpdate } from './PhysicsManager';

@@ -1,7 +1,7 @@
 import { TimeS } from "./types/misc.type";
 
 export let Ammo: any;
-export let physicsWorld!: Ammo.btDiscreteDynamicsWorld;
+export let physicsWorld!: any;
 
 let dynamicObjects: Array<any> = [];
 let tempTransform: any;
