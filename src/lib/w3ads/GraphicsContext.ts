@@ -2,9 +2,11 @@ import * as THREE from 'three';
 
 export class GraphicsContext {
     public root: THREE.Scene;
+    public mainCamera: THREE.Camera;
 
-    constructor() {
+    constructor(camera: THREE.Camera) {
         this.root = new THREE.Scene();
+        this.mainCamera = camera;
     }
 
     add(newObj: THREE.Object3D) {

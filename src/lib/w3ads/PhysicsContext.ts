@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TimeMS } from "../../types/misc.type";
 
-export let Ammo: any;
+let Ammo: any;
 
 type PhysicsConfig = {
     gravity: { x: number, y: number, z: number },
@@ -19,7 +19,8 @@ export class PhysicsContext {
     private transform: any;
     private dynamicBodies: Array<any>;
 
-    constructor(config: PhysicsConfig) {
+    constructor(AmmoLib: any, config: PhysicsConfig) {
+        Ammo = AmmoLib;
         this.config = config;
 
         let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
@@ -93,13 +94,17 @@ export class PhysicsContext {
         const dynamicBodyInfo = new Ammo.btRigidBodyConstructionInfo( initial.mass, localMotionState, collider, localInertia );
         const dynamicBody = new Ammo.btRigidBody( dynamicBodyInfo );
 
+        dynamicBody.setLinearVelocity(new Ammo.btVector3(
+            initial.linearVelocity.x, initial.linearVelocity.y, initial.linearVelocity.z
+        ));
+
         tjsObject.userData.physicsBody = dynamicBody;
         this.dynamicBodies.push( tjsObject );
         this.context.addRigidBody( dynamicBody );
     }
 }
 
-class PhysicsColliderFactory {
+export class PhysicsColliderFactory {
     static standardMargin = 0.05;
 
     static box(x: number, y: number, z: number): any {
@@ -108,10 +113,14 @@ class PhysicsColliderFactory {
         );
 
         box.setMargin(this.standardMargin);
+
+        return box;
     }
 
     static sphere(r: number) {
         const sphere = new Ammo.btSphereShape(r);
         sphere.setMargin(this.standardMargin);
+
+        return sphere;
     }
 }

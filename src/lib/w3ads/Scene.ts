@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { TimeMS, TimeS } from './types/misc.type';
 import { PhysicsContext } from './PhysicsContext';
 import { GraphicsContext } from './GraphicsContext';
@@ -7,10 +8,10 @@ export abstract class Scene {
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
 
-    constructor( key: string) {
+    constructor( key: string, AmmoLib: any, camera: THREE.Camera) {
         this.sceneKey = key;
-        this.graphics = new GraphicsContext();
-        this.physics= new PhysicsContext({
+        this.graphics = new GraphicsContext(camera);
+        this.physics= new PhysicsContext(AmmoLib, {
             gravity: { x: 0, y: -10, z:0 },
         });
     }
@@ -26,7 +27,7 @@ export abstract class Scene {
         this.load();
     }
 
-    _buiid(): void {
+    _build(): void {
 
         this.build();
     }
