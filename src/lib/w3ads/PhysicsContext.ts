@@ -57,7 +57,7 @@ export class PhysicsContext {
         }
     }
 
-    addStatic(tjsObject: THREE.Mesh, collider: any) {
+    addStatic(tjsObject: THREE.Object3D, collider: any) {
         // A static body is a rigid body with mass zero
 
         const staticMass = 0;
@@ -86,7 +86,7 @@ export class PhysicsContext {
 
     }
 
-    addDynamic(tjsObject: THREE.Mesh, collider: any, initial: BodyConditions) {
+    addDynamic(tjsObject: THREE.Object3D, collider: any, initial: BodyConditions) {
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
 
@@ -113,6 +113,10 @@ export class PhysicsContext {
         tjsObject.userData.physicsBody = dynamicBody;
         this.dynamicBodies.push( tjsObject );
         this.context.addRigidBody( dynamicBody );
+    }
+
+    applyCentralForceOn(tjsObject: THREE.Object3D, x: number, y: number, z: number) {
+        tjsObject.userData.physicsBody.applyCentralForce( new Ammo.btVector3(x, y, z) );
     }
 }
 
