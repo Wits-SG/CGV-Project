@@ -1,7 +1,7 @@
 //@ts-ignore
 import AmmoLib from './ammo/ammo.js'; 
 import * as THREE from 'three';
-import { TimeS, TimeMS } from './types/misc.type';
+import { TimeS, TimeMS } from './lib/w3ads/types/misc.type';
 import { PhysicsColliderFactory, Scene } from './lib/index.js';
 import { Project } from './lib/w3ads/Project.js';
 
