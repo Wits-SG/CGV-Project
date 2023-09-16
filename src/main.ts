@@ -2,19 +2,13 @@
 import AmmoLib from './ammo/ammo.js'; 
 import * as THREE from 'three';
 import { TimeS, TimeMS } from './types/misc.type';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PhysicsColliderFactory, Scene } from './lib/index.js';
-
-const clock = new THREE.Clock();
-const renderer = new THREE.WebGLRenderer();
+import { Project } from './lib/w3ads/Project.js';
 
 // God bless the smart people
 // https://github.com/gonnavis/three.js/commit/1227b9243d4be885e385aa54d93ad1cda1bef6fe#diff-44c2e6e2da946b542740c4150509969870d935e3bcc60832663d116bd50c1779
 // https://discourse.threejs.org/t/how-to-convert-ammo-js-to-es6-module/30633/2
 
-AmmoLib().then(function (result: any) {
-  initialize(result);
-}).catch((e: any) => console.log(e));
 
 class W3adScene extends Scene {
   testBox!: THREE.Mesh;
@@ -35,25 +29,25 @@ class W3adScene extends Scene {
   build(): void {
     this.testSphere = this.graphics.addSphere({
       position: { x: 0, y: 10, z: 0},
-      radius: 2,
+      radius: 1,
       colour: 0xff0000,
       shadows: true,
     });
 
     this.testBox = this.graphics.addBox({
       position: {x: 0.7, y: 0, z: 0},
-      scale: {x: 1, y: 1, z: 1},
-      rotation: {x: 0, y: 0, z: 0},
+      scale: {x: 20, y: 0.1, z: 20},
+      rotation: {x: 0.2, y: 0, z: 0},
       colour: 0x00ff00,
       shadows: true,
     });
 
-    this.physics.addDynamic(this.testSphere, PhysicsColliderFactory.sphere(2), {
+    this.physics.addDynamic(this.testSphere, PhysicsColliderFactory.sphere(1), {
       mass: 1,
       linearVelocity: { x: 0, y: 20, z: 0 }
     });
 
-    this.physics.addStatic(this.testBox, PhysicsColliderFactory.box(0.5, 0.5, 0.5))
+    this.physics.addStatic(this.testBox, PhysicsColliderFactory.box(10, 0.05, 10))
 
     let lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
     lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
@@ -80,39 +74,32 @@ class W3adScene extends Scene {
   }
 
   update(): void {
-    this.testBox.rotation.x += 0.01;
   }
 
   destroy(): void {}
 
 }
 
-let testScene: W3adScene;
-function initialize(Ammo: any) {
-  testScene = new W3adScene(Ammo);
-  testScene._build();
+let project: Project;
+const update = () => {
+      const deltaTime = project.clock.getDelta() * 1000 as TimeMS;
+      const netTime = project.clock.getElapsedTime() as TimeS;
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
+      if (project.currentScene != null) {
+          project.currentScene._update(netTime, deltaTime);
+          project.renderer.render(project.currentScene.graphics.root, project.currentScene.graphics.mainCamera);
+      }
 
-  renderer.setClearColor( 0xbfd1e5 );
-  renderer.shadowMap.enabled = true;
+      project.animFrameID = requestAnimationFrame(update);
+  }
 
-  testScene.graphics.mainCamera.position.z = 10;
-  let controls = new OrbitControls( testScene.graphics.mainCamera, renderer.domElement );
-  controls.target.set( 0, 2, 0 );
-  controls.update();
+AmmoLib().then(function (result: any) {
+  project = new Project(
+    [ new W3adScene(result) ],
+    {
+      shadows: true,
+    }
+  );
 
-  mainUpdateLoop();
-}
-
-function mainUpdateLoop() {
-	requestAnimationFrame( mainUpdateLoop );
-
-  const deltaTime = clock.getDelta() * 1000 as TimeMS;
-  const netTime = clock.getElapsedTime() as TimeS;
-
-  testScene._update(netTime, deltaTime);
-
-  renderer.render( testScene.graphics.root, testScene.graphics.mainCamera);
-}
+  update();
+}).catch((e: any) => console.error(e));
