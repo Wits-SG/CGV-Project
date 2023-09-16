@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TimeMS } from "../../types/misc.type";
+import { TimeMS } from "./types/misc.type";
 
 let Ammo: any;
 
