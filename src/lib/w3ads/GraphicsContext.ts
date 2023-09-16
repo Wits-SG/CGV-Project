@@ -38,6 +38,7 @@ export class GraphicsContext {
 
     addSphere(info: { 
         position: { x: number, y: number, z: number }, 
+        rotation: { x: number, y: number, z: number },
         radius: number
         colour: number,
         shadows: boolean
@@ -48,6 +49,7 @@ export class GraphicsContext {
             new THREE.MeshLambertMaterial({ color: info.colour })
         );
         sphere.position.set(info.position.x, info.position.y, info.position.z);
+        sphere.rotation.set(info.rotation.x, info.rotation.y, info.rotation.z);
         sphere.scale.set(info.radius, info.radius, info.radius);
 
         sphere.castShadow = info.shadows;

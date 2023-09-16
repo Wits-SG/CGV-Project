@@ -64,12 +64,13 @@ export class PhysicsContext {
 
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
+        const transformOrigin = new Ammo.btVector3(tjsObject.position.x, tjsObject.position.y, tjsObject.position.z);
+        const transformRotation = new Ammo.btQuaternion(tjsObject.quaternion.x, tjsObject.quaternion.y, tjsObject.quaternion.z, tjsObject.quaternion.w);
 
         collider.calculateLocalInertia( staticMass, localInertia );
         localTransform.setIdentity();
-        localTransform.setOrigin(new Ammo.btVector3(
-            tjsObject.position.x, tjsObject.position.y, tjsObject.position.z
-        ));
+        localTransform.setOrigin(transformOrigin);
+        localTransform.setRotation(transformRotation);
 
         const localMotionState = new Ammo.btDefaultMotionState( localTransform );
         const staticBodyInfo = new Ammo.btRigidBodyConstructionInfo( staticMass, localMotionState, collider, localInertia );
@@ -84,11 +85,13 @@ export class PhysicsContext {
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
 
+        const transformOrigin = new Ammo.btVector3(tjsObject.position.x, tjsObject.position.y, tjsObject.position.z);
+        const transformRotation = new Ammo.btQuaternion(tjsObject.quaternion.x, tjsObject.quaternion.y, tjsObject.quaternion.z, tjsObject.quaternion.w);
+
         collider.calculateLocalInertia( initial.mass, localInertia );
         localTransform.setIdentity();
-        localTransform.setOrigin(new Ammo.btVector3(
-            tjsObject.position.x, tjsObject.position.y, tjsObject.position.z
-        ));
+        localTransform.setOrigin(transformOrigin);
+        localTransform.setRotation(transformRotation);
 
         const localMotionState = new Ammo.btDefaultMotionState( localTransform );
         const dynamicBodyInfo = new Ammo.btRigidBodyConstructionInfo( initial.mass, localMotionState, collider, localInertia );
