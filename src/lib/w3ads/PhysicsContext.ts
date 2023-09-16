@@ -64,8 +64,13 @@ export class PhysicsContext {
 
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
-        const transformOrigin = new Ammo.btVector3(tjsObject.position.x, tjsObject.position.y, tjsObject.position.z);
-        const transformRotation = new Ammo.btQuaternion(tjsObject.quaternion.x, tjsObject.quaternion.y, tjsObject.quaternion.z, tjsObject.quaternion.w);
+
+        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
+        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
+        tjsObject.getWorldPosition(tjsPosition);
+        tjsObject.getWorldQuaternion(tjsRotation);
+        const transformOrigin = new Ammo.btVector3(tjsPosition.x, tjsPosition.y, tjsPosition.z); 
+        const transformRotation = new Ammo.btQuaternion(tjsRotation.x, tjsRotation.y, tjsRotation.z, tjsRotation.w);
 
         collider.calculateLocalInertia( staticMass, localInertia );
         localTransform.setIdentity();
@@ -85,8 +90,12 @@ export class PhysicsContext {
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
 
-        const transformOrigin = new Ammo.btVector3(tjsObject.position.x, tjsObject.position.y, tjsObject.position.z);
-        const transformRotation = new Ammo.btQuaternion(tjsObject.quaternion.x, tjsObject.quaternion.y, tjsObject.quaternion.z, tjsObject.quaternion.w);
+        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
+        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
+        tjsObject.getWorldPosition(tjsPosition);
+        tjsObject.getWorldQuaternion(tjsRotation);
+        const transformOrigin = new Ammo.btVector3(tjsPosition.x, tjsPosition.y, tjsPosition.z); 
+        const transformRotation = new Ammo.btQuaternion(tjsRotation.x, tjsRotation.y, tjsRotation.z, tjsRotation.w);
 
         collider.calculateLocalInertia( initial.mass, localInertia );
         localTransform.setIdentity();
