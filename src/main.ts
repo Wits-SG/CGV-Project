@@ -29,6 +29,7 @@ class W3adScene extends Scene {
   build(): void {
     this.testSphere = this.graphics.addSphere({
       position: { x: 0, y: 10, z: 0},
+      rotation: { x: 10, y: 0, z: 0},
       radius: 1,
       colour: 0xff0000,
       shadows: true,
@@ -37,14 +38,14 @@ class W3adScene extends Scene {
     this.testBox = this.graphics.addBox({
       position: {x: 0.7, y: 0, z: 0},
       scale: {x: 20, y: 0.1, z: 20},
-      rotation: {x: 0.2, y: 0, z: 0},
+      rotation: {x: 10, y: 0, z: 0},
       colour: 0x00ff00,
       shadows: true,
     });
 
     this.physics.addDynamic(this.testSphere, PhysicsColliderFactory.sphere(1), {
       mass: 1,
-      linearVelocity: { x: 0, y: 20, z: 0 }
+      linearVelocity: { x: 0, y: 0, z: 0 }
     });
 
     this.physics.addStatic(this.testBox, PhysicsColliderFactory.box(10, 0.05, 10))
