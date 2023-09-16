@@ -31,8 +31,6 @@ export class GraphicsContext {
 
         box.castShadow = info.shadows;
         box.receiveShadow = info.shadows;
-
-        this.add(box);
         return box;
     }
 
@@ -55,7 +53,6 @@ export class GraphicsContext {
         sphere.castShadow = info.shadows;
         sphere.receiveShadow = info.shadows;
 
-        this.add(sphere);
         return sphere;
     }
 }
