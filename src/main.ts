@@ -13,6 +13,8 @@ import { Project } from './lib/w3ads/Project.js';
 class W3adScene extends Scene {
   testBox!: THREE.Mesh;
   testSphere!: THREE.Mesh;
+  stopBox!: THREE.Mesh;
+  cobj!: THREE.Object3D;
 
   constructor(AmmoLib: any) {
     super(
@@ -27,28 +29,48 @@ class W3adScene extends Scene {
   load(): void {}
 
   build(): void {
+    this.graphics.mainCamera.position.set(30, 20, 30);
+    this.graphics.mainCamera.lookAt(0,0,0);
+
     this.testSphere = this.graphics.addSphere({
       position: { x: 0, y: 10, z: 0},
-      rotation: { x: 10, y: 0, z: 0},
+      rotation: { x: 0, y: 0, z: 0},
       radius: 1,
       colour: 0xff0000,
       shadows: true,
     });
 
+    this.cobj = new THREE.Object3D();
+    this.cobj.position.set(0,0,0);
+    this.cobj.rotateZ(-0.2);
+
     this.testBox = this.graphics.addBox({
-      position: {x: 0.7, y: 0, z: 0},
+      position: {x: 0, y: 0, z: 0},
       scale: {x: 20, y: 0.1, z: 20},
-      rotation: {x: 10, y: 0, z: 0},
+      rotation: {x: 0, y: 0, z: 0},
       colour: 0x00ff00,
       shadows: true,
     });
+    this.stopBox = this.graphics.addBox({
+      position: {x: 10, y: 1, z: 0},
+      scale: {x: 0.2, y: 2, z: 20},
+      rotation: {x: 0, y: 0, z: 0},
+      colour: 0x0000ff,
+      shadows: true,
+    });
+
+    this.cobj.add(this.testBox);
+    this.cobj.add(this.stopBox);
+    this.graphics.add(this.testSphere);
+    this.graphics.add(this.cobj);
 
     this.physics.addDynamic(this.testSphere, PhysicsColliderFactory.sphere(1), {
       mass: 1,
-      linearVelocity: { x: 0, y: 0, z: 0 }
+      linearVelocity: { x: -3, y: 5, z: 0 }
     });
 
     this.physics.addStatic(this.testBox, PhysicsColliderFactory.box(10, 0.05, 10))
+    this.physics.addStatic(this.stopBox, PhysicsColliderFactory.box(0.01, 1, 20))
 
     let lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
     lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
@@ -75,6 +97,7 @@ class W3adScene extends Scene {
   }
 
   update(): void {
+    this.physics.applyCentralForceOn(this.testSphere, -0.8, 0, 0);
   }
 
   destroy(): void {}
