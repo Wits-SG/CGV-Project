@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Scene } from "./Scene";
 
 type ProjectConfig = {
+    physicsEngine: any,
     shadows: boolean,
 }
 
@@ -27,6 +28,10 @@ export class Project {
         this.renderer.setClearColor( 0xbfd1e5 );
         this.renderer.shadowMap.enabled = config.shadows;
         document.body.appendChild(this.renderer.domElement);
+
+        for(let scene of this.scenes) {
+            scene.setRenderer(this.renderer);
+        }
 
         this.changeScene(scenes.length > 0 ? scenes[0].sceneKey : '').then(() => {
             this.currentScene.graphics.mainCamera.position.z = 10;

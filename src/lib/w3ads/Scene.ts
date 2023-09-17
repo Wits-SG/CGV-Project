@@ -8,12 +8,16 @@ export abstract class Scene {
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
 
-    constructor( key: string, AmmoLib: any, camera: THREE.Camera) {
+    constructor( key: string, AmmoLib: any ) {
         this.sceneKey = key;
-        this.graphics = new GraphicsContext(camera);
+        this.graphics = new GraphicsContext();
         this.physics= new PhysicsContext(AmmoLib, {
             gravity: { x: 0, y: -10, z:0 },
         });
+    }
+
+    setRenderer(renderer: THREE.WebGLRenderer) {
+        this.graphics.renderer = renderer;
     }
 
     // Lifecycle

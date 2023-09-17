@@ -1,26 +1,28 @@
 import * as THREE from 'three';
 
 export class GraphicsContext {
+    public renderer!: THREE.WebGLRenderer;
     public root: THREE.Scene;
-    public mainCamera: THREE.Camera;
+    public mainCamera!: THREE.Camera;
 
-    constructor(camera: THREE.Camera) {
+    constructor() {
         this.root = new THREE.Scene();
-        this.mainCamera = camera;
     }
 
     add(newObj: THREE.Object3D) {
         this.root.add(newObj);
     }
+}
 
-    addBox(info: { 
+export class GraphicsPrimitiveFactory {
+
+    static box(info: { 
         position: { x: number, y: number, z: number }, 
         rotation: { x: number, y: number, z: number },
         scale: { x: number, y: number, z: number },
         colour: number,
         shadows: boolean
     }) {
-
         const box = new THREE.Mesh(
             new THREE.BoxGeometry(),
             new THREE.MeshLambertMaterial({ color: info.colour })
@@ -31,17 +33,17 @@ export class GraphicsContext {
 
         box.castShadow = info.shadows;
         box.receiveShadow = info.shadows;
-        return box;
+
+        return box
     }
 
-    addSphere(info: { 
+    static sphere(info: { 
         position: { x: number, y: number, z: number }, 
         rotation: { x: number, y: number, z: number },
         radius: number
         colour: number,
         shadows: boolean
     }) {
-
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(),
             new THREE.MeshLambertMaterial({ color: info.colour })
@@ -55,4 +57,8 @@ export class GraphicsContext {
 
         return sphere;
     }
+}
+
+export class GraphicsLightFactory {
+    // Eventually
 }
