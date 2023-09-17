@@ -51,6 +51,7 @@ export class Project {
             for (let scene of this.scenes) {
                 if (sceneKey === scene.sceneKey) {
                     this.currentScene = scene;
+                    this.currentScene._create();
                     this.currentScene._load();
                     this.currentScene._build();
                     return;

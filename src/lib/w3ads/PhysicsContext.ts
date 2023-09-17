@@ -9,7 +9,8 @@ type PhysicsConfig = {
 
 type BodyConditions = {
     mass: number,
-    linearVelocity: { x: number, y: number, z: number }
+    linearVelocity: { x: number, y: number, z: number },
+    friction: number,
 }
 
 export class PhysicsContext {
@@ -104,6 +105,8 @@ export class PhysicsContext {
 
         const localMotionState = new Ammo.btDefaultMotionState( localTransform );
         const dynamicBodyInfo = new Ammo.btRigidBodyConstructionInfo( initial.mass, localMotionState, collider, localInertia );
+        dynamicBodyInfo.m_friction = initial.friction;
+
         const dynamicBody = new Ammo.btRigidBody( dynamicBodyInfo );
 
         dynamicBody.setLinearVelocity(new Ammo.btVector3(
@@ -117,6 +120,10 @@ export class PhysicsContext {
 
     applyCentralForceOn(tjsObject: THREE.Object3D, x: number, y: number, z: number) {
         tjsObject.userData.physicsBody.applyCentralForce( new Ammo.btVector3(x, y, z) );
+    }
+
+    setLinearVelocityOn(tjsObject: THREE.Object3D, x: number, y: number, z: number) {
+        tjsObject.userData.physicsBody.setLinearVelocity( new Ammo.btVector3(x, y, z) );
     }
 }
 

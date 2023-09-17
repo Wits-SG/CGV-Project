@@ -22,7 +22,6 @@ export abstract class Scene {
 
     // Lifecycle
     _create(): void {
-
         this.create();
     }
 

@@ -3,6 +3,7 @@ import AmmoLib from './ammo/ammo.js';
 import { TimeS, TimeMS } from './lib/w3ads/types/misc.type';
 import { Project } from './lib/w3ads/Project.js';
 import { TestScene } from './scenes/TestScene.js';
+import { SandboxScene } from './scenes/Sandbox.js';
 
 
 let project: Project;
@@ -20,7 +21,7 @@ const update = () => {
 
 AmmoLib().then(function (result: any) {
   project = new Project(
-    [ new TestScene(result) ],
+    [ new SandboxScene(result), new TestScene(result) ],
     {
       physicsEngine: result,
       shadows: true,
