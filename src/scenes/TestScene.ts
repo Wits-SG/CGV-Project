@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { PhysicsColliderFactory, Scene } from '../lib/index.js';
+import { PhysicsColliderFactory, GraphicsPrimitiveFactory, Scene } from '../lib/index.js';
+import { TimeS, TimeMS } from '../lib/w3ads/types/misc.type.js';
 
 export class TestScene extends Scene {
   testBox!: THREE.Mesh;
@@ -23,7 +24,7 @@ export class TestScene extends Scene {
     this.graphics.mainCamera.position.set(30, 20, 30);
     this.graphics.mainCamera.lookAt(0,0,0);
 
-    this.testSphere = this.graphics.addSphere({
+    this.testSphere = GraphicsPrimitiveFactory.sphere({
       position: { x: 0, y: 10, z: 0},
       rotation: { x: 0, y: 0, z: 0},
       radius: 1,
@@ -36,14 +37,15 @@ export class TestScene extends Scene {
     this.cobj.rotateZ(-0.2);
     this.cobj.rotateX(0.015)
 
-    this.testBox = this.graphics.addBox({
+    this.testBox = GraphicsPrimitiveFactory.box({
       position: {x: 0, y: 0, z: 0},
       scale: {x: 20, y: 0.1, z: 20},
       rotation: {x: 0, y: 0, z: 0},
       colour: 0x00ff00,
       shadows: true,
     });
-    this.stopBox = this.graphics.addBox({
+
+    this.stopBox = GraphicsPrimitiveFactory.box({
       position: {x: 10, y: 1, z: 0},
       scale: {x: 0.2, y: 2, z: 20},
       rotation: {x: 0, y: 0, z: 0},
@@ -88,7 +90,7 @@ export class TestScene extends Scene {
     this.graphics.add(lightDirectional);
   }
 
-  update(): void {
+  update(time: TimeS): void {
     this.physics.applyCentralForceOn(this.testSphere, -0.8, 0, 0);
   }
 
