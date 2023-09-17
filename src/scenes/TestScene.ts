@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { PhysicsColliderFactory, GraphicsPrimitiveFactory, Scene } from '../lib/index.js';
-import { TimeS } from '../lib/w3ads/types/misc.type.js';
 
 export class TestScene extends Scene {
   testBox!: THREE.Mesh;
