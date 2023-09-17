@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 
 export class GraphicsContext {
+    public renderer!: THREE.WebGLRenderer;
     public root: THREE.Scene;
-    public mainCamera: THREE.Camera;
+    public mainCamera!: THREE.Camera;
 
-    constructor(camera: THREE.Camera) {
+    constructor() {
         this.root = new THREE.Scene();
-        this.mainCamera = camera;
     }
 
     add(newObj: THREE.Object3D) {

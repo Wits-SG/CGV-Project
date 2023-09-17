@@ -19,8 +19,7 @@ class W3adScene extends Scene {
   constructor(AmmoLib: any) {
     super(
       'Test W3ads Scene',
-      AmmoLib,
-      new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
+      AmmoLib
     );
   }
 
@@ -29,6 +28,7 @@ class W3adScene extends Scene {
   load(): void {}
 
   build(): void {
+    this.graphics.mainCamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);
     this.graphics.mainCamera.position.set(30, 20, 30);
     this.graphics.mainCamera.lookAt(0,0,0);
 
@@ -43,6 +43,7 @@ class W3adScene extends Scene {
     this.cobj = new THREE.Object3D();
     this.cobj.position.set(0,0,0);
     this.cobj.rotateZ(-0.2);
+    this.cobj.rotateX(0.015)
 
     this.testBox = this.graphics.addBox({
       position: {x: 0, y: 0, z: 0},
@@ -121,6 +122,7 @@ AmmoLib().then(function (result: any) {
   project = new Project(
     [ new W3adScene(result) ],
     {
+      physicsEngine: result,
       shadows: true,
     }
   );
