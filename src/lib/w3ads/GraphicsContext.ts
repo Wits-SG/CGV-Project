@@ -58,3 +58,7 @@ export class GraphicsPrimitiveFactory {
         return sphere;
     }
 }
+
+export class GraphicsLightFactory {
+    // Eventually
+}

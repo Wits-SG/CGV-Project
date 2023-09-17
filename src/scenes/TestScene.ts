@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { PhysicsColliderFactory, GraphicsPrimitiveFactory, Scene } from '../lib/index.js';
-import { TimeS, TimeMS } from '../lib/w3ads/types/misc.type.js';
+import { TimeS } from '../lib/w3ads/types/misc.type.js';
 
 export class TestScene extends Scene {
   testBox!: THREE.Mesh;
@@ -90,7 +90,7 @@ export class TestScene extends Scene {
     this.graphics.add(lightDirectional);
   }
 
-  update(time: TimeS): void {
+  update(): void {
     this.physics.applyCentralForceOn(this.testSphere, -0.8, 0, 0);
   }
 
