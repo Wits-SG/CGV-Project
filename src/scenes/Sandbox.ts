@@ -30,7 +30,7 @@ export class SandboxScene extends Scene {
 
     build(): void {
         this.player.build();
-        this.player.setPosition(0, 0, 0);
+        this.player.setPosition(0, 0, 5);
 
         this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },

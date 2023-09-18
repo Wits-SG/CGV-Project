@@ -11,9 +11,13 @@ export class PlayerConstruct {
     moveSpeed = 100;
     jumpSpeed = 8;
 
+    position: { x: number, y: number, z: number };
+    cameraOffset: { x: number, y: number, z: number } = { x: 0, y: 2, z: 5 };
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         this.graphics = graphics;
         this.physics = physics;
+        this.position = { x: 0, y: 0, z: 0 };
     }
 
     create() {
@@ -48,9 +52,7 @@ export class PlayerConstruct {
     load() {}
 
     build() {
-        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.set(0, 20, 0);
-        this.camera.lookAt(0, 0, 0);
+        this.camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 1000);
         
         const bodyGeometry = new THREE.CapsuleGeometry(1, 2, 10, 20);
         const bodyMaterial = new THREE.MeshLambertMaterial({
@@ -69,16 +71,24 @@ export class PlayerConstruct {
     }
 
     update() {
-        // this.camera.position.set(
-        //     this.body.position.x, this.body.position.y, this.body.position.z
-        // );
-        // console.log(this.camera.position)
+        this.setPosition(
+            this.body.position.x, 
+            this.body.position.y, 
+            this.body.position.z
+        );
+        this.camera.position.set(
+            this.position.x + this.cameraOffset.x,
+            this.position.y + this.cameraOffset.y,
+            this.position.z + this.cameraOffset.z,
+        );
+        this.camera.lookAt(
+            this.position.x, this.position.y, this.position.z
+        );
     }
 
     destroy() {}
 
     setPosition(x: number, y: number, z: number) {
-        this.body.position.set(x, y ,z);
-        this.camera.position.set(x, y , z);
+        this.position = { x: x, y: y, z: z };
     }
 }

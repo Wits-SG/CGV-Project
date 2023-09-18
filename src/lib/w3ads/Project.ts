@@ -34,7 +34,6 @@ export class Project {
         }
 
         this.changeScene(scenes.length > 0 ? scenes[0].sceneKey : '').then(() => {
-            this.currentScene.graphics.mainCamera.position.z = 10;
             let controls = new OrbitControls(this.currentScene.graphics.mainCamera, this.renderer.domElement);
             controls.target.set(0, 2, 0);
             controls.update();
