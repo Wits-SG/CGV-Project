@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+//@ts-expect-error
+import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls'; 
 import { GraphicsContext, PhysicsColliderFactory, PhysicsContext } from './lib';
 
 export class PlayerConstruct {
@@ -6,13 +8,13 @@ export class PlayerConstruct {
     physics: PhysicsContext;
 
     camera!: THREE.PerspectiveCamera;
+    controls!: FirstPersonControls;
     body!: THREE.Mesh;
 
     moveSpeed = 100;
     jumpSpeed = 8;
 
     position: { x: number, y: number, z: number };
-    cameraOffset: { x: number, y: number, z: number } = { x: 0, y: 2, z: 5 };
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         this.graphics = graphics;
@@ -21,7 +23,7 @@ export class PlayerConstruct {
     }
 
     create() {
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
+        this.graphics.renderer.domElement.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w') {
                 this.physics.setLinearVelocityOn(this.body, 0, 0, this.moveSpeed);
                 return;
@@ -53,6 +55,9 @@ export class PlayerConstruct {
 
     build() {
         this.camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 1000);
+        this.controls = new FirstPersonControls(this.camera, this.graphics.renderer.domElement);
+        this.camera.lookAt(10, 0, 0);
+        this.camera.position.set(0,0,0);
         
         const bodyGeometry = new THREE.CapsuleGeometry(1, 2, 10, 20);
         const bodyMaterial = new THREE.MeshLambertMaterial({
@@ -61,6 +66,7 @@ export class PlayerConstruct {
         this.body = new THREE.Mesh(bodyGeometry, bodyMaterial);
 
         this.graphics.add(this.body);
+        this.body.add(this.camera);
         this.graphics.mainCamera = this.camera;
 
         this.physics.addDynamic(this.body, PhysicsColliderFactory.box(1, 2, 1), {
@@ -71,19 +77,8 @@ export class PlayerConstruct {
     }
 
     update() {
-        this.setPosition(
-            this.body.position.x, 
-            this.body.position.y, 
-            this.body.position.z
-        );
-        this.camera.position.set(
-            this.position.x + this.cameraOffset.x,
-            this.position.y + this.cameraOffset.y,
-            this.position.z + this.cameraOffset.z,
-        );
-        this.camera.lookAt(
-            this.position.x, this.position.y, this.position.z
-        );
+        this.controls.update();
+        console.log(this.camera.position, this.camera.rotation);
     }
 
     destroy() {}
