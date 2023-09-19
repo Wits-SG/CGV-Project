@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib';
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-import { TimeS, TimeMS } from '../lib/w3ads/types/misc.type';
+import { TimeS } from '../lib/w3ads/types/misc.type';
 
 export class SandboxScene extends Scene {
 
@@ -155,7 +155,7 @@ export class SandboxScene extends Scene {
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
-    update(time: TimeS, delta: TimeMS): void {
+    update(time: TimeS): void {
         // this.player.update();
         this.physics.moveKinematic(this.ballKinematic, 0, 0, 0.1 * Math.sin(time));
     }
