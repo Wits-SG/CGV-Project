@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib';
+//@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-// import { PlayerConstruct } from '../player';
+import { TimeS, TimeMS } from '../lib/w3ads/types/misc.type';
 
 export class SandboxScene extends Scene {
 
@@ -10,8 +11,9 @@ export class SandboxScene extends Scene {
 
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
+    ballKinematic!: THREE.Mesh;
+    ballDynamic!: THREE.Mesh;
 
-    // player: PlayerConstruct;
     controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
@@ -20,7 +22,6 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        // this.player = new PlayerConstruct(this.graphics, this.physics);
     }
 
     create(): void {
@@ -35,7 +36,7 @@ export class SandboxScene extends Scene {
         // this.player.build();
         // this.player.setPosition(0, 0, 5);
         this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera.position.set(20, 20, 20);
+        this.graphics.mainCamera.position.set(20, 100, 20);
         this.graphics.mainCamera.lookAt(0, 0, 0);
         this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
 
@@ -85,7 +86,7 @@ export class SandboxScene extends Scene {
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(5, 1, 0.1));
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 5));
         this.graphics.add(this.walls[8]);
 
         this.walls.push(
@@ -97,8 +98,36 @@ export class SandboxScene extends Scene {
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(5, 1, 0.1));
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 5));
         this.graphics.add(this.walls[9]);
+
+        this.ballKinematic = GraphicsPrimitiveFactory.sphere({
+            position: { x: 0, y: 0, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            radius: 1,
+            colour: 0xff0000,
+            shadows: true,
+        })
+        this.graphics.add(this.ballKinematic);
+        this.physics.addKinematic(this.ballKinematic, PhysicsColliderFactory.sphere(1), {
+            mass: 1,
+            linearVelocity: { x: 0, y: 0, z: 1 },
+            friction: 0,
+        })
+
+        this.ballDynamic = GraphicsPrimitiveFactory.sphere({
+            position: { x: 0, y: 0, z: 2 },
+            rotation: { x: 0, y: 0, z: 0 },
+            radius: 1,
+            colour: 0xff0000,
+            shadows: true,
+        })
+        this.graphics.add(this.ballDynamic);
+        this.physics.addDynamic(this.ballDynamic, PhysicsColliderFactory.sphere(1), {
+            mass: 1,
+            linearVelocity: { x: 0, y: 0, z: 0 },
+            friction: 0,
+        })
         
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
@@ -126,8 +155,9 @@ export class SandboxScene extends Scene {
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
-    update(): void {
+    update(time: TimeS, delta: TimeMS): void {
         // this.player.update();
+        this.physics.moveKinematic(this.ballKinematic, 0, 0, 0.1 * Math.sin(time));
     }
 
     destroy(): void {
