@@ -2,11 +2,14 @@ import * as THREE from 'three';
 import { TimeMS, TimeS } from './types/misc.type';
 import { PhysicsContext } from './PhysicsContext';
 import { GraphicsContext } from './GraphicsContext';
+import { Construct } from './Construct';
 
 export abstract class Scene {
     public sceneKey: string;    
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
+
+    public constructs: Array<Construct>;
 
     constructor( key: string, AmmoLib: any ) {
         this.sceneKey = key;
@@ -14,6 +17,7 @@ export abstract class Scene {
         this.physics= new PhysicsContext(AmmoLib, {
             gravity: { x: 0, y: -10, z:0 },
         });
+        this.constructs = [];
     }
 
     setRenderer(renderer: THREE.WebGLRenderer) {
@@ -23,25 +27,43 @@ export abstract class Scene {
     // Lifecycle
     _create(): void {
         this.create();
+
+        for (let construct of this.constructs) {
+            construct.create();
+        }
     }
 
     _load(): void {
-
         this.load();
+
+        for (let construct of this.constructs) {
+            construct.load();
+        }
     }
 
     _build(): void {
-
         this.build();
+
+        for (let construct of this.constructs) {
+            construct.build();
+        }
     }
 
     _update(time: TimeS, delta: TimeMS): void {
         this.physics.update(delta);
 
         this.update(time, delta);
+
+        for (let construct of this.constructs) {
+            construct.update(time, delta);
+        }
     }
 
     _destroy() {
+        for (let construct of this.constructs) {
+            construct.destroy();
+        }
+
         this.destroy();
     }
 
@@ -51,4 +73,8 @@ export abstract class Scene {
     abstract build(): void;
     abstract update(time?: TimeS, delta?: TimeS): void;
     abstract destroy(): void;
+
+    addConstruct(newConstruct: Construct) {
+        this.constructs.push(newConstruct);
+    }
 }

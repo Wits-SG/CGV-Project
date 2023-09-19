@@ -3,6 +3,7 @@ import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib'
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import { TimeS } from '../lib/w3ads/types/misc.type';
+import { TestConstruct } from '../constructs/TestConstruct';
 
 export class SandboxScene extends Scene {
 
@@ -12,7 +13,7 @@ export class SandboxScene extends Scene {
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
     ballKinematic!: THREE.Mesh;
-    ballDynamic!: THREE.Mesh;
+    testConstruct: TestConstruct;
 
     controls!: OrbitControls;
 
@@ -21,6 +22,9 @@ export class SandboxScene extends Scene {
             'Sandbox',
             AmmoLib
         );
+
+        this.testConstruct = new TestConstruct(this.graphics, this.physics);
+        this.addConstruct(this.testConstruct);
 
     }
 
@@ -115,19 +119,6 @@ export class SandboxScene extends Scene {
             friction: 0,
         })
 
-        this.ballDynamic = GraphicsPrimitiveFactory.sphere({
-            position: { x: 0, y: 0, z: 2 },
-            rotation: { x: 0, y: 0, z: 0 },
-            radius: 1,
-            colour: 0xff0000,
-            shadows: true,
-        })
-        this.graphics.add(this.ballDynamic);
-        this.physics.addDynamic(this.ballDynamic, PhysicsColliderFactory.sphere(1), {
-            mass: 1,
-            linearVelocity: { x: 0, y: 0, z: 0 },
-            friction: 0,
-        })
         
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
