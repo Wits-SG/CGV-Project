@@ -7,6 +7,7 @@ export class GraphicsContext {
 
     constructor() {
         this.root = new THREE.Scene();
+        // TODO move this to a build method called automagically by the Scene Class
     }
 
     add(newObj: THREE.Object3D) {

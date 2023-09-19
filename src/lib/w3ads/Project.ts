@@ -2,6 +2,7 @@ import * as THREE from 'three';
 //@ts-ignore
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Scene } from "./Scene";
+import { TimeS, TimeMS } from './types/misc.type';
 
 type ProjectConfig = {
     physicsEngine: any,
@@ -33,14 +34,44 @@ export class Project {
             scene.setRenderer(this.renderer);
         }
 
-        this.changeScene(scenes.length > 0 ? scenes[0].sceneKey : '').then(() => {
-            this.currentScene.graphics.mainCamera.position.z = 10;
-            let controls = new OrbitControls(this.currentScene.graphics.mainCamera, this.renderer.domElement);
-            controls.target.set(0, 2, 0);
-            controls.update();
-        }).catch((e: any) => {
+        this.renderer.domElement.addEventListener('click', async () => {
+
+            // await this.renderer.domElement.requestPointerLock();
+            this.play();
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            if (document.pointerLockElement == this.renderer.domElement) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        })
+
+        this.changeScene(scenes.length > 0 ? scenes[0].sceneKey : '').catch((e: any) => {
             console.error(`Failed to load first scene - ${e}`);
         })
+            this.play();
+    }
+
+    pause() {
+        cancelAnimationFrame(this.animFrameID);
+    }
+
+    play() {
+        requestAnimationFrame(this.update.bind(this));
+    }
+
+    update() {
+        const deltaTime = this.clock.getDelta() * 1000 as TimeMS;
+        const netTime = this.clock.getElapsedTime() as TimeS;
+
+        if (this.currentScene != null) {
+            this.currentScene._update(netTime, deltaTime);
+            this.renderer.render(this.currentScene.graphics.root, this.currentScene.graphics.mainCamera);
+        }
+
+        this.animFrameID = requestAnimationFrame(this.update.bind(this));
     }
 
     async changeScene(sceneKey: string) {
@@ -51,6 +82,7 @@ export class Project {
             for (let scene of this.scenes) {
                 if (sceneKey === scene.sceneKey) {
                     this.currentScene = scene;
+                    this.currentScene._create();
                     this.currentScene._load();
                     this.currentScene._build();
                     return;

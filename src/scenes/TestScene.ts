@@ -59,7 +59,8 @@ export class TestScene extends Scene {
 
     this.physics.addDynamic(this.testSphere, PhysicsColliderFactory.sphere(1), {
       mass: 1,
-      linearVelocity: { x: -3, y: 5, z: 0 }
+      linearVelocity: { x: -3, y: 5, z: 0 },
+      friction: 1
     });
 
     this.physics.addStatic(this.testBox, PhysicsColliderFactory.box(10, 0.05, 10))
@@ -90,7 +91,7 @@ export class TestScene extends Scene {
   }
 
   update(): void {
-    this.physics.applyCentralForceOn(this.testSphere, -0.8, 0, 0);
+    this.physics.applyCentralForceOnDynamic(this.testSphere, -0.8, 0, 0);
   }
 
   destroy(): void {}
