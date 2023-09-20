@@ -50,23 +50,7 @@ export class PhysicsContext {
         this.kinematicBodies = [];
     }
 
-    update(delta: TimeMS) {
-        this.context.stepSimulation( delta / 1000, 1); // Pass Delta in as seconds
-
-        for (let objDyn of this.dynamicBodies) {
-            const objPhys = objDyn.userData.physicsBody;
-            const objMS = objPhys.getMotionState();
-
-            if (objMS) {
-                objMS.getWorldTransform(this.tempTransform);
-                const pos = this.tempTransform.getOrigin();
-                const quat = this.tempTransform.getRotation();
-
-                objDyn.position.set(pos.x(), pos.y(), pos.z());
-                objDyn.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w())
-            }
-        }
-
+    updateKinematic() {
         let tjsPosition: THREE.Vector3 = new THREE.Vector3();
         let tjsQuaternion: THREE.Quaternion = new THREE.Quaternion();
         for (let objKin of this.kinematicBodies) {
@@ -90,6 +74,30 @@ export class PhysicsContext {
             }
 
         }
+    }
+
+    updateDynamic() {
+        for (let objDyn of this.dynamicBodies) {
+            const objPhys = objDyn.userData.physicsBody;
+            const objMS = objPhys.getMotionState();
+
+            if (objMS) {
+                objMS.getWorldTransform(this.tempTransform);
+                const pos = this.tempTransform.getOrigin();
+                const quat = this.tempTransform.getRotation();
+
+                objDyn.position.set(pos.x(), pos.y(), pos.z());
+                objDyn.quaternion.set(quat.x(), quat.y(), quat.z(), quat.w())
+            }
+        }
+    }
+
+    update(delta: TimeMS) {
+        this.context.stepSimulation( delta / 1000, 1); // Pass Delta in as seconds
+
+        this.updateDynamic();
+        this.updateKinematic();
+
     }
 
     addStatic(tjsObject: THREE.Object3D, collider: any) {

@@ -64,7 +64,7 @@ export class SandboxScene extends Scene {
                 })
             );
 
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(5, 1, 0.1));
+            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
             this.graphics.add(this.walls[i]);
         }
         for (let i = 4; i < 8; ++i) {
@@ -78,7 +78,7 @@ export class SandboxScene extends Scene {
                 })
             );
 
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(5, 1, 0.1));
+            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
             this.graphics.add(this.walls[i]);
         }
         this.walls.push(
@@ -90,7 +90,7 @@ export class SandboxScene extends Scene {
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 5));
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
         this.graphics.add(this.walls[8]);
 
         this.walls.push(
@@ -102,7 +102,7 @@ export class SandboxScene extends Scene {
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 5));
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
         this.graphics.add(this.walls[9]);
 
         this.ballKinematic = GraphicsPrimitiveFactory.sphere({
