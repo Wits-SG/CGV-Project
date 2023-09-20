@@ -78,6 +78,7 @@ export class Project {
         if (sceneKey != '') {
             const sceneClass = this.scenes.get(sceneKey);
             // This should work because it'll always be populated by sub elements
+            //@ts-expect-error
             this.currentScene = new sceneClass(this.config.physicsEngine);
             this.currentScene.setRenderer(this.renderer);
             this.currentScene._create();
