@@ -34,7 +34,7 @@ Any instantiation code like array initilization and other similar operation occu
 in here. This is predominantly for any code that is executed once and does not 
 rely on anything that needs to be loaded.
 
-Any (constructs)[Constructs.md] need to be created and added to the scene here.
+Any [constructs](Constructs.md) need to be created and added to the scene here.
 
 This method gets called once.
 
@@ -46,7 +46,7 @@ to correctly construct a scene.
 This includes the following:
 
 * Model loading - Any models are fetched over the internet and thus need to be
-handled asyncronously - See (GraphicsContext)[GraphicsContext.md] for more details.
+handled asyncronously - See [GraphicsContext](GraphicsContext.md) for more details.
 
 This method gets called once.
 
@@ -72,7 +72,7 @@ This method gets called repeatedly throughtout the scenes lifetime.
 
 Any cleanup code needs to be added to this hook.
 
-This method gets called once, when the (project)[Projects.md] changes scenes.
+This method gets called once, when the [project](Projects.md) changes scenes.
 
 ## Example
 

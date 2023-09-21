@@ -14,7 +14,7 @@ It also provides some additional configuration properties to help build a game.
 Identifier: `scenes`
 Type: `Map<string, typeof Scene>`
 
-A list of all scenes that are used within the game. Each scene is uniquely identified
+A list of all the [scenes](Scenes.md) that are used within the game. Each scene is uniquely identified
 by a scene key string. This key is then used to change the currently loaded scene
 by providing the new scene's key to the `changeScene()` method.
 
