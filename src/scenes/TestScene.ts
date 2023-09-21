@@ -16,7 +16,7 @@ export class TestScene extends Scene {
 
   create(): void {}
 
-  load(): void {}
+  async load(): Promise<void> {}
 
   build(): void {
     this.graphics.mainCamera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);

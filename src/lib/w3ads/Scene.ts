@@ -33,11 +33,11 @@ export abstract class Scene {
         }
     }
 
-    _load(): void {
-        this.load();
+    async _load() {
+        await this.load();
 
         for (let construct of this.constructs) {
-            construct.load();
+            await construct.load();
         }
     }
 
@@ -69,7 +69,7 @@ export abstract class Scene {
 
     // Lifecycle Hooks
     abstract create(): void;
-    abstract load(): void;
+    abstract load() : Promise<void>; 
     abstract build(): void;
     abstract update(time?: TimeS, delta?: TimeS): void;
     abstract destroy(): void;

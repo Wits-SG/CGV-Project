@@ -48,7 +48,6 @@ export class Project {
         this.changeScene(firstScene !== undefined ? firstScene : '').catch((e: any) => {
             console.error(`Failed to load first scene - ${e}`);
         })
-            this.play();
     }
 
     pause() {
@@ -82,8 +81,9 @@ export class Project {
             this.currentScene = new sceneClass(this.config.physicsEngine);
             this.currentScene.setRenderer(this.renderer);
             this.currentScene._create();
-            this.currentScene._load();
+            await this.currentScene._load();
             this.currentScene._build();
+            this.play();
         }
     }
 

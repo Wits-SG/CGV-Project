@@ -11,7 +11,7 @@ export class TestConstruct extends Construct {
 
     create() {}
 
-    load() {}
+    async load() {}
 
     build() {
         this.ball = GraphicsPrimitiveFactory.sphere({
