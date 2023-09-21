@@ -1,75 +1,75 @@
-# Scenes
+# W3ad Scenes
 
-## What are scenes?
+## Lifecycle
 
-Scenes are the base level world construct, an alternate name for them might be a 'level'. They are different to Constructs in that Scenes can be
-thought of as top level Constructs. Each Scene is therfore responsible for managing it's sub-Constructs and building out an actual level within the game.
+The Scene is composed of the following lifecycle, where each lifecycle method gets
+called in the following order:
 
-## Creating a new scene
+1. Create
+2. Load
+3. Build
+4. Update
+5. Destroy
 
-To create a new scene, extend and implement the abstract class found in `./src/lib/types/scene.type.ts`.
+The scene will do setup work, and anything else necessary in these lifecycle methods.
+However to provide a way to execute additional code in these methods, each method
+has a respective hook.
 
-An example implementation is provided:
+This hook will be executed by the lifecycle method at the following points:
 
-```js
-export class ExampleScene extends Scene {
-    // Scene Tree
-    cube!: THREE.Mesh;
-    subconstruct!: ExampleConstruct;
+* After scene normal lifecycle code:
+    * Create
+    * Load
+    * Build
+    * Update
+* Before scene normal lifecycle code:
+    * Destroy
 
-    constructor() {
-        super('<Example Scene Name>');
-        this.subconstruct = new ExampleConstruct();
-    }
+These hooks must be overriden by the Child class to provide the additional behaviour
+into the scene.
 
-    build(): void {
-        const geometry = new THREE.BoxGeometry( 1, 2, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-        this.cube = new THREE.Mesh( geometry, material );
+### Create
 
-        this.subconstruct.load();
+Any instantiation code like array initilization and other similar operation occur
+in here. This is predominantly for any code that is executed once and does not 
+rely on anything that needs to be loaded.
 
-        this.root.add( this.cube );
-        this.root.add( this.subconstruct.root );
-    }
+Any (constructs)[Constructs.md] need to be created and added to the scene here.
 
-    update(deltaTime: TimeMS): void {
-        this.cube.rotation.x += 1 * deltaTime;
-        this.cube.rotation.y += 1 * deltaTime;
+This method gets called once.
 
-        this.subconstruct.update();
-    }
-}
-```
+### Load
 
-### Scene Tree
+Load is an async hook that should be used to handle any async code required
+to correctly construct a scene.
 
-These are the actual variables and subobjects associatied with the scene.
+This includes the following:
 
-You should list out all the objects required by the scene to function here.
+* Model loading - Any models are fetched over the internet and thus need to be
+handled asyncronously - See (GraphicsContext)[GraphicsContext.md] for more details.
 
-### Constructor
-
-This function needs to call super with the Scene name specified. This registers the scene with the SceneManager allowing for Scene Switching using the API in `SceneLoader.ts`. (It will in the future. For now you must go manually add the scene to the scene loader. Follow the currently existing code exactly and if there is any confusion contact Brendan Griffiths (@orwellian225))
-
-The correct naming convention for Scene is SCREAMING-KEBAB-CASE
-eg. `EXAMPLE-SCENE-1 EXAMPLE-SCENE-2`
-
-However, the scene registration will follow the below steps to try convert any provided name to the required convention.
-
-1. Replace all spaces with a dash(-).
-2. Convert the string to uppercase.
-
-Any Constructs used within a scene need to call the Constructs constructor method to be used correctly.
+This method gets called once.
 
 ### Build
 
-This function constructs the inital layout of a scene and is called only once, when the scene is first loaded. So this should add all the resources used by the scene and render them as necessary.
+This hook handles the actual scene construction. Building the layout of the scene
+needs to occur here, and any other code that relies on some resource being loaded.
 
-Any Constructs used within a scene need to call the Constructs load method to be used correctly.
+This method gets called once.
 
 ### Update
 
-This function gets called every frame. It is used to animate any dynamic elements used by the scene.
+This hook handles the frame-by-frame updates of the scene.
 
-Any Constructs used within a Scene need to call the Construct's update method in the Scene update method.
+It has two parameters `time` and `delta`. Time is the number of seconds since the
+game was started (This will change to number of seconds since scene was created
+sometime in the future). Delta is the number of milliseconds that have occured
+between the last frame and the current frame.
+
+This method gets called repeatedly throughtout the scenes lifetime.
+
+### Destroy
+
+Any cleanup code needs to be added to this hook.
+
+This method gets called once, when the (project)[Projects.md] changes scenes.
