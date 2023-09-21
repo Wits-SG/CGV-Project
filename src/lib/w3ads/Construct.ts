@@ -12,7 +12,7 @@ export abstract class Construct {
     }
 
     abstract create(): void;
-    abstract load(): void;
+    abstract load(): Promise<void>;
     abstract build(): void;
     abstract update(time?: TimeS, delta?: TimeMS): void;
     abstract destroy(): void;
