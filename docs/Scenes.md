@@ -34,8 +34,6 @@ Any instantiation code like array initilization and other similar operation occu
 in here. This is predominantly for any code that is executed once and does not 
 rely on anything that needs to be loaded.
 
-Any [constructs](Constructs.md) need to be created and added to the scene here.
-
 This method gets called once.
 
 ### Load
