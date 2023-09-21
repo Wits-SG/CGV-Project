@@ -14,6 +14,7 @@ export class SandboxScene extends Scene {
     walls!: Array<THREE.Mesh>;
     ballKinematic!: THREE.Mesh;
     testConstruct: TestConstruct;
+    k!: THREE.Mesh;
 
     controls!: OrbitControls;
 
@@ -32,8 +33,9 @@ export class SandboxScene extends Scene {
         // this.player.create();
     }
 
-    load(): void {
-        // this.player.load();
+    async load(): Promise<void> {
+        const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
+        this.k = gltfData.scene;
     }
 
     build(): void {
@@ -43,6 +45,8 @@ export class SandboxScene extends Scene {
         this.graphics.mainCamera.position.set(20, 100, 20);
         this.graphics.mainCamera.lookAt(0, 0, 0);
         this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+
+        this.k.position.set(0, 0, 0);
 
         this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -142,6 +146,7 @@ export class SandboxScene extends Scene {
         this.graphics.add(this.floor);
         this.graphics.add(this.lightHemisphere);
         this.graphics.add(this.lightDirectional);
+        this.graphics.add(this.k);
 
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
