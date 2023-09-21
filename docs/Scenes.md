@@ -73,3 +73,41 @@ This method gets called repeatedly throughtout the scenes lifetime.
 Any cleanup code needs to be added to this hook.
 
 This method gets called once, when the (project)[Projects.md] changes scenes.
+
+## Example
+
+```typescript
+import { Scene } from './w3ad/index.ts';
+
+export class ExampleScene extends Scene {
+
+    // Add scene variables here
+
+    constructor(AmmoLib: any) {
+        super('Scene Key', AmmoLib);
+        // Add constructs here
+    }
+
+    create() {
+        // Pre-load creation code
+    }
+
+    async load() {
+        // Async code
+    }
+
+    build() {
+        // Post-load creation code
+        // Create ThreeJS Objects here
+    }
+    
+    update(time: TimeS, delta: TimeMS) {
+        // Every frame call code
+    }
+
+    destroy() {
+        // Clean up code here
+    }
+
+}
+```
