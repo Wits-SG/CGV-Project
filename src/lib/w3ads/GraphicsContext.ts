@@ -6,10 +6,12 @@ export class GraphicsContext {
     public root: THREE.Scene;
     public mainCamera!: THREE.Camera;
     public modelLoader: GLTFLoader;
+    public textureLoader: THREE.TextureLoader;
 
     constructor() {
         this.root = new THREE.Scene();
         this.modelLoader = new GLTFLoader();
+        this.textureLoader = new THREE.TextureLoader();
         // TODO move this to a build method called automagically by the Scene Class
     }
 
@@ -21,6 +23,14 @@ export class GraphicsContext {
 
         return new Promise((resolve, reject) => {
             this.modelLoader.load(url, data => resolve(data), undefined, reject);
+        });
+
+    }
+
+    async loadTexture(url: string) {
+
+        return new Promise((resolve, reject) => {
+            this.textureLoader.load(url, data => resolve(data), undefined, reject);
         });
 
     }
