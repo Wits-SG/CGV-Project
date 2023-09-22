@@ -28,37 +28,37 @@ export class MainLibraryConstruct extends Construct {
     create() {}
 
     async load(): Promise<void>{
-        try{
-        const gltfData: any = await this.graphics.loadModel('assets/BookShelf/scene.gltf');
-        this.bookshelf = gltfData.scene;
-        }catch(e){
+        try {
+            const gltfData: any = await this.graphics.loadModel('assets/BookShelf/scene.gltf');
+            this.bookshelf = gltfData.scene;
+        } catch(e: any) {
             console.error(e);
         }
 
-        try{
+        try {
             const gltfData: any = await this.graphics.loadModel('assets/wooden_table/scene.gltf');
             this.table = gltfData.scene;
-            }catch(e){
+        } catch(e: any) {
                 console.error(e);
-            }
+        }
 
-        try{
+        try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
-        }catch(e){
+        } catch(e: any) {
             console.error(e);
         }
-        try{
+        try {
             this.textureCeilingData = await this.graphics.loadTexture('assets/colorful-mexican-architecture-urban-landscape.jpg');
             this.textureCeilingData.wrapS = this.textureCeilingData.wrapT = THREE.RepeatWrapping;
             this.textureCeilingData.repeat.set(1, 6);
-        }catch(e){
+        } catch(e: any) {
             console.error(e);
         }
-        try{
+        try {
             this.textureWallsData = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
             this.textureWallsData.wrapS = this.textureCeilingData.wrapT = THREE.RepeatWrapping;
             this.textureWallsData.repeat.set(4, 1);
-        }catch(e){
+        } catch(e: any) {
             console.error(e);
         }
     }
