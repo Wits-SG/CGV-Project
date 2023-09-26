@@ -47,7 +47,7 @@ export class StatuesConstruct extends Construct{
     build(){
 
         // Floor plane
-        const geometry = new THREE.BoxGeometry(50,60,1);
+        const geometry = new THREE.BoxGeometry(60,60,1);
         this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
         this.floor = new THREE.Mesh(geometry, this.floorTexture);
         this.floor.rotation.set(Math.PI/2,0,0);
