@@ -29,12 +29,14 @@ export class StatuesConstruct extends Construct{
         this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
         this.floor = new THREE.Mesh(geometry, this.floorTexture);
         this.floor.rotation.set(Math.PI/2,0,0);
+        this.floor.position.set(0,0,0);
         this.graphics.add(this.floor);
 
         //Chess board
         const board_base = new THREE.BoxGeometry(30,30,0.4);
-        const boardColour = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        const boardColour = new THREE.MeshBasicMaterial( { color: 0x393939 } );
         this.board = new THREE.Mesh(board_base, boardColour);
+        this.board.position.set(0,1,0);
         this.board.rotation.set(Math.PI/2,0,0);
         this.graphics.add(this.board);
     }
