@@ -6,7 +6,17 @@ export class StatuesConstruct extends Construct{
     floor!: THREE.Mesh
     floorTexture!: THREE.MeshBasicMaterial;
     textureFloorData!: any;
-    board!: THREE.Mesh
+
+    // chess board
+    board!: THREE.Mesh;
+
+    // black and white squares
+    blackSquares!: Array<THREE.Mesh>;
+    whiteSquares!: Array<THREE.Mesh>;
+    whiteSquaresTexture!: THREE.MeshBasicMaterial;
+    blackSquaresTexture!: THREE.MeshBasicMaterial;
+    whiteSquareData!: any;
+    blackSquareData!: any;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext ) {
         super(graphics, physics);
@@ -17,6 +27,18 @@ export class StatuesConstruct extends Construct{
     async load(): Promise<void> { 
         try {
             this.textureFloorData = await this.graphics.loadTexture('public/asssets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.blackSquareData = await this.graphics.loadTexture('public/asssets/Marble/black_marble.jpg');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.whiteSquareData = await this.graphics.loadTexture('public/asssets/Marble/white_marble.jpeg');
         } catch (e: any) {
             console.error(e);
         }
@@ -32,13 +54,40 @@ export class StatuesConstruct extends Construct{
         this.floor.position.set(0,0,0);
         this.graphics.add(this.floor);
 
+        const verticesBlack = [[1.5, 1.5, 1.15], [1.5, 7.5, 1.15], [4.5, 4.5, 1.15], [4.5, 10.5, 1.15], [7.5, 1.5, 1.15], [7.5, 7.5, 1.15], [10.5, 4.5, 1.15], [10.5, 10.5, 1.15]];
+        const verticesWhite = [[1.5, 4.5, 1.15], [1.5, 10.5, 1.15], [4.5, 1.5, 1.15], [4.5, 7.5, 1.15], [7.5, 4.5, 1.15], [7.5, 10.5, 1.15], [10.5, 1.5, 1.15], [10.5, 7.5, 1.15]];
+        const rotation = [[Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0]];
+
         //Chess board
         const board_base = new THREE.BoxGeometry(30,30,0.4);
         const boardColour = new THREE.MeshBasicMaterial( { color: 0x393939 } );
         this.board = new THREE.Mesh(board_base, boardColour);
-        this.board.position.set(0,1,0);
+        this.board.position.set(0,0.7,0);
         this.board.rotation.set(Math.PI/2,0,0);
         this.graphics.add(this.board);
+
+        this.blackSquares = [];
+        for (let i = 0 ;i < 8; i++){
+            const geometry = new THREE.BoxGeometry(3, 3, 0.5);
+            this.blackSquaresTexture = new THREE.MeshBasicMaterial({map: this.blackSquareData, side: THREE.DoubleSide});
+            const blackSquare = new THREE.Mesh(geometry, this.blackSquaresTexture);
+            blackSquare.position.set(verticesBlack[i][1], verticesBlack[i][2], verticesBlack[i][0]);
+            blackSquare.rotation.set(rotation[i][0], rotation[i][1], rotation[i][2]);
+            this.blackSquares.push(blackSquare);
+            this.graphics.add(blackSquare);
+
+        }
+
+        this.whiteSquares = [];
+        for (let i = 0; i < 8; i++){
+            const geometry = new THREE.BoxGeometry(3, 3, 0.5);
+            this.whiteSquaresTexture = new THREE.MeshBasicMaterial({map: this.whiteSquareData, side: THREE.DoubleSide});
+            const whiteSquare = new THREE.Mesh(geometry, this.whiteSquaresTexture);
+            whiteSquare.position.set(verticesWhite[i][1], verticesWhite[i][2], verticesWhite[i][0]);
+            whiteSquare.rotation.set(rotation[i][0], rotation[i][1], rotation[i][2]);
+            this.whiteSquares.push(whiteSquare);
+            this.graphics.add(whiteSquare);
+        }
     }
 
     update(){}
