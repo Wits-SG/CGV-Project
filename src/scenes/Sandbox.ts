@@ -27,8 +27,8 @@ export class SandboxScene extends Scene {
 
        // this.testConstruct = new TestConstruct(this.graphics, this.physics);
        // this.addConstruct(this.testConstruct);
-        this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
-        this.addConstruct(this.mainLibrary);
+       this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
+       this.addConstruct(this.mainLibrary);
     }
 
     create(): void {
@@ -36,8 +36,8 @@ export class SandboxScene extends Scene {
     }
 
     async load(): Promise<void> {
-        const gltfData: any = await this.graphics.loadModel('/assets/officer-k/scene.gltf');
-        this.k = gltfData.scene;
+      const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
+      this.k = gltfData.scene;
     }
 
     build(): void {
@@ -49,7 +49,7 @@ export class SandboxScene extends Scene {
         this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
 
         this.k.position.set(0, -10, 0);
-        this.k.scale.set(1, 1, 1);
+     this.k.scale.set(1, 1, 1);
 
        /* this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -149,7 +149,7 @@ export class SandboxScene extends Scene {
         //this.graphics.add(this.floor);
         //this.graphics.add(this.lightHemisphere);
         //this.graphics.add(this.lightDirectional);
-       //this.graphics.add(this.k);
+        this.graphics.add(this.k);
 
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
