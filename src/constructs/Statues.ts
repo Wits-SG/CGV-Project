@@ -54,10 +54,6 @@ export class StatuesConstruct extends Construct{
         this.floor.position.set(0,0,0);
         this.graphics.add(this.floor);
 
-        const verticesBlack = [[1.5, 1.5, 1.15], [1.5, 7.5, 1.15], [4.5, 4.5, 1.15], [4.5, 10.5, 1.15], [7.5, 1.5, 1.15], [7.5, 7.5, 1.15], [10.5, 4.5, 1.15], [10.5, 10.5, 1.15]];
-        const verticesWhite = [[1.5, 4.5, 1.15], [1.5, 10.5, 1.15], [4.5, 1.5, 1.15], [4.5, 7.5, 1.15], [7.5, 4.5, 1.15], [7.5, 10.5, 1.15], [10.5, 1.5, 1.15], [10.5, 7.5, 1.15]];
-        const rotation = [[Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0], [Math.PI/2,0,0]];
-
         //Chess board
         const board_base = new THREE.BoxGeometry(30,30,0.4);
         const boardColour = new THREE.MeshBasicMaterial( { color: 0x393939 } );
@@ -66,27 +62,37 @@ export class StatuesConstruct extends Construct{
         this.board.rotation.set(Math.PI/2,0,0);
         this.graphics.add(this.board);
 
+        // Define the number of rows and columns on the chessboard
+        const numRows = 8;
+        const numCols = 8;
+
+        // Size of each square
+        const squareSize = 3;
+
+        // Initialize arrays to hold black and white squares
         this.blackSquares = [];
-        for (let i = 0 ;i < 8; i++){
-            const geometry = new THREE.BoxGeometry(3, 3, 0.5);
-            this.blackSquaresTexture = new THREE.MeshBasicMaterial({map: this.blackSquareData, side: THREE.DoubleSide});
-            const blackSquare = new THREE.Mesh(geometry, this.blackSquaresTexture);
-            blackSquare.position.set(verticesBlack[i][1], verticesBlack[i][2], verticesBlack[i][0]);
-            blackSquare.rotation.set(rotation[i][0], rotation[i][1], rotation[i][2]);
-            this.blackSquares.push(blackSquare);
-            this.graphics.add(blackSquare);
-
-        }
-
         this.whiteSquares = [];
-        for (let i = 0; i < 8; i++){
-            const geometry = new THREE.BoxGeometry(3, 3, 0.5);
-            this.whiteSquaresTexture = new THREE.MeshBasicMaterial({map: this.whiteSquareData, side: THREE.DoubleSide});
-            const whiteSquare = new THREE.Mesh(geometry, this.whiteSquaresTexture);
-            whiteSquare.position.set(verticesWhite[i][1], verticesWhite[i][2], verticesWhite[i][0]);
-            whiteSquare.rotation.set(rotation[i][0], rotation[i][1], rotation[i][2]);
-            this.whiteSquares.push(whiteSquare);
-            this.graphics.add(whiteSquare);
+
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                const x = col * squareSize - (squareSize * (numCols - 1)) / 2;
+                const z = row * squareSize - (squareSize * (numRows - 1)) / 2;
+
+                const geometry = new THREE.BoxGeometry(squareSize, 0.5, squareSize);
+                const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
+                const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+
+                const square = new THREE.Mesh(geometry, material);
+                square.position.set(x, 1.15, z);
+
+                if ((row + col) % 2 === 0) {
+                    this.blackSquares.push(square);
+                } else {
+                    this.whiteSquares.push(square);
+                }
+
+                this.graphics.add(square);
+            }
         }
     }
 
