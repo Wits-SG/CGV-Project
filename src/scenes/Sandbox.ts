@@ -36,7 +36,7 @@ export class SandboxScene extends Scene {
     }
 
     async load(): Promise<void> {
-        const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
+        const gltfData: any = await this.graphics.loadModel('/assets/officer-k/scene.gltf');
         this.k = gltfData.scene;
     }
 
