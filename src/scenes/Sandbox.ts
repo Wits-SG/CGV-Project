@@ -3,7 +3,8 @@ import { Scene } from '../lib';
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 //import { TimeS } from '../lib/w3ads/types/misc.type';
-import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+//import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+import { StatuesConstruct } from '../constructs/Statues';
 
 export class SandboxScene extends Scene {
 
@@ -14,8 +15,9 @@ export class SandboxScene extends Scene {
     walls!: Array<THREE.Mesh>;
     ballKinematic!: THREE.Mesh;
     //testConstruct: TestConstruct;
-    k!: THREE.Mesh;
-    mainLibrary!: MainLibraryConstruct;
+    //k!: THREE.Mesh;
+    //mainLibrary!: MainLibraryConstruct;
+    statueRoom!: StatuesConstruct;
 
     controls!: OrbitControls;
 
@@ -27,17 +29,21 @@ export class SandboxScene extends Scene {
 
        // this.testConstruct = new TestConstruct(this.graphics, this.physics);
        // this.addConstruct(this.testConstruct);
-        this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
-        this.addConstruct(this.mainLibrary);
-    }
+        // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
+        // this.addConstruct(this.mainLibrary);
+
+        this.statueRoom = new StatuesConstruct(this.graphics, this.physics);
+        this.addConstruct(this.statueRoom);
+    };
+
 
     create(): void {
         // this.player.create();
     }
 
     async load(): Promise<void> {
-        const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
-        this.k = gltfData.scene;
+        // const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
+        // this.k = gltfData.scene;
     }
 
     build(): void {
@@ -48,8 +54,8 @@ export class SandboxScene extends Scene {
         this.graphics.mainCamera.lookAt(0, 0,-50);
         this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
 
-        this.k.position.set(0, -10, 0);
-        this.k.scale.set(1, 1, 1);
+        // this.k.position.set(0, -10, 0);
+        // this.k.scale.set(1, 1, 1);
 
        /* this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -147,9 +153,9 @@ export class SandboxScene extends Scene {
 
 
         //this.graphics.add(this.floor);
-        //this.graphics.add(this.lightHemisphere);
-        //this.graphics.add(this.lightDirectional);
-       //this.graphics.add(this.k);
+        // this.graphics.add(this.lightHemisphere);
+        // this.graphics.add(this.lightDirectional);
+        // this.graphics.add(this.k);
 
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
