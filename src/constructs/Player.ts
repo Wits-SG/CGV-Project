@@ -96,7 +96,7 @@ export class Player extends Construct {
         })
     }
 
-    update(time?: number | undefined, delta?: number | undefined): void {
+    update(): void {
         const xLocal = this.direction.f - this.direction.b; // Character facing x
         const zLocal = this.direction.r - this.direction.l; // Character facing z
 
