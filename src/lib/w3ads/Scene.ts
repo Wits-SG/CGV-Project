@@ -42,11 +42,11 @@ export abstract class Scene {
     }
 
     _build(): void {
-        this.build();
-
         for (let construct of this.constructs) {
             construct.build();
         }
+
+        this.build();
     }
 
     _update(time: TimeS, delta: TimeMS): void {
