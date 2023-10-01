@@ -12,6 +12,7 @@ export class SandboxScene extends Scene {
 
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
+    ball!: THREE.Mesh;
     player!: Player;
 
     controls!: OrbitControls;
@@ -33,10 +34,10 @@ export class SandboxScene extends Scene {
     }
 
     build(): void {
-        this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera.position.set(5, 5, 5);
-        this.graphics.mainCamera.lookAt(0, 0, 0);
-        this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
+        // this.graphics.mainCamera.position.set(5, 5, 5);
+        // this.graphics.mainCamera.lookAt(0, 0, 0);
+        // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
 
        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -78,25 +79,25 @@ export class SandboxScene extends Scene {
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: 25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 3, 40));
         this.graphics.add(this.walls[8]);
 
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: -25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 3, 40));
         this.graphics.add(this.walls[9]);
 
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
@@ -116,8 +117,22 @@ export class SandboxScene extends Scene {
         this.lightDirectional.shadow.camera.right = 50;
         this.lightDirectional.shadow.camera.top = 50;
         this.lightDirectional.shadow.camera.bottom = -50;
+        
+        this.ball = GraphicsPrimitiveFactory.sphere({
+            position: { x: 0, y: 10, z: 1 },
+            rotation: { x: 0, y: 0, z: 0 },
+            radius: 1,
+            shadows: true,
+            colour: 0xff0000
+        })
+        this.physics.addDynamic(this.ball, PhysicsColliderFactory.sphere(1), {
+            linearVelocity: { x: 0, y: 0, z: 0 },
+            mass: 5,
+            friction: 5
+        })
 
 
+        this.graphics.add(this.ball);
         this.graphics.add(this.floor);
         this.graphics.add(this.lightHemisphere);
         this.graphics.add(this.lightDirectional);
