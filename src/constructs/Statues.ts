@@ -189,7 +189,12 @@ export class StatuesConstruct extends Construct {
         plinthGroup.add(cylinderMesh2);
         plinthGroup.add(cylinderMesh3);
 
-        this.floor.add(plinthGroup);
+        const plinthSpacing = 5; 
+        for (let i = 0; i < 5; i++) {
+            const additionalPlinthGroup = plinthGroup.clone(); // Clone the existing plinth group
+            additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
+            this.floor.add(additionalPlinthGroup); // Add the cloned plinth group to the floor
+        }
 
 
         // Add the board to the scene
