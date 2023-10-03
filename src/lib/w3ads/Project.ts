@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import Stats from 'three/addons/libs/stats.module.js'
 //@ts-ignore
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Scene } from "./Scene";
@@ -7,11 +8,13 @@ import { TimeS, TimeMS } from './types/misc.type';
 type ProjectConfig = {
     physicsEngine: any,
     shadows: boolean,
+    stats: boolean,
 }
 
 export class Project {
     clock: THREE.Clock;
     renderer: THREE.WebGLRenderer;
+    stats: Stats | null;
     animFrameID: any;
 
     config: ProjectConfig;
@@ -24,11 +27,20 @@ export class Project {
 
         this.clock = new THREE.Clock();
         this.renderer = new THREE.WebGLRenderer();
+        
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor( 0xbfd1e5 );
         this.renderer.shadowMap.enabled = config.shadows;
+
+        this.stats = null;
+        if (config.stats) {
+            this.stats = new Stats();
+            document.body.appendChild( this.stats.dom );
+        }
+
         document.body.appendChild(this.renderer.domElement);
+
 
         this.renderer.domElement.addEventListener('click', async () => {
 
@@ -79,6 +91,10 @@ export class Project {
         if (this.currentScene != null) {
             this.currentScene._update(netTime, deltaTime);
             this.renderer.render(this.currentScene.graphics.root, this.currentScene.graphics.mainCamera);
+        }
+
+        if ( this.stats != null ) {
+            this.stats.update();
         }
 
         this.animFrameID = requestAnimationFrame(this.update.bind(this));
