@@ -110,6 +110,29 @@ export class StatuesConstruct extends Construct {
         // Board Numbers
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
+
+            //plinth numbering
+            const plinthSpace = 5;
+            const startingPlinth = -10;
+
+            for (let i = 1; i <=5; i++){
+                const numberText = i.toString();
+                const geometry = new TextGeometry(numberText, {
+                    font: font,
+                    size: 0.5,
+                    height: 0,
+                });
+
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0x000000 })]);
+
+                const xOffset = startingPlinth + (i - 1) * plinthSpace;
+                textMesh.position.set(23.45, 0.8, xOffset);
+                textMesh.rotation.set(Math.PI/2, 3*Math.PI/2, Math.PI/2);
+
+                this.graphics.add(textMesh);
+            }
+
+
             const numberSpacing = 3; // Adjust the spacing between numbers
             const startingNumberX = -11; // Adjust the starting X position
 
@@ -195,7 +218,6 @@ export class StatuesConstruct extends Construct {
             additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
             this.floor.add(additionalPlinthGroup); // Add the cloned plinth group to the floor
         }
-
 
         // Add the board to the scene
         this.graphics.add(this.board);
