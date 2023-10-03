@@ -99,22 +99,26 @@ export class StatuesConstruct extends Construct {
 
         // Board Letters & Numbers
         const loader = new FontLoader();
-        loader.load('src/fonts/Montserrat_Bold.json',  (font) => {
-            const geometry = new TextGeometry('1', {
-                font: font,
-                size: 1,
-                height: 0,
+        loader.load('src/fonts/Montserrat_Bold.json', (font) => {
+            const numberSpacing = 3; // Adjust the spacing between numbers
+            const startingX = -11; // Adjust the starting X position
 
-            });
+            for (let i = 1; i <= 8; i++) {
+                const numberText = i.toString();
+                const geometry = new TextGeometry(numberText, {
+                    font: font,
+                    size: 1,
+                    height: 0,
+                });
 
-            const textMesh = new THREE.Mesh(geometry, [
-                new THREE.MeshBasicMaterial({ color: 0xffffff}),
-            ])
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
 
-            textMesh.position.set(-11.5,1.15,-13);
-            textMesh.rotation.set(Math.PI/2 ,Math.PI,Math.PI/2);
+                const xOffset = startingX + (i - 1) * numberSpacing;
+                textMesh.position.set(xOffset, 1, -14);
+                textMesh.rotation.set(Math.PI / 2, Math.PI, Math.PI / 2);
 
-            this.graphics.add(textMesh);
+                this.graphics.add(textMesh);
+            }
         });
 
         
