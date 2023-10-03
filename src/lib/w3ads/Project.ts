@@ -44,10 +44,24 @@ export class Project {
             }
         })
 
+        window.onresize = () => {
+            // I've added the ts warnings because I can't be bothered to make this
+            // handle a generic resize case. mainCamera is a Camera type but the
+            // props needed to readjust sizing exist on PerspectiveCamera
+
+            //@ts-expect-error
+            this.currentScene.graphics.mainCamera.aspect = window.innerWidth / window.innerHeight;
+            //@ts-expect-error
+            this.currentScene.graphics.mainCamera.updateProjectionMatrix();
+            this.currentScene.graphics.renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+
         const [firstScene] = scenes.keys(); 
         this.changeScene(firstScene !== undefined ? firstScene : '').catch((e: any) => {
             console.error(`Failed to load first scene - ${e}`);
         })
+
+
     }
 
     pause() {
