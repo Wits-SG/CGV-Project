@@ -62,10 +62,9 @@ export class Player extends Construct {
 
     build(): void {
         const bodyMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
-        const bodyGeometry = new THREE.CapsuleGeometry(1, 2, 10, 10);
+        const bodyGeometry = new THREE.CapsuleGeometry(1, 1.8, 10, 10);
         this.body = new THREE.Mesh(bodyGeometry, bodyMat);
         this.body.rotation.set(0, 0.8, 0);
-        this.setPosition(0, 1, 0);
 
         this.face = GraphicsPrimitiveFactory.box({
             position: { x: 0.9, y: 1.4, z: 0 },
@@ -83,7 +82,7 @@ export class Player extends Construct {
 
         this.face.add(this.camera);
         this.body.add(this.face);
-        this.graphics.add(this.body);
+        this.add(this.body);
 
         this.body.layers.set(1);
         this.face.layers.set(1);
@@ -109,9 +108,5 @@ export class Player extends Construct {
     }
 
     destroy(): void {
-    }
-
-    setPosition(x: number, y: number, z: number) {
-        this.body.position.set(x, y, z);
     }
 }

@@ -38,6 +38,7 @@ export class SandboxScene extends Scene {
         // this.graphics.mainCamera.position.set(5, 5, 5);
         // this.graphics.mainCamera.lookAt(0, 0, 0);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        this.player.root.position.set(0, 1, 0);
 
        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
