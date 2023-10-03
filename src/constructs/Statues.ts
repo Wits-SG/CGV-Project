@@ -101,7 +101,7 @@ export class StatuesConstruct extends Construct {
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
             const numberSpacing = 3; // Adjust the spacing between numbers
-            const startingX = -11; // Adjust the starting X position
+            const startingNumberX = -11; // Adjust the starting X position
 
             for (let i = 1; i <= 8; i++) {
                 const numberText = i.toString();
@@ -113,10 +113,30 @@ export class StatuesConstruct extends Construct {
 
                 const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
 
-                const xOffset = startingX + (i - 1) * numberSpacing;
+                const xOffset = startingNumberX + (i - 1) * numberSpacing;
                 textMesh.position.set(xOffset, 1, -14);
                 textMesh.rotation.set(Math.PI / 2, Math.PI, Math.PI / 2);
 
+                this.graphics.add(textMesh);
+            }
+
+            const letterSpacing = 3; // Adjust the spacing between letters
+            const startingLetterX = -14; // Adjust the starting X position
+        
+            for (let i = 0; i < 8; i++) {
+                const letterText = String.fromCharCode(65 + i); // Convert ASCII code to letters (A-H)
+                const geometry = new TextGeometry(letterText, {
+                    font: font,
+                    size: 1,
+                    height: 0,
+                });
+        
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
+        
+                const xOffset = startingLetterX + i * letterSpacing + 3;
+                textMesh.position.set(-14, 1, xOffset); // Adjust the Z position to place letters at the bottom
+                textMesh.rotation.set(Math.PI / 2, Math.PI, Math.PI / 2);
+        
                 this.graphics.add(textMesh);
             }
         });
