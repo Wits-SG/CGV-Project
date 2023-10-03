@@ -33,7 +33,7 @@ export class SandboxScene extends Scene {
         // this.addConstruct(this.mainLibrary);
 
         this.musicRoom = new MusicConstruct(this.graphics, this.physics);
-        this.addConstruct(this.statueRoom);
+        this.addConstruct(this.musicRoom);
     };
 
 
