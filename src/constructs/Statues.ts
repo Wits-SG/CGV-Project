@@ -20,6 +20,10 @@ export class StatuesConstruct extends Construct {
     whiteSquareData!: any;
     blackSquareData!: any;
 
+    // plinth
+    plinthTexture!: THREE.MeshBasicMaterial;
+    plinthData!: any;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         super(graphics, physics);
     }
@@ -41,6 +45,12 @@ export class StatuesConstruct extends Construct {
 
         try {
             this.whiteSquareData = await this.graphics.loadTexture('public/asssets/Marble/white_marble.jpeg');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.plinthData = await this.graphics.loadTexture('public/asssets/Marble/plinths_marble.png');
         } catch (e: any) {
             console.error(e);
         }
@@ -97,7 +107,7 @@ export class StatuesConstruct extends Construct {
             }
         }
 
-        // Board Letters & Numbers
+        // Board Numbers
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
             const numberSpacing = 3; // Adjust the spacing between numbers
@@ -120,6 +130,7 @@ export class StatuesConstruct extends Construct {
                 this.graphics.add(textMesh);
             }
 
+            // Board Letters
             const letterSpacing = 3; // Adjust the spacing between letters
             const startingLetterX = -14; // Adjust the starting X position
         
@@ -141,11 +152,44 @@ export class StatuesConstruct extends Construct {
             }
         });
 
-        
-        
+        // Plinths
+        const plinthGroup = new THREE.Group();
 
+        // Plinth (Box)
+        const plinthBoxGeometry = new THREE.BoxGeometry(3, 0.8, 3);
+        const plinthBoxMaterial = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const plinth = new THREE.Mesh(plinthBoxGeometry, plinthBoxMaterial);
+        plinth.rotation.set(Math.PI / 2, 0, 0);
+        plinth.position.set(25, -15, -0.9);
 
+        // Cylinder 1
+        const cylinderGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 15);
+        const cylinderMaterial = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        cylinderMesh.rotation.set(Math.PI/2, 0, 0);
+        cylinderMesh.position.set(25, -15, -1.5); 
 
+        // Cylinder 2
+        const cylinderGeometry2 = new THREE.CylinderGeometry(1, 1, 3, 15);
+        const cylinderMaterial2 = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMesh2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
+        cylinderMesh2.rotation.set(Math.PI/2, 0, 0);
+        cylinderMesh2.position.set(25, -15, -3); 
+
+        // Cylinder 3
+        const cylinderGeometry3 = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 15);
+        const cylinderMaterial3 = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMesh3 = new THREE.Mesh(cylinderGeometry3, cylinderMaterial3);
+        cylinderMesh3.rotation.set(Math.PI/2, 0, 0);
+        cylinderMesh3.position.set(25, -15, -4.5); 
+
+        // Add the plinth and the cylinder to the group
+        plinthGroup.add(plinth);
+        plinthGroup.add(cylinderMesh);
+        plinthGroup.add(cylinderMesh2);
+        plinthGroup.add(cylinderMesh3);
+
+        this.floor.add(plinthGroup);
 
 
         // Add the board to the scene
