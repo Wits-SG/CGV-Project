@@ -19,6 +19,7 @@ AmmoLib().then(function (result: any) {
         {
             physicsEngine: result,
             shadows: true,
+            stats: true,
         }
     );
 

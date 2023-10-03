@@ -14,7 +14,7 @@ export class Player extends Construct {
     create(): void {
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
 
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
+        document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
@@ -22,14 +22,14 @@ export class Player extends Construct {
             if (event.key == ' ') { this.physics.jumpCharacter(this.body); }
             if (event.key == 'Shift') { this.speed = 0.4 }
         });
-        window.addEventListener('keyup', (event: KeyboardEvent) => {
+        document.addEventListener('keyup', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
             if (event.key == 'Shift') { this.speed = 0.2 }
         });
-        window.addEventListener('mousemove', (event: MouseEvent) => {
+        document.addEventListener('mousemove', (event: MouseEvent) => {
 
             // character orientation and screen orientation are flipped
             const rotateAmountX = (-1 * event.movementX) * this.sensitivity;
@@ -52,7 +52,7 @@ export class Player extends Construct {
             this.face.rotation.z = totalY;
         });
 
-        window.addEventListener('click', async () => {
+        document.addEventListener('click', async () => {
             await this.graphics.renderer.domElement.requestPointerLock();
         })
     }
