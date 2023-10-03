@@ -97,6 +97,7 @@ export class StatuesConstruct extends Construct {
             }
         }
 
+        // Board Letters & Numbers
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json',  (font) => {
             const geometry = new TextGeometry('1', {
