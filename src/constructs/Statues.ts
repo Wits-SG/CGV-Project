@@ -293,6 +293,49 @@ export class StatuesConstruct extends Construct {
         tempKnight.scale.set(2,2,2);
         this.board.add(tempKnight);
 
+        // Add point lights at the corners of board
+        const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
+        cornerLight1.position.set(-15, -15, -10); // Adjust the position as per your needs
+        this.board.add(cornerLight1);
+
+        const cornerLight2 = new THREE.PointLight(0xffffff, 500, 100);
+        cornerLight2.position.set(15, -15, -10); 
+        this.board.add(cornerLight2);
+
+        const cornerLight3 = new THREE.PointLight(0xffffff, 500, 100);
+        cornerLight3.position.set(-15, 15, -10); 
+        this.board.add(cornerLight3);
+
+        const cornerLight4 = new THREE.PointLight(0xffffff, 500, 100);
+        cornerLight4.position.set(15, 15, -10); 
+        this.board.add(cornerLight4);
+
+        const middleLight = new THREE.PointLight(0xffffff, 500, 100);
+        middleLight.position.set(0,0,-10);
+        this.board.add(middleLight);
+        
+
+        // Add point lights to the back of each plinth
+        const plinthBackLight1 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        plinthBackLight1.position.set(25, -15, -10); 
+        this.floor.add(plinthBackLight1);
+
+        const plinthBackLight2 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        plinthBackLight2.position.set(25, -10, -10); 
+        this.floor.add(plinthBackLight2);
+
+        const plinthBackLight3 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        plinthBackLight3.position.set(25, -5, -10); 
+        this.floor.add(plinthBackLight3);
+
+        const plinthBackLight4 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        plinthBackLight4.position.set(25, 0, -10); 
+        this.floor.add(plinthBackLight4);
+
+        const plinthBackLight5 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        plinthBackLight5.position.set(25, 5, -10); 
+        this.floor.add(plinthBackLight5)
+
         // Add the floor to the scene
         this.graphics.add(this.floor);
         // Add chessboard to the scene
