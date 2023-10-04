@@ -14,7 +14,7 @@ export class Player extends Construct {
     create(): void {
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
-        this.physics.addInteracting(this.root);
+        this.interactions.addInteracting(this.root, () => {});
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }

@@ -13,12 +13,6 @@ type BodyConditions = {
     friction: number,
 }
 
-type InteractArea = {
-    object: THREE.Object3D,
-    radius: number,
-    onInteract: Function,
-}
-
 // AMMO Defines
 const STATE = { DISABLE_DEACTIVATION: 4 };
 const FLAGS = { CF_KINEMAITC_OBJECT: 2};

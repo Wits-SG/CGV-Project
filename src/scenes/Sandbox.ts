@@ -23,7 +23,7 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics);
+        this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
     }
 
@@ -134,7 +134,7 @@ export class SandboxScene extends Scene {
             mass: 10,
             friction: 1
         })
-        this.physics.addInteractable(this.ball, 5, () => {
+        this.interactions.addInteractable(this.ball, 5, () => {
             if (this.ball.material == blueMat)
                 this.ball.material = redMat
             else if (this.ball.material == redMat)
