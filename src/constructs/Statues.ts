@@ -12,6 +12,9 @@ export class StatuesConstruct extends Construct {
     // chess board
     board!: THREE.Mesh;
 
+    // Chess pieces
+    pieces!: THREE.Group;
+
     // black and white squares
     blackSquares!: Array<THREE.Mesh>;
     whiteSquares!: Array<THREE.Mesh>;
@@ -54,6 +57,7 @@ export class StatuesConstruct extends Construct {
         } catch (e: any) {
             console.error(e);
         }
+
     }
 
     build() {
@@ -64,7 +68,7 @@ export class StatuesConstruct extends Construct {
         this.floor = new THREE.Mesh(geometry, this.floorTexture);
         this.floor.rotation.set(Math.PI / 2, 0, 0);
         this.floor.position.set(0, 0, 0);
-        this.graphics.add(this.floor);
+        
 
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 30, 0.4);
@@ -107,11 +111,11 @@ export class StatuesConstruct extends Construct {
             }
         }
 
-        // Board Numbers
+        // Text
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
 
-            //plinth numbering
+            // Plinth numbering
             const plinthSpace = 5;
             const startingPlinth = -10;
 
@@ -132,7 +136,7 @@ export class StatuesConstruct extends Construct {
                 this.graphics.add(textMesh);
             }
 
-
+            // Board Numbers
             const numberSpacing = 3; // Adjust the spacing between numbers
             const startingNumberX = -11; // Adjust the starting X position
 
@@ -147,10 +151,10 @@ export class StatuesConstruct extends Construct {
                 const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
 
                 const xOffset = startingNumberX + (i - 1) * numberSpacing;
-                textMesh.position.set(xOffset, 1, -14);
-                textMesh.rotation.set(Math.PI / 2, Math.PI, Math.PI / 2);
+                textMesh.position.set(xOffset, -14, -0.3);
+                textMesh.rotation.set(0, Math.PI, Math.PI/2);
 
-                this.graphics.add(textMesh);
+                this.board.add(textMesh);
             }
 
             // Board Letters
@@ -168,10 +172,10 @@ export class StatuesConstruct extends Construct {
                 const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
         
                 const xOffset = startingLetterX + i * letterSpacing + 3;
-                textMesh.position.set(-14, 1, xOffset); // Adjust the Z position to place letters at the bottom
-                textMesh.rotation.set(Math.PI / 2, Math.PI, Math.PI / 2);
+                textMesh.position.set(-14, xOffset, -0.3); // Adjust the Z position to place letters at the bottom
+                textMesh.rotation.set(0, Math.PI, Math.PI / 2);
         
-                this.graphics.add(textMesh);
+                this.board.add(textMesh);
             }
         });
 
@@ -216,10 +220,12 @@ export class StatuesConstruct extends Construct {
         for (let i = 0; i < 5; i++) {
             const additionalPlinthGroup = plinthGroup.clone(); // Clone the existing plinth group
             additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
-            this.floor.add(additionalPlinthGroup); // Add the cloned plinth group to the floor
+            this.floor.add(additionalPlinthGroup);
         }
 
-        // Add the board to the scene
+        // Add the floor to the scene
+        this.graphics.add(this.floor);
+        // Add chessboard to the scene
         this.graphics.add(this.board);
     }
 
