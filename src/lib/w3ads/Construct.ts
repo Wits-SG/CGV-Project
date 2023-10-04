@@ -2,17 +2,20 @@ import * as THREE from 'three';
 import { PhysicsContext } from "./PhysicsContext";
 import { GraphicsContext } from "./GraphicsContext";
 import { TimeS, TimeMS } from "./types/misc.type";
+import { InteractManager } from './InteractManager';
 
 export abstract class Construct {
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
+    public interactions: InteractManager;
 
     public root: THREE.Object3D;
     public constructs: Array<Construct>;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
         this.graphics = graphics;
         this.physics = physics;
+        this.interactions = interactions;
         this.root = new THREE.Object3D();
         this.constructs = [];
     }
