@@ -13,6 +13,8 @@ export class Player extends Construct {
 
     create(): void {
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
+        this.root.userData.canInteract = false;
+        this.physics.addInteracting(this.root);
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
@@ -28,6 +30,13 @@ export class Player extends Construct {
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
             if (event.key == 'Shift') { this.speed = 0.2 }
+        });
+        document.addEventListener('keypress', (event: KeyboardEvent) => {
+            if (this.root.userData.canInteract) {
+                if (event.key == 'e' || event.key == 'E') {
+                    this.root.userData.onInteract();
+                }
+            }
         });
         document.addEventListener('mousemove', (event: MouseEvent) => {
 
@@ -87,7 +96,7 @@ export class Player extends Construct {
         this.body.layers.set(1);
         this.face.layers.set(1);
 
-        this.physics.addCharacter(this.body, PhysicsColliderFactory.box(1, 2, 1), {
+        this.physics.addCharacter(this.root, PhysicsColliderFactory.box(1, 2, 1), {
             jump: true,
             jumpHeight: 8,
             jumpSpeed: 7,
@@ -104,7 +113,7 @@ export class Player extends Construct {
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
 
-        this.physics.moveCharacter(this.body, x, 0, z, this.speed);
+        this.physics.moveCharacter(this.root, x, 0, z, this.speed);
     }
 
     destroy(): void {

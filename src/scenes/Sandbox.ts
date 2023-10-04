@@ -125,12 +125,21 @@ export class SandboxScene extends Scene {
             radius: 1,
             shadows: true,
             colour: 0xff0000
-        })
+        });
+        const blueMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        const redMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+        this.ball.material = blueMat;
         this.physics.addDynamic(this.ball, PhysicsColliderFactory.sphere(1), {
             linearVelocity: { x: 0, y: 0, z: 0 },
-            mass: 5,
-            friction: 5
+            mass: 10,
+            friction: 1
         })
+        this.physics.addInteractable(this.ball, 5, () => {
+            if (this.ball.material == blueMat)
+                this.ball.material = redMat
+            else if (this.ball.material == redMat)
+                this.ball.material = blueMat
+        });
 
 
         this.graphics.add(this.ball);
