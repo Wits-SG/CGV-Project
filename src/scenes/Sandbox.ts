@@ -27,11 +27,6 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-       // this.testConstruct = new TestConstruct(this.graphics, this.physics);
-       // this.addConstruct(this.testConstruct);
-        // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
-        // this.addConstruct(this.mainLibrary);
-
         this.statueRoom = new StatuesConstruct(this.graphics, this.physics);
         this.addConstruct(this.statueRoom);
     };
@@ -153,8 +148,8 @@ export class SandboxScene extends Scene {
 
 
         //this.graphics.add(this.floor);
-        // this.graphics.add(this.lightHemisphere);
-        // this.graphics.add(this.lightDirectional);
+        this.graphics.add(this.lightHemisphere);
+        this.graphics.add(this.lightDirectional);
         // this.graphics.add(this.k);
 
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))

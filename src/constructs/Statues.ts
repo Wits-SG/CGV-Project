@@ -6,26 +6,30 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 export class StatuesConstruct extends Construct {
 
     floor!: THREE.Mesh
-    floorTexture!: THREE.MeshBasicMaterial;
+    floorTexture!: THREE.MeshLambertMaterial;
     textureFloorData!: any;
 
     // chess board
     board!: THREE.Mesh;
 
-    // Chess pieces
-    pieces!: THREE.Group;
-
     // black and white squares
     blackSquares!: Array<THREE.Mesh>;
     whiteSquares!: Array<THREE.Mesh>;
-    whiteSquaresTexture!: THREE.MeshBasicMaterial;
-    blackSquaresTexture!: THREE.MeshBasicMaterial;
+    whiteSquaresTexture!: THREE.MeshLambertMaterial;
+    blackSquaresTexture!: THREE.MeshLambertMaterial;
     whiteSquareData!: any;
     blackSquareData!: any;
 
     // plinth
-    plinthTexture!: THREE.MeshBasicMaterial;
+    plinthTexture!: THREE.MeshLambertMaterial;
     plinthData!: any;
+
+    // chess pieces
+    pawn!: THREE.Group;
+    bishop!: THREE.Group;
+    rook!: THREE.Group;
+    queen!: THREE.Group;
+    knight!: THREE.Group;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         super(graphics, physics);
@@ -57,6 +61,41 @@ export class StatuesConstruct extends Construct {
         } catch (e: any) {
             console.error(e);
         }
+        
+        try {
+            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Pawn/scene.gltf');
+            this.pawn = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Bishop/scene.gltf');
+            this.bishop = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Rook/scene.gltf');
+            this.rook = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Queen/scene.gltf');
+            this.queen = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Knight/scene.gltf');
+            this.knight = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
 
     }
 
@@ -64,7 +103,7 @@ export class StatuesConstruct extends Construct {
 
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 60, 1);
-        this.floorTexture = new THREE.MeshBasicMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
+        this.floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, this.floorTexture);
         this.floor.rotation.set(Math.PI / 2, 0, 0);
         this.floor.position.set(0, 0, 0);
@@ -72,7 +111,7 @@ export class StatuesConstruct extends Construct {
 
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 30, 0.4);
-        const boardColour = new THREE.MeshBasicMaterial({ color: 0x393939 });
+        const boardColour = new THREE.MeshLambertMaterial({ color: 0x393939 });
         this.board = new THREE.Mesh(board_base, boardColour);
         this.board.position.set(0, 0.7, 0);
         this.board.rotation.set(Math.PI / 2, 0, 0);
@@ -95,7 +134,7 @@ export class StatuesConstruct extends Construct {
 
                 const geometry = new THREE.BoxGeometry(squareSize, squareSize, 0.5);
                 const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
-                const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+                const material = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
 
                 const square = new THREE.Mesh(geometry, material);
                 //square.rotation.set(Math.PI/2, 0, 0);
@@ -127,10 +166,10 @@ export class StatuesConstruct extends Construct {
                     height: 0,
                 });
 
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0x000000 })]);
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0x000000 })]);
 
                 const xOffset = startingPlinth + (i - 1) * plinthSpace;
-                textMesh.position.set(23.45, 0.8, xOffset);
+                textMesh.position.set(23.45, 0.7, xOffset);
                 textMesh.rotation.set(Math.PI/2, 3*Math.PI/2, Math.PI/2);
 
                 this.graphics.add(textMesh);
@@ -148,7 +187,7 @@ export class StatuesConstruct extends Construct {
                     height: 0,
                 });
 
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
 
                 const xOffset = startingNumberX + (i - 1) * numberSpacing;
                 textMesh.position.set(xOffset, -14, -0.3);
@@ -169,7 +208,7 @@ export class StatuesConstruct extends Construct {
                     height: 0,
                 });
         
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshBasicMaterial({ color: 0xffffff })]);
+                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
         
                 const xOffset = startingLetterX + i * letterSpacing + 3;
                 textMesh.position.set(-14, xOffset, -0.3); // Adjust the Z position to place letters at the bottom
@@ -184,28 +223,28 @@ export class StatuesConstruct extends Construct {
 
         // Plinth (Box)
         const plinthBoxGeometry = new THREE.BoxGeometry(3, 0.8, 3);
-        const plinthBoxMaterial = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const plinthBoxMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
         const plinth = new THREE.Mesh(plinthBoxGeometry, plinthBoxMaterial);
         plinth.rotation.set(Math.PI / 2, 0, 0);
         plinth.position.set(25, -15, -0.9);
 
         // Cylinder 1
         const cylinderGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 15);
-        const cylinderMaterial = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
         const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
         cylinderMesh.rotation.set(Math.PI/2, 0, 0);
         cylinderMesh.position.set(25, -15, -1.5); 
 
         // Cylinder 2
         const cylinderGeometry2 = new THREE.CylinderGeometry(1, 1, 3, 15);
-        const cylinderMaterial2 = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMaterial2 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
         const cylinderMesh2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
         cylinderMesh2.rotation.set(Math.PI/2, 0, 0);
         cylinderMesh2.position.set(25, -15, -3); 
 
         // Cylinder 3
         const cylinderGeometry3 = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 15);
-        const cylinderMaterial3 = new THREE.MeshBasicMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        const cylinderMaterial3 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
         const cylinderMesh3 = new THREE.Mesh(cylinderGeometry3, cylinderMaterial3);
         cylinderMesh3.rotation.set(Math.PI/2, 0, 0);
         cylinderMesh3.position.set(25, -15, -4.5); 
@@ -222,6 +261,37 @@ export class StatuesConstruct extends Construct {
             additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
             this.floor.add(additionalPlinthGroup);
         }
+
+        // Add Chess pieces
+        const tempPawn = this.pawn.clone();
+        tempPawn.position.set(-10.5,-10.5,-0.6);
+        tempPawn.rotation.set(-Math.PI/2, Math.PI, 0);
+        tempPawn.scale.set(2,2,2);
+        this.board.add(tempPawn);
+
+        const tempBishop = this.bishop.clone();
+        tempBishop.position.set(-4.5,-7.5,-0.6);
+        tempBishop.rotation.set(-Math.PI/2, Math.PI, 0);
+        tempBishop.scale.set(2,2,2);
+        this.board.add(tempBishop);
+
+        const tempRook = this.rook.clone();
+        tempRook.position.set(7.5,-1.5,-0.6);
+        tempRook.rotation.set(-Math.PI/2, Math.PI, 0);
+        tempRook.scale.set(2,2,2);
+        this.board.add(tempRook);
+
+        const tempQueen = this.queen.clone();
+        tempQueen.position.set(-7.5,1.5,-0.6);
+        tempQueen.rotation.set(-Math.PI/2, Math.PI, 0);
+        tempQueen.scale.set(2,2,2);
+        this.board.add(tempQueen);
+
+        const tempKnight = this.knight.clone();
+        tempKnight.position.set(1.5,10.5,-0.6);
+        tempKnight.rotation.set(-Math.PI/2, Math.PI, 0);
+        tempKnight.scale.set(2,2,2);
+        this.board.add(tempKnight);
 
         // Add the floor to the scene
         this.graphics.add(this.floor);
