@@ -21,7 +21,6 @@ export class Player extends Construct {
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == ' ') { this.physics.jumpCharacter(this.body); }
             if (event.key == 'Shift') { this.speed = 0.4 }
         });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
@@ -32,6 +31,7 @@ export class Player extends Construct {
             if (event.key == 'Shift') { this.speed = 0.2 }
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
+            if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
             if (this.root.userData.canInteract) {
                 if (event.key == 'e' || event.key == 'E') {
                     this.root.userData.onInteract();
