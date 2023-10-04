@@ -147,20 +147,13 @@ export class PhysicsContext {
         this.updateInteract();
     }
 
-    addStatic(tjsObject: THREE.Object3D, collider: any) {
+    addFreeStatic(position: { x: number, y: number, z: number }, rotation: { x: number, y: number, z: number, w: number }, collider: any) {
         // A static body is a rigid body with mass zero
-
         const staticMass = 0;
-
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
-
-        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
-        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
-        tjsObject.getWorldPosition(tjsPosition);
-        tjsObject.getWorldQuaternion(tjsRotation);
-        const transformOrigin = new Ammo.btVector3(tjsPosition.x, tjsPosition.y, tjsPosition.z); 
-        const transformRotation = new Ammo.btQuaternion(tjsRotation.x, tjsRotation.y, tjsRotation.z, tjsRotation.w);
+        const transformOrigin = new Ammo.btVector3(position.x, position.y, position.z); 
+        const transformRotation = new Ammo.btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);
 
         collider.calculateLocalInertia( staticMass, localInertia );
         localTransform.setIdentity();
@@ -171,8 +164,18 @@ export class PhysicsContext {
         const staticBodyInfo = new Ammo.btRigidBodyConstructionInfo( staticMass, localMotionState, collider, localInertia );
         const staticBody = new Ammo.btRigidBody( staticBodyInfo );
 
-        tjsObject.userData.physicsBody = staticBody;
         this.context.addRigidBody( staticBody );
+        return staticBody;
+    }
+
+    addStatic(tjsObject: THREE.Object3D, collider: any) {
+        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
+        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
+        tjsObject.getWorldPosition(tjsPosition);
+        tjsObject.getWorldQuaternion(tjsRotation);
+
+        const staticBody = this.addFreeStatic(tjsPosition, tjsRotation, collider);
+        tjsObject.userData.physicsBody = staticBody;
     }
 
     addDynamic(tjsObject: THREE.Object3D, collider: any, initial: BodyConditions) {
