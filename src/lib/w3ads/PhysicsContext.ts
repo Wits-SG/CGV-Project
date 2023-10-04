@@ -128,6 +128,7 @@ export class PhysicsContext {
                 if (distance2 < area.radius**2) {
                     intObj.userData.canInteract = true;
                     intObj.userData.onInteract = area.onInteract;
+                    break; // Move to the next interacting object
                 } else {
                     intObj.userData.canInteract = false;
                     intObj.userData.onInteract = null;
