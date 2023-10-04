@@ -76,5 +76,6 @@ export abstract class Scene {
 
     addConstruct(newConstruct: Construct) {
         this.constructs.push(newConstruct);
+        this.graphics.add(newConstruct.root);
     }
 }

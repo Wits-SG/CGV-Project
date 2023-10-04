@@ -13,6 +13,12 @@ type BodyConditions = {
     friction: number,
 }
 
+type InteractArea = {
+    object: THREE.Object3D,
+    radius: number,
+    onInteract: Function,
+}
+
 // AMMO Defines
 const STATE = { DISABLE_DEACTIVATION: 4 };
 const FLAGS = { CF_KINEMAITC_OBJECT: 2};
@@ -28,6 +34,9 @@ export class PhysicsContext {
     private dynamicBodies: Array<any>;
     private kinematicBodies: Array<any>;
     private characterBodies: Array<any>;
+
+    private interactableObjects: Array<InteractArea>;
+    private interactingObjects: Array<THREE.Object3D>;
 
     constructor(AmmoLib: any, config: PhysicsConfig) {
         Ammo = AmmoLib;
@@ -50,6 +59,9 @@ export class PhysicsContext {
         this.dynamicBodies = [];
         this.kinematicBodies = [];
         this.characterBodies = [];
+
+        this.interactableObjects = [];
+        this.interactingObjects = [];
     }
 
     updateKinematic() {
@@ -105,12 +117,34 @@ export class PhysicsContext {
         }
     }
 
+    updateInteract() {
+        for (let intObj of this.interactingObjects) {
+            for (let area of this.interactableObjects) {
+                const x2 = (intObj.position.x - area.object.position.x) ** 2;
+                const y2 = (intObj.position.y - area.object.position.y) ** 2;
+                const z2 = (intObj.position.z - area.object.position.z) ** 2;
+                const distance2 = x2 + y2 + z2;
+
+                if (distance2 < area.radius**2) {
+                    intObj.userData.canInteract = true;
+                    intObj.userData.onInteract = area.onInteract;
+                    break; // Move to the next interacting object
+                } else {
+                    intObj.userData.canInteract = false;
+                    intObj.userData.onInteract = null;
+                }
+
+            }
+        }
+    }
+
     update(delta: TimeMS) {
         this.context.stepSimulation( delta / 1000, 1); // Pass Delta in as seconds
 
         this.updateDynamic();
         this.updateKinematic();
         this.updateCharacters();
+        this.updateInteract();
     }
 
     addStatic(tjsObject: THREE.Object3D, collider: any) {
@@ -255,6 +289,16 @@ export class PhysicsContext {
         tjsObject.userData.physicsBody = character;
         tjsObject.userData.physicsGhost = ghost;
         this.characterBodies.push( tjsObject );
+    }
+
+    addInteractable(object: THREE.Object3D, radius: number, onInteract: Function) {
+        this.interactableObjects.push({
+            object, radius, onInteract
+        } satisfies InteractArea);
+    }
+
+    addInteracting(tjsObject: THREE.Object3D) {
+        this.interactingObjects.push(tjsObject);
     }
 
     applyCentralForceOnDynamic(tjsObject: THREE.Object3D, x: number, y: number, z: number) {

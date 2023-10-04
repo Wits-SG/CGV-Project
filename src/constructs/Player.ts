@@ -13,23 +13,32 @@ export class Player extends Construct {
 
     create(): void {
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
+        this.root.userData.canInteract = false;
+        this.physics.addInteracting(this.root);
 
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
+        document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == ' ') { this.physics.jumpCharacter(this.body); }
             if (event.key == 'Shift') { this.speed = 0.4 }
         });
-        window.addEventListener('keyup', (event: KeyboardEvent) => {
+        document.addEventListener('keyup', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
             if (event.key == 'Shift') { this.speed = 0.2 }
         });
-        window.addEventListener('mousemove', (event: MouseEvent) => {
+        document.addEventListener('keypress', (event: KeyboardEvent) => {
+            if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
+            if (this.root.userData.canInteract) {
+                if (event.key == 'e' || event.key == 'E') {
+                    this.root.userData.onInteract();
+                }
+            }
+        });
+        document.addEventListener('mousemove', (event: MouseEvent) => {
 
             // character orientation and screen orientation are flipped
             const rotateAmountX = (-1 * event.movementX) * this.sensitivity;
@@ -52,7 +61,7 @@ export class Player extends Construct {
             this.face.rotation.z = totalY;
         });
 
-        window.addEventListener('click', async () => {
+        document.addEventListener('click', async () => {
             await this.graphics.renderer.domElement.requestPointerLock();
         })
     }
@@ -62,10 +71,9 @@ export class Player extends Construct {
 
     build(): void {
         const bodyMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
-        const bodyGeometry = new THREE.CapsuleGeometry(1, 2, 10, 10);
+        const bodyGeometry = new THREE.CapsuleGeometry(1, 1.8, 10, 10);
         this.body = new THREE.Mesh(bodyGeometry, bodyMat);
         this.body.rotation.set(0, 0.8, 0);
-        this.setPosition(0, 1, 0);
 
         this.face = GraphicsPrimitiveFactory.box({
             position: { x: 0.9, y: 1.4, z: 0 },
@@ -83,12 +91,12 @@ export class Player extends Construct {
 
         this.face.add(this.camera);
         this.body.add(this.face);
-        this.graphics.add(this.body);
+        this.add(this.body);
 
         this.body.layers.set(1);
         this.face.layers.set(1);
 
-        this.physics.addCharacter(this.body, PhysicsColliderFactory.box(1, 2, 1), {
+        this.physics.addCharacter(this.root, PhysicsColliderFactory.box(1, 2, 1), {
             jump: true,
             jumpHeight: 8,
             jumpSpeed: 7,
@@ -105,13 +113,9 @@ export class Player extends Construct {
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
 
-        this.physics.moveCharacter(this.body, x, 0, z, this.speed);
+        this.physics.moveCharacter(this.root, x, 0, z, this.speed);
     }
 
     destroy(): void {
-    }
-
-    setPosition(x: number, y: number, z: number) {
-        this.body.position.set(x, y, z);
     }
 }

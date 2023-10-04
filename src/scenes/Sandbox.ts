@@ -38,6 +38,7 @@ export class SandboxScene extends Scene {
         // this.graphics.mainCamera.position.set(5, 5, 5);
         // this.graphics.mainCamera.lookAt(0, 0, 0);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        this.player.root.position.set(0, 1, 0);
 
        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -124,12 +125,21 @@ export class SandboxScene extends Scene {
             radius: 1,
             shadows: true,
             colour: 0xff0000
-        })
+        });
+        const blueMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        const redMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+        this.ball.material = blueMat;
         this.physics.addDynamic(this.ball, PhysicsColliderFactory.sphere(1), {
             linearVelocity: { x: 0, y: 0, z: 0 },
-            mass: 5,
-            friction: 5
+            mass: 10,
+            friction: 1
         })
+        this.physics.addInteractable(this.ball, 5, () => {
+            if (this.ball.material == blueMat)
+                this.ball.material = redMat
+            else if (this.ball.material == redMat)
+                this.ball.material = blueMat
+        });
 
 
         this.graphics.add(this.ball);
