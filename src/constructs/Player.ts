@@ -5,6 +5,7 @@ export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
     face!: THREE.Mesh;
     camera!: THREE.Camera;
+    holdingObject: THREE.Mesh | undefined = undefined;
 
     direction!: { f: number, b: number, l: number, r: number }
     speed: number = 0.2;
@@ -14,7 +15,14 @@ export class Player extends Construct {
     create(): void {
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
-        this.interactions.addInteracting(this.root, () => {});
+        this.interactions.addInteracting(this.root, (object: THREE.Mesh) => {
+            const inHandScale = object.userData.inHandScale;
+            object.removeFromParent();
+            object.position.set(2, -1.5, 2);
+            object.scale.setScalar(inHandScale);
+            this.holdingObject = object;
+            this.face.add(object);
+        });
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
@@ -37,6 +45,11 @@ export class Player extends Construct {
                     this.root.userData.onInteract();
                 }
             }
+            if (this.root.userData.canPlace) {
+                if (event.key == 'q' || event.key == 'Q') {
+                    this.root.userData.onPlace(this.holdingObject);
+                }
+            }
         });
         document.addEventListener('mousemove', (event: MouseEvent) => {
 
@@ -45,7 +58,7 @@ export class Player extends Construct {
             const rotateAmountY = (-1 * event.movementY) * this.sensitivity;
 
             const maxAngle = Math.PI / 4 + Math.PI / 6;
-            const minAngle = -Math.PI / 6;
+            const minAngle = -Math.PI / 4 - Math.PI / 6;
 
             this.body.rotation.y = (this.body.rotation.y + rotateAmountX) % (2 * Math.PI);
             let totalY = this.face.rotation.z + rotateAmountY % (Math.PI);
