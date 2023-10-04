@@ -29,7 +29,7 @@ export abstract class Scene {
         this.create();
 
         for (let construct of this.constructs) {
-            construct.create();
+            construct._create();
         }
     }
 
@@ -37,16 +37,16 @@ export abstract class Scene {
         await this.load();
 
         for (let construct of this.constructs) {
-            await construct.load();
+            await construct._load();
         }
     }
 
     _build(): void {
-        this.build();
-
         for (let construct of this.constructs) {
-            construct.build();
+            construct._build();
         }
+
+        this.build();
     }
 
     _update(time: TimeS, delta: TimeMS): void {
@@ -55,13 +55,13 @@ export abstract class Scene {
         this.update(time, delta);
 
         for (let construct of this.constructs) {
-            construct.update(time, delta);
+            construct._update(time, delta);
         }
     }
 
     _destroy() {
         for (let construct of this.constructs) {
-            construct.destroy();
+            construct._destroy();
         }
 
         this.destroy();
@@ -76,5 +76,6 @@ export abstract class Scene {
 
     addConstruct(newConstruct: Construct) {
         this.constructs.push(newConstruct);
+        this.graphics.add(newConstruct.root);
     }
 }

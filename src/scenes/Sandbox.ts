@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { Scene } from '../lib';
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-//import { TimeS } from '../lib/w3ads/types/misc.type';
-import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+import { Player } from '../constructs/Player';
+import { GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib';
 
 export class SandboxScene extends Scene {
 
@@ -12,10 +12,8 @@ export class SandboxScene extends Scene {
 
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
-    ballKinematic!: THREE.Mesh;
-    //testConstruct: TestConstruct;
-    k!: THREE.Mesh;
-    mainLibrary!: MainLibraryConstruct;
+    ball!: THREE.Mesh;
+    player!: Player;
 
     controls!: OrbitControls;
 
@@ -25,41 +23,32 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-       // this.testConstruct = new TestConstruct(this.graphics, this.physics);
-       // this.addConstruct(this.testConstruct);
-        this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
-        this.addConstruct(this.mainLibrary);
+        this.player = new Player(this.graphics, this.physics);
+        this.addConstruct(this.player);
     }
 
     create(): void {
-        // this.player.create();
     }
 
     async load(): Promise<void> {
-        const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
-        this.k = gltfData.scene;
     }
 
     build(): void {
-        // this.player.build();
-        // this.player.setPosition(0, 0, 5);
-        this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera.position.set(1, 50, 1);
-        this.graphics.mainCamera.lookAt(0, 0,-50);
-        this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
+        // this.graphics.mainCamera.position.set(5, 5, 5);
+        // this.graphics.mainCamera.lookAt(0, 0, 0);
+        // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        this.player.root.position.set(0, 1, 0);
 
-        this.k.position.set(0, -10, 0);
-        this.k.scale.set(1, 1, 1);
-
-       /* this.floor = GraphicsPrimitiveFactory.box({
+       this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
             scale: { x: 1000, y: 0.1, z: 1000 },
             rotation: { x: 0, y: 0, z: 0 },
             colour: 0x98fb98,
             shadows: true,
-        });*/
+        });
 
-       /* this.walls = [];
+        this.walls = [];
         for (let i = 0; i < 4; ++i) {
             this.walls.push(
                 GraphicsPrimitiveFactory.box({
@@ -91,42 +80,27 @@ export class SandboxScene extends Scene {
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: 25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 3, 40));
         this.graphics.add(this.walls[8]);
 
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: -25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
-        this.graphics.add(this.walls[9]);*/
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 3, 40));
+        this.graphics.add(this.walls[9]);
 
-        /*this.ballKinematic = GraphicsPrimitiveFactory.sphere({
-            position: { x: 0, y: 0, z: 0 },
-            rotation: { x: 0, y: 0, z: 0 },
-            radius: 1,
-            colour: 0xff0000,
-            shadows: true,
-        });
-        this.graphics.add(this.ballKinematic);
-        this.physics.addKinematic(this.ballKinematic, PhysicsColliderFactory.sphere(1), {
-            mass: 1,
-            linearVelocity: { x: 0, y: 0, z: 1 },
-            friction: 0,
-        });*/
-
-        
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
@@ -144,19 +118,38 @@ export class SandboxScene extends Scene {
         this.lightDirectional.shadow.camera.right = 50;
         this.lightDirectional.shadow.camera.top = 50;
         this.lightDirectional.shadow.camera.bottom = -50;
+        
+        this.ball = GraphicsPrimitiveFactory.sphere({
+            position: { x: 0, y: 10, z: 1 },
+            rotation: { x: 0, y: 0, z: 0 },
+            radius: 1,
+            shadows: true,
+            colour: 0xff0000
+        });
+        const blueMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        const redMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+        this.ball.material = blueMat;
+        this.physics.addDynamic(this.ball, PhysicsColliderFactory.sphere(1), {
+            linearVelocity: { x: 0, y: 0, z: 0 },
+            mass: 10,
+            friction: 1
+        })
+        this.physics.addInteractable(this.ball, 5, () => {
+            if (this.ball.material == blueMat)
+                this.ball.material = redMat
+            else if (this.ball.material == redMat)
+                this.ball.material = blueMat
+        });
 
 
-        //this.graphics.add(this.floor);
-        //this.graphics.add(this.lightHemisphere);
-        //this.graphics.add(this.lightDirectional);
-       //this.graphics.add(this.k);
-
-        //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
+        this.graphics.add(this.ball);
+        this.graphics.add(this.floor);
+        this.graphics.add(this.lightHemisphere);
+        this.graphics.add(this.lightDirectional);
+        this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
     update(): void {
-        // this.player.update();
-        //this.physics.moveKinematic(this.ballKinematic, 0, 0, 0.1 * Math.sin(time));
     }
 
     destroy(): void {
