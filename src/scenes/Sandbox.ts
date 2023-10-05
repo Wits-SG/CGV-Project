@@ -27,6 +27,11 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
+       // this.testConstruct = new TestConstruct(this.graphics, this.physics);
+       // this.addConstruct(this.testConstruct);
+        // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
+        // this.addConstruct(this.mainLibrary);
+
         this.statueRoom = new StatuesConstruct(this.graphics, this.physics);
         this.addConstruct(this.statueRoom);
     };
