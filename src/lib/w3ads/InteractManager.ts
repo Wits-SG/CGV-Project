@@ -57,20 +57,24 @@ export class InteractManager {
 
     update() {
         for (let interacting of this.interactingObjects) {
+            let worldInteractPos: THREE.Vector3 = new THREE.Vector3();
+            interacting.object.getWorldPosition(worldInteractPos);
 
             // Interact Search to find closest object
             let minObj = 0;
             let minDistanceSquared = Number.MAX_VALUE;
             for (let i = 0; i < this.interactableObjects.length; ++i) {
+                let worldPos = new THREE.Vector3();
+                this.interactableObjects[i].object.getWorldPosition(worldPos);
                 const vals = {
                     x2: (
-                        interacting.object.position.x - this.interactableObjects[i].object.position.x
+                        worldPos.x - worldInteractPos.x
                     )**2,
                     y2: (
-                        interacting.object.position.y - this.interactableObjects[i].object.position.y
+                        worldPos.y - worldInteractPos.y
                     )**2,
                     z2: (
-                        interacting.object.position.z - this.interactableObjects[i].object.position.z
+                        worldPos.z - worldInteractPos.z
                     )**2,
                 };
                 const distanceSquared = vals.x2 + vals.y2 + vals.z2;
@@ -101,15 +105,17 @@ export class InteractManager {
             let minSpot = 0;
             let minSpotDistanceSquared = Number.MAX_VALUE;
             for (let i = 0; i < this.pickupSpots.length; ++i) {
+                let spotPos = new THREE.Vector3();
+                this.pickupSpots[i].spot.getWorldPosition(spotPos);
                 const vals = {
                     x2: (
-                        interacting.object.position.x - this.pickupSpots[i].spot.position.x
+                        spotPos.x - worldInteractPos.x
                     )**2,
                     y2: (
-                        interacting.object.position.y - this.pickupSpots[i].spot.position.y
+                        spotPos.y - worldInteractPos.y
                     )**2,
                     z2: (
-                        interacting.object.position.z - this.pickupSpots[i].spot.position.z
+                        spotPos.z - worldInteractPos.z
                     )**2,
                 };
                 const distanceSquared = vals.x2 + vals.y2 + vals.z2;
