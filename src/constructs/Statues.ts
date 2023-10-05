@@ -259,6 +259,7 @@ export class StatuesConstruct extends Construct {
         for (let i = 0; i < 5; i++) {
             const additionalPlinthGroup = plinthGroup.clone(); // Clone the existing plinth group
             additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
+            this.physics.addStatic(additionalPlinthGroup, PhysicsColliderFactory.box(1.5, 4, 1.5));
             this.floor.add(additionalPlinthGroup);
         }
 
