@@ -9,7 +9,7 @@ export class MusicConstruct extends Construct{
 
     //Music instruments
     guitar!: THREE.Group;
-    kobza!: THREE.Group;
+    gram!: THREE.Group;
     piano!: THREE.Group;
     conductorStand!: THREE.Group;
 
@@ -42,8 +42,15 @@ export class MusicConstruct extends Construct{
             console.error(e);
         }
 
-        try {//kobza object
-            const gltfData: any = await this.graphics.loadModel('public/assets/music/music_stand/scene.gltf');
+        try {//gramophone object
+            const gltfData: any = await this.graphics.loadModel('public/assets/music/gramophone/scene.gltf');
+            this.gram = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {//gramophone object
+            const gltfData: any = await this.graphics.loadModel('public/assets/music/manhasset_music_stand/scene.gltf');
             this.conductorStand = gltfData.scene;
         } catch (e: any) {
             console.error(e);
@@ -66,20 +73,27 @@ export class MusicConstruct extends Construct{
 
         //Add guitar
         const tempGuitar = this.guitar.clone();
-        tempGuitar.position.set(-20.5, -10.5, -1);
+        tempGuitar.position.set(-20.5, -10.5, -0.6);
         tempGuitar.rotation.set(-Math.PI/2, Math.PI/4, 0);
         tempGuitar.scale.set(0.2,0.2,0.2);
         this.floor.add(tempGuitar);
 
         const tempPiano = this.piano.clone();
-        tempPiano.position.set(-1.5, -15.5, -1);
+        tempPiano.position.set(-1.5, -15.5, -0.6);
         tempPiano.rotation.set(-Math.PI/2, Math.PI/2, 0);
         tempPiano.scale.set(1.5,1.5,1.5);
         this.floor.add(tempPiano);
 
-        const tempstand = this.conductorStand.clone();
-        tempstand.scale.set(5,5,5);
-        this.floor.add(tempstand);
+        const tempGram = this.gram.clone();
+        tempGram.position.set(10.5, 5.5, 0);
+        tempGram.rotation.set(-Math.PI/2, 3*Math.PI/4, 0);
+        tempGram.scale.set(15,15,15);
+        this.floor.add(tempGram);
+
+        const tempStand = this.conductorStand.clone();
+        tempGram.position.set(10.5, 5.5, 2.6);
+        tempStand.scale.set(0.5,0.5,0.5);
+        this.floor.add(tempStand);
 
         // Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
