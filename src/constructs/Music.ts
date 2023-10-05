@@ -9,7 +9,7 @@ export class MusicConstruct extends Construct{
 
     //Music instruments
     guitar!: THREE.Group;
-    cello!: THREE.Group;
+    kobza!: THREE.Group;
     piano!: THREE.Group;
     conductorStand!: THREE.Group;
 
@@ -34,6 +34,22 @@ export class MusicConstruct extends Construct{
         } catch (e: any) {
             console.error(e);
         }
+
+        try {//piano object
+            const gltfData: any = await this.graphics.loadModel('public/assets/music/piano_low_poly/scene.gltf');
+            this.piano = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {//kobza object
+            const gltfData: any = await this.graphics.loadModel('public/assets/music/music_stand/scene.gltf');
+            this.conductorStand = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
+
     }
 
     build() {
@@ -50,12 +66,20 @@ export class MusicConstruct extends Construct{
 
         //Add guitar
         const tempGuitar = this.guitar.clone();
-        tempGuitar.position.set(-15.5, -7.5, -0.6);
+        tempGuitar.position.set(-20.5, -10.5, -1);
         tempGuitar.rotation.set(-Math.PI/2, Math.PI/4, 0);
         tempGuitar.scale.set(0.2,0.2,0.2);
         this.floor.add(tempGuitar);
 
+        const tempPiano = this.piano.clone();
+        tempPiano.position.set(-1.5, -15.5, -1);
+        tempPiano.rotation.set(-Math.PI/2, Math.PI/2, 0);
+        tempPiano.scale.set(1.5,1.5,1.5);
+        this.floor.add(tempPiano);
 
+        const tempstand = this.conductorStand.clone();
+        tempstand.scale.set(5,5,5);
+        this.floor.add(tempstand);
 
         // Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
