@@ -3,7 +3,7 @@ import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory,
     PhysicsColliderFactory } from '../lib/index';
     
 export class MusicConstruct extends Construct{
-    floor!: THREE.Mesh
+    floor!: THREE.Mesh;
     carpet!: THREE.MeshLambertMaterial;
     carpetData!: any;
 
@@ -12,6 +12,7 @@ export class MusicConstruct extends Construct{
     gram!: THREE.Group;
     piano!: THREE.Group;
     conductorStand!: THREE.Group;
+    phone!: THREE.Group;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         super(graphics, physics);
@@ -56,6 +57,13 @@ export class MusicConstruct extends Construct{
             console.error(e);
         }
 
+        try {//phone object
+            const gltfData: any = await this.graphics.loadModel('public/assets/phone/scene.gltf');
+            this.phone = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+
 
     }
 
@@ -68,8 +76,15 @@ export class MusicConstruct extends Construct{
         this.floor = new THREE.Mesh(geometry, this.carpet);
         this.floor.rotation.set(Math.PI/2,0,0);
         this.floor.position.set(0,0,0);
-        this.graphics.add(this.floor);
+       
 
+
+        //phone
+        // const tempPhone = this.phone.clone();
+        // tempPhone.position.set(0, 10, -2);
+        // tempPhone.rotation.set(-Math.PI/2, Math.PI/4, 0);
+        // tempPhone.scale.set(1,1,1);
+        // this.floor.add(tempPhone);
 
         //Add guitar
         const tempGuitar = this.guitar.clone();
@@ -85,13 +100,13 @@ export class MusicConstruct extends Construct{
         this.floor.add(tempPiano);
 
         const tempGram = this.gram.clone();
-        tempGram.position.set(10.5, 5.5, 0);
-        tempGram.rotation.set(-Math.PI/2, 3*Math.PI/4, 0);
+        tempGram.position.set(20, -15, 0);
+        tempGram.rotation.set(-Math.PI/2, 3*-Math.PI/4, 0);
         tempGram.scale.set(15,15,15);
         this.floor.add(tempGram);
 
         const tempStand = this.conductorStand.clone();
-        tempGram.position.set(10.5, 5.5, 2.6);
+        tempStand.position.set(10.5, 5.5, 2.6);
         tempStand.scale.set(0.5,0.5,0.5);
         this.floor.add(tempStand);
 
@@ -118,7 +133,7 @@ export class MusicConstruct extends Construct{
         
 
 
-
+        this.graphics.add(this.floor);
     } //all geometry (where place objects)
 
     update() {}
