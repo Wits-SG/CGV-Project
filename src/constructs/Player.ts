@@ -8,7 +8,7 @@ export class Player extends Construct {
     holdingObject: THREE.Mesh | undefined = undefined;
 
     direction!: { f: number, b: number, l: number, r: number }
-    speed: number = 0.2;
+    speed: number = 0.05;
 
     sensitivity: number = 0.2 * Math.PI / 180; // Angle change per unit = 1 degree
 
@@ -29,14 +29,14 @@ export class Player extends Construct {
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == 'Shift') { this.speed = 0.4 }
+            if (event.key == 'Shift') { this.speed = 0.1 }
         });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
-            if (event.key == 'Shift') { this.speed = 0.2 }
+            if (event.key == 'Shift') { this.speed = 0.05 }
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
             if (event.key == ' ') { this.physics.jumpCharacter(this.root); }

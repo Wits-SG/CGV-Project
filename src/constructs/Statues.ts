@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib/index';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { InteractManager } from '../lib/w3ads/InteractManager';
 
 export class StatuesConstruct extends Construct {
 
@@ -31,67 +32,67 @@ export class StatuesConstruct extends Construct {
     queen!: THREE.Group;
     knight!: THREE.Group;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
+        super(graphics, physics, interactions);
     }
 
     create() { }
 
     async load(): Promise<void> {
         try {
-            this.textureFloorData = await this.graphics.loadTexture('public/asssets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
+            this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            this.blackSquareData = await this.graphics.loadTexture('public/asssets/Marble/black_marble.jpg');
+            this.blackSquareData = await this.graphics.loadTexture('assets/Marble/black_marble.jpg');
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            this.whiteSquareData = await this.graphics.loadTexture('public/asssets/Marble/white_marble.jpeg');
+            this.whiteSquareData = await this.graphics.loadTexture('assets/Marble/white_marble.jpeg');
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            this.plinthData = await this.graphics.loadTexture('public/asssets/Marble/plinths_marble.png');
+            this.plinthData = await this.graphics.loadTexture('assets/Marble/plinths_marble.png');
         } catch (e: any) {
             console.error(e);
         }
         
         try {
-            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Pawn/scene.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Pawn/scene.gltf');
             this.pawn = gltfData.scene;
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Bishop/scene.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Bishop/scene.gltf');
             this.bishop = gltfData.scene;
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Rook/scene.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Rook/scene.gltf');
             this.rook = gltfData.scene;
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Queen/scene.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Queen/scene.gltf');
             this.queen = gltfData.scene;
         } catch (e: any) {
             console.error(e);
         }
 
         try {
-            const gltfData: any = await this.graphics.loadModel('public/asssets/Chess_Pieces/Knight/scene.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Knight/scene.gltf');
             this.knight = gltfData.scene;
         } catch (e: any) {
             console.error(e);
@@ -338,9 +339,9 @@ export class StatuesConstruct extends Construct {
         this.floor.add(plinthBackLight5)
 
         // Add the floor to the scene
-        this.graphics.add(this.floor);
+        this.add(this.floor);
         // Add chessboard to the scene
-        this.graphics.add(this.board);
+        this.add(this.board);
     }
 
     
