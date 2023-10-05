@@ -106,8 +106,9 @@ export class MusicConstruct extends Construct{
         this.floor.add(tempGram);
 
         const tempStand = this.conductorStand.clone();
-        tempStand.position.set(10.5, 5.5, 2.6);
-        tempStand.scale.set(0.5,0.5,0.5);
+        tempStand.position.set(10.5, 5.5,0);
+        tempStand.rotation.set(-Math.PI/2, 3*-Math.PI/4, 0);
+        tempStand.scale.set(1,1,1);
         this.floor.add(tempStand);
 
         // Add point lights at the corners of board
