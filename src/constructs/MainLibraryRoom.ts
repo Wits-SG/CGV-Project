@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -21,8 +22,8 @@ export class MainLibraryConstruct extends Construct {
     table!: THREE.Group;
     tables!: Array<THREE.Group>;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext ) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
+        super(graphics, physics, interactions);
     }
 
     create() {}
