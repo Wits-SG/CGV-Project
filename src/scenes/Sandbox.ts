@@ -153,8 +153,8 @@ export class SandboxScene extends Scene {
 
 
         //this.graphics.add(this.floor);
-        // this.graphics.add(this.lightHemisphere);
-        // this.graphics.add(this.lightDirectional);
+        this.graphics.add(this.lightHemisphere);
+        this.graphics.add(this.lightDirectional);
         // this.graphics.add(this.k);
 
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
