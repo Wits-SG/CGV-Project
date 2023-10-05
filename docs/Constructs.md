@@ -1,113 +1,84 @@
-# Constructs
+# W3ad Constructs
 
-## What is a Construct?
+## Description
 
-A Construct is the building blocks of the larger scene graph. They provide an interface to package complex Game Objects into batches of code
-through a virtual scene tree on top of the ThreeJS scene graph.
+A construct is a sublevel component that helps break large [scenes](Scenes.md)
+into smaller more manageable code. A scene will automatically call any Constructs
+lifecycle hooks used within it, if the construct is correctly added to the scene
 
-For example - Assuming the following world environment:
+## lifecycle
 
-* A character
-* A desk
-* A door
+Constructs have an identical lifecyle to [scenes](/docs/Scenes.md#lifecycle). However,
+all construct lifecyle hooks will get called after the scenes lifecyle hooks.
 
-The ThreeJS Scene Graph might look like:
+### Build
 
-```text
-Scene
--- Camera
----- Sphere (head)
----- Box (body)
----- Oval (arm Left)
----- Oval (arm Right)
----- Oval (leg Left)
----- Oval (leg Right)
--- Box (Desk top) 
----- Box (leg Top Right)
----- Box (leg Bottom Right)
----- Box (leg Top Left)
----- Box (leg Bottom Left)
--- Box (Door Frame)
----- Sphere (Doorknob)
----- Box (Actual Door)
+Any ThreeJS object added to a construct will have a THREE.Object3D as a root object.
+This root object will then be added to its parent 
+
+## Adding constructs to a scene
+
+Once a construct has been defined, it then needs to be added to a scene.
+
+You can do this by adding the following line of code to the Scenes constructor:
+
+```typescript
+    
+    class ExampleScene extends Scene {
+
+        construct!: ExampleConstruct;
+
+        // snip ..
+
+        constructor(AmmoLib: any) {
+            super('ExampleScene', AmmoLib);
+
+            this.construct = new ExampleConstruct(this.graphics, this.physics);
+            this.addConstruct(this.construct);
+        }
+
+        // snip ..
+    
+    }
 ```
 
-Where as the Construct Graph will look like
+If the construct is declared and added to the scene correctly, then all construct
+lifecyle hooks will be called by the scene.
 
-```text
-CGV-Scene
--- Construct (Character)
--- Construct (Desk)
--- Construct (Door)
-```
+## Example
 
-The simplified constructs can also localize behaviour to themselves i.e. the scene is not handling behavioural logic for the door.
-
-A result of this graph encapsulation is that cross-graph-node communication becomes difficult. How exactly do you let the door know to open
-when the character is within a specific range and presses a key. The solution to this is [Construct Signals](Signals.md).
-
-### Further Reading
-
-The Construct is a heavily borrowed idea of Godot's Scene System with the Signals System being an almost direct rip.
-
-Interesting reading can be found here:
-
-* [Godot Scenes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/nodes_and_scenes.html)
-* [Godot Signals](https://docs.godotengine.org/en/stable/getting_started/step_by_step/signals.html)
-
-## Creating a new construct
-
-To create a new construct, extend and implement the abstract class found in `./src/lib/types/construct.type.ts`.
-
-An example implementation is provided:
-
-```js
+```typescript
 export class ExampleConstruct extends Construct {
-    // Construct Tree
-    plane!: THREE.Mesh;
-    subconstruct!: ExampleSubConstruct;
 
-    constructor() {
-        this.subconstruct = new ExampleSubConstruct();
+    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
+        super(graphics, physics);
     }
 
-    build(): void {
-        const geometryPlane = new THREE.PlaneGeometry(2, 2);
-        const materialPlane = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-        this.plane = new THREE.Mesh( geometryPlane, materialPlane );
-
-        this.subconstruct.load();
-
-        this.root.add( this.plane );
-        this.root.add( this.subconstruct.root );
+    create() {
+        // Pre-load creation code
     }
 
-    update(deltaTime: TimeS): void {
-        this.plane.rotation.y += 1 * deltaTime;
-        this.subconstruct.update();
+    async load() {
+        // Async code
+    }
+
+    build() {
+        // Post-load creation code
+        // Create ThreeJS Objects here
+    }
+
+    update(time: TimeS, delta: TimeMS) {
+        // Every frame call code
+    }
+
+    destroy() {
+        // Clean up code here
     }
 
 }
 ```
 
-### Construct Tree
-
-The variables of the objects used the by the construct.
-
-All objects should be listed here for the construct to function correctly.
-
-### Constructor
-
-Any subconstructs should have their constructor called here.
-
-### Build
-
-This constructs the initial layout / objects of a construct. It is only called once, when the Construct is loaded. Therefore all necessary resources should be built / placed here.
-
-Any subconstructs should have their load methods called here.
-
-### Update
-
-This function gets called every frame. It is used to animate any dynamic elements used by the construct.
-
-Any subconstructs should have their update method called here.
+> Note:
+>
+> Constructs can be added to other constructs in the exact same way of registering
+> the child construct in the parents constructor.

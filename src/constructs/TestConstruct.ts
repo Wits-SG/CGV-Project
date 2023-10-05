@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
 
 export class TestConstruct extends Construct {
 
     ball!: THREE.Mesh;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext ) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager ) {
+        super(graphics, physics, interactions);
     }
 
     create() {}

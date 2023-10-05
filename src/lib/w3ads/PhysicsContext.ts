@@ -27,6 +27,7 @@ export class PhysicsContext {
 
     private dynamicBodies: Array<any>;
     private kinematicBodies: Array<any>;
+    private characterBodies: Array<any>;
 
     constructor(AmmoLib: any, config: PhysicsConfig) {
         Ammo = AmmoLib;
@@ -48,6 +49,7 @@ export class PhysicsContext {
 
         this.dynamicBodies = [];
         this.kinematicBodies = [];
+        this.characterBodies = [];
     }
 
     updateKinematic() {
@@ -92,28 +94,32 @@ export class PhysicsContext {
         }
     }
 
+    updateCharacters() {
+        for (let objChar of this.characterBodies) {
+            const char = objChar.userData.physicsBody;
+
+            const transform = char.getGhostObject().getWorldTransform();
+            const pos = transform.getOrigin();
+
+            objChar.position.set(pos.x(), pos.y(), pos.z());
+        }
+    }
+
     update(delta: TimeMS) {
         this.context.stepSimulation( delta / 1000, 1); // Pass Delta in as seconds
 
         this.updateDynamic();
         this.updateKinematic();
-
+        this.updateCharacters();
     }
 
-    addStatic(tjsObject: THREE.Object3D, collider: any) {
+    addFreeStatic(position: { x: number, y: number, z: number }, rotation: { x: number, y: number, z: number, w: number }, collider: any) {
         // A static body is a rigid body with mass zero
-
         const staticMass = 0;
-
         const localInertia = new Ammo.btVector3(0, 0, 0);
         const localTransform = new Ammo.btTransform();
-
-        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
-        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
-        tjsObject.getWorldPosition(tjsPosition);
-        tjsObject.getWorldQuaternion(tjsRotation);
-        const transformOrigin = new Ammo.btVector3(tjsPosition.x, tjsPosition.y, tjsPosition.z); 
-        const transformRotation = new Ammo.btQuaternion(tjsRotation.x, tjsRotation.y, tjsRotation.z, tjsRotation.w);
+        const transformOrigin = new Ammo.btVector3(position.x, position.y, position.z); 
+        const transformRotation = new Ammo.btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);
 
         collider.calculateLocalInertia( staticMass, localInertia );
         localTransform.setIdentity();
@@ -124,8 +130,18 @@ export class PhysicsContext {
         const staticBodyInfo = new Ammo.btRigidBodyConstructionInfo( staticMass, localMotionState, collider, localInertia );
         const staticBody = new Ammo.btRigidBody( staticBodyInfo );
 
-        tjsObject.userData.physicsBody = staticBody;
         this.context.addRigidBody( staticBody );
+        return staticBody;
+    }
+
+    addStatic(tjsObject: THREE.Object3D, collider: any) {
+        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
+        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
+        tjsObject.getWorldPosition(tjsPosition);
+        tjsObject.getWorldQuaternion(tjsRotation);
+
+        const staticBody = this.addFreeStatic(tjsPosition, tjsRotation, collider);
+        tjsObject.userData.physicsBody = staticBody;
     }
 
     addDynamic(tjsObject: THREE.Object3D, collider: any, initial: BodyConditions) {
@@ -195,6 +211,55 @@ export class PhysicsContext {
         this.context.addRigidBody( kinematicBody );
     }
 
+    addCharacter(tjsObject: THREE.Object3D, collider: any, options: {
+        jump: boolean, gravity: number, jumpHeight: number, jumpSpeed: number
+    }) {
+        
+        // Politely borrowed from here
+        // https://playground.babylonjs.com/#GI786N#24
+
+        let localTransform = new Ammo.btTransform();
+
+        let tjsPosition: THREE.Vector3 = new THREE.Vector3();
+        let tjsRotation: THREE.Quaternion = new THREE.Quaternion();
+        tjsObject.getWorldPosition(tjsPosition);
+        tjsObject.getWorldQuaternion(tjsRotation);
+        const transformOrigin = new Ammo.btVector3(tjsPosition.x, tjsPosition.y, tjsPosition.z); 
+        const transformRotation = new Ammo.btQuaternion(tjsRotation.x, tjsRotation.y, tjsRotation.z, tjsRotation.w);
+
+        localTransform.setIdentity();
+        localTransform.setOrigin(transformOrigin);
+        localTransform.setRotation(transformRotation);
+
+        const ghost = new Ammo.btPairCachingGhostObject();
+        ghost.setWorldTransform(localTransform);
+        ghost.setCollisionShape(collider);
+        ghost.setCollisionFlags(32);
+        ghost.setActivationState(4);
+        ghost.activate(true);
+
+        const character = new Ammo.btKinematicCharacterController (
+            ghost,
+            collider,
+            0.1,
+            1
+        );
+        character.setGravity(options.gravity);
+        character.setUseGhostSweepTest(false);
+        if (options.jump) { 
+            character.canJump();
+            character.setMaxJumpHeight(options.jumpHeight);
+            character.setJumpSpeed(options.jumpSpeed);
+        }
+
+        this.context.addCollisionObject(ghost, 32, 3);
+        this.context.addAction(character);
+
+        tjsObject.userData.physicsBody = character;
+        tjsObject.userData.physicsGhost = ghost;
+        this.characterBodies.push( tjsObject );
+    }
+
     applyCentralForceOnDynamic(tjsObject: THREE.Object3D, x: number, y: number, z: number) {
         tjsObject.userData.physicsBody.applyCentralForce( new Ammo.btVector3(x, y, z) );
     }
@@ -208,6 +273,16 @@ export class PhysicsContext {
             x: x, y: y, z: z
         };
     } 
+
+    moveCharacter(tjsObject: THREE.Object3D, x: number, y: number, z: number, speed: number) {
+        const body = tjsObject.userData.physicsBody;
+        body.setWalkDirection(new Ammo.btVector3(x * speed, y * speed, z * speed));
+    }
+
+    jumpCharacter(tjsObject: THREE.Object3D) {
+        const body = tjsObject.userData.physicsBody;
+        body.jump();
+    }
 }
 
 export class PhysicsColliderFactory {

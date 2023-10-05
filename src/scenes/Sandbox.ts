@@ -38,7 +38,6 @@ export class SandboxScene extends Scene {
 
 
     create(): void {
-        // this.player.create();
     }
 
     async load(): Promise<void> {
@@ -47,25 +46,21 @@ export class SandboxScene extends Scene {
     }
 
     build(): void {
-        // this.player.build();
-        // this.player.setPosition(0, 0, 5);
-        this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera.position.set(1, 50, 1);
-        this.graphics.mainCamera.lookAt(0, 0,-50);
-        this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
+        // this.graphics.mainCamera.position.set(5, 5, 5);
+        // this.graphics.mainCamera.lookAt(0, 0, 0);
+        // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        this.player.root.position.set(0, 1, 0);
 
-        // this.k.position.set(0, -10, 0);
-        // this.k.scale.set(1, 1, 1);
-
-       /* this.floor = GraphicsPrimitiveFactory.box({
+       this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
             scale: { x: 1000, y: 0.1, z: 1000 },
             rotation: { x: 0, y: 0, z: 0 },
             colour: 0x98fb98,
             shadows: true,
-        });*/
+        });
 
-       /* this.walls = [];
+        this.walls = [];
         for (let i = 0; i < 4; ++i) {
             this.walls.push(
                 GraphicsPrimitiveFactory.box({
@@ -97,42 +92,27 @@ export class SandboxScene extends Scene {
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: 25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 3, 40));
         this.graphics.add(this.walls[8]);
 
         this.walls.push(
             GraphicsPrimitiveFactory.box({
                 position: { x: -25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
+                scale: { x: 0.2, y: 6, z: 80 },
                 rotation: { x: 0, y: 0, z: 0 },
                 colour: 0x0000ff,
                 shadows: true,
             })
         );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
-        this.graphics.add(this.walls[9]);*/
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 3, 40));
+        this.graphics.add(this.walls[9]);
 
-        /*this.ballKinematic = GraphicsPrimitiveFactory.sphere({
-            position: { x: 0, y: 0, z: 0 },
-            rotation: { x: 0, y: 0, z: 0 },
-            radius: 1,
-            colour: 0xff0000,
-            shadows: true,
-        });
-        this.graphics.add(this.ballKinematic);
-        this.physics.addKinematic(this.ballKinematic, PhysicsColliderFactory.sphere(1), {
-            mass: 1,
-            linearVelocity: { x: 0, y: 0, z: 1 },
-            friction: 0,
-        });*/
-
-        
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
@@ -160,9 +140,13 @@ export class SandboxScene extends Scene {
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
-    update(): void {
-        // this.player.update();
-        //this.physics.moveKinematic(this.ballKinematic, 0, 0, 0.1 * Math.sin(time));
+    //@ts-ignore
+    update(time: number, delta: number): void {
+        delta = delta / 1000;
+        const rotateAmount = delta * 45 * Math.PI/180;
+        this.pickupBox.rotateX(rotateAmount);
+        this.pickupBox.rotateY(rotateAmount);
+        this.pickupBox.rotateZ(rotateAmount);
     }
 
     destroy(): void {
