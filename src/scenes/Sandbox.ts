@@ -13,6 +13,8 @@ export class SandboxScene extends Scene {
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
     ball!: THREE.Mesh;
+    pickupBox!: THREE.Mesh;
+    placeSpot!: THREE.Mesh;
     player!: Player;
 
     controls!: OrbitControls;
@@ -23,7 +25,7 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics);
+        this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
     }
 
@@ -134,14 +136,35 @@ export class SandboxScene extends Scene {
             mass: 10,
             friction: 1
         })
-        this.physics.addInteractable(this.ball, 5, () => {
+        this.interactions.addInteractable(this.ball, 5, () => {
             if (this.ball.material == blueMat)
                 this.ball.material = redMat
             else if (this.ball.material == redMat)
                 this.ball.material = blueMat
         });
 
+        this.pickupBox = GraphicsPrimitiveFactory.box({
+            position: { x: 0, y: 2, z: 50 },
+            rotation: { x: 0, y: 0, z: 0},
+            scale: { x: 5, y: 5, z: 5 },
+            shadows: true,
+            colour: 0xff00ff
+        })
+        this.interactions.addPickupObject(this.pickupBox, 8, 1, () => {});
 
+        const placeGeom = new THREE.BoxGeometry(1, 3, 1);
+        const placeMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+        this.placeSpot = new THREE.Mesh(placeGeom, placeMat);
+        this.placeSpot.position.set(0, 0, -50);
+        this.interactions.addPickupSpot(this.placeSpot, 8, (placedObject: THREE.Mesh) => {
+            this.placeSpot.add(placedObject);
+            placedObject.position.set(0, 2.5, 0);
+            placedObject.scale.set(2, 2, 2);
+            placedObject.material = new THREE.MeshLambertMaterial({ color: 0x00ffff });
+        })
+
+        this.graphics.add(this.pickupBox);
+        this.graphics.add(this.placeSpot);
         this.graphics.add(this.ball);
         this.graphics.add(this.floor);
         this.graphics.add(this.lightHemisphere);
@@ -149,7 +172,13 @@ export class SandboxScene extends Scene {
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
-    update(): void {
+    //@ts-ignore
+    update(time: number, delta: number): void {
+        delta = delta / 1000;
+        const rotateAmount = delta * 45 * Math.PI/180;
+        this.pickupBox.rotateX(rotateAmount);
+        this.pickupBox.rotateY(rotateAmount);
+        this.pickupBox.rotateZ(rotateAmount);
     }
 
     destroy(): void {
