@@ -56,7 +56,7 @@ export class SandboxScene extends Scene {
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
         this.player.root.position.set(0, 30, 0);
 
-        this.statueRoom.root.scale.set(0.2,0.2,0.2);
+        //this.statueRoom.root.scale.set(0.2,0.2,0.2);
 
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
