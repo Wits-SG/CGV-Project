@@ -32,6 +32,8 @@ export class StatuesConstruct extends Construct {
     queen!: THREE.Group;
     knight!: THREE.Group;
 
+    chessPlinths!: THREE.Group;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
         super(graphics, physics, interactions);
     }
@@ -98,6 +100,13 @@ export class StatuesConstruct extends Construct {
             console.error(e);
         }
 
+        try {
+            const gltfData: any = await this.graphics.loadModel('assets/Chess_Plinths/chess_plinth.gltf');
+            this.chessPlinths = gltfData.scene;
+        } catch (e: any) {
+            console.log(e);
+        }
+
     }
 
     build() {
@@ -109,7 +118,6 @@ export class StatuesConstruct extends Construct {
         this.floor.rotation.set(Math.PI / 2, 0, 0);
         this.floor.position.set(0, 0, 0);
         
-
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 30, 0.4);
         const boardColour = new THREE.MeshLambertMaterial({ color: 0x393939 });
@@ -219,49 +227,67 @@ export class StatuesConstruct extends Construct {
             }
         });
 
-        // Plinths
-        const plinthGroup = new THREE.Group();
+        // // Plinths
+        // const plinthGroup = new THREE.Group();
 
-        // Plinth (Box)
-        const plinthBoxGeometry = new THREE.BoxGeometry(3, 0.8, 3);
-        const plinthBoxMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
-        const plinth = new THREE.Mesh(plinthBoxGeometry, plinthBoxMaterial);
-        plinth.rotation.set(Math.PI / 2, 0, 0);
-        plinth.position.set(25, -15, -0.9);
+        // // Plinth (Box)
+        // const plinthBoxGeometry = new THREE.BoxGeometry(3, 0.8, 3);
+        // const plinthBoxMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        // const plinth = new THREE.Mesh(plinthBoxGeometry, plinthBoxMaterial);
+        // plinth.rotation.set(Math.PI / 2, 0, 0);
+        // plinth.position.set(25, -15, -0.9);
 
-        // Cylinder 1
-        const cylinderGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 15);
-        const cylinderMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
-        const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-        cylinderMesh.rotation.set(Math.PI/2, 0, 0);
-        cylinderMesh.position.set(25, -15, -1.5); 
+        // // Cylinder 1
+        // const cylinderGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 15);
+        // const cylinderMaterial = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        // const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        // cylinderMesh.rotation.set(Math.PI/2, 0, 0);
+        // cylinderMesh.position.set(25, -15, -1.5); 
 
-        // Cylinder 2
-        const cylinderGeometry2 = new THREE.CylinderGeometry(1, 1, 3, 15);
-        const cylinderMaterial2 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
-        const cylinderMesh2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
-        cylinderMesh2.rotation.set(Math.PI/2, 0, 0);
-        cylinderMesh2.position.set(25, -15, -3); 
+        // // Cylinder 2
+        // const cylinderGeometry2 = new THREE.CylinderGeometry(1, 1, 3, 15);
+        // const cylinderMaterial2 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        // const cylinderMesh2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
+        // cylinderMesh2.rotation.set(Math.PI/2, 0, 0);
+        // cylinderMesh2.position.set(25, -15, -3); 
 
-        // Cylinder 3
-        const cylinderGeometry3 = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 15);
-        const cylinderMaterial3 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
-        const cylinderMesh3 = new THREE.Mesh(cylinderGeometry3, cylinderMaterial3);
-        cylinderMesh3.rotation.set(Math.PI/2, 0, 0);
-        cylinderMesh3.position.set(25, -15, -4.5); 
+        // // Cylinder 3
+        // const cylinderGeometry3 = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 15);
+        // const cylinderMaterial3 = new THREE.MeshLambertMaterial({ map: this.plinthData, side: THREE.DoubleSide });
+        // const cylinderMesh3 = new THREE.Mesh(cylinderGeometry3, cylinderMaterial3);
+        // cylinderMesh3.rotation.set(Math.PI/2, 0, 0);
+        // cylinderMesh3.position.set(25, -15, -4.5); 
 
-        // Add the plinth and the cylinder to the group
-        plinthGroup.add(plinth);
-        plinthGroup.add(cylinderMesh);
-        plinthGroup.add(cylinderMesh2);
-        plinthGroup.add(cylinderMesh3);
+        // // Add the plinth and the cylinder to the group
+        // plinthGroup.add(plinth);
+        // plinthGroup.add(cylinderMesh);
+        // plinthGroup.add(cylinderMesh2);
+        // plinthGroup.add(cylinderMesh3);
 
-        const plinthSpacing = 5; 
+        // const plinthSpacing = 5; 
+        // for (let i = 0; i < 5; i++) {
+        //     const additionalPlinthGroup = plinthGroup.clone(); // Clone the existing plinth group
+        //     additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
+        //     this.physics.addStatic(additionalPlinthGroup, PhysicsColliderFactory.box(1.5, 4, 1.5));
+        //     this.floor.add(additionalPlinthGroup);
+        // }
+
+        // Plinths (using the chess_plinth model)
+        const plinthSpacing = 5;
+
+        // Clone the chess_plinth model for each plinth
         for (let i = 0; i < 5; i++) {
-            const additionalPlinthGroup = plinthGroup.clone(); // Clone the existing plinth group
-            additionalPlinthGroup.position.y += (i + 1) * plinthSpacing; // Adjust the X position for spacing
-            this.physics.addStatic(additionalPlinthGroup, PhysicsColliderFactory.box(1.5, 4, 1.5));
-            this.floor.add(additionalPlinthGroup);
+            const plinthClone = this.chessPlinths.clone();
+
+            // Position and rotation adjustments
+            plinthClone.position.y += (i + 1) * plinthSpacing;
+            plinthClone.position.x = 25; // Adjust the X position as needed
+            plinthClone.position.z = -0.9; // Adjust the Z position as needed
+            plinthClone.rotation.set(Math.PI / 2, 0, 0);
+
+            // Add the plinth clone to the floor
+            this.physics.addStatic(plinthClone, PhysicsColliderFactory.box(1.5, 4, 1.5));
+            this.floor.add(plinthClone);
         }
 
         // Add Chess pieces
