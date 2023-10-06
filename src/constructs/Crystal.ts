@@ -20,6 +20,8 @@ export class Crystal extends Construct {
         this.add(this.crystalBody);
 
         this.interactions.addPickupObject(this.root, 5, 1, () => {});
+        this.root.userData.isCrystal = true;
+        this.root.userData.foundCrystal = false;
     }
 
     update(): void {
