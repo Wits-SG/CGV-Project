@@ -166,8 +166,6 @@ export class SandboxScene extends Scene {
     }
 
     update(): void {
-        // this.player.update();
-        //this.physics.moveKinematic(this.ballKinematic, 0, 0, 0.1 * Math.sin(time));
     }
 
     destroy(): void {
