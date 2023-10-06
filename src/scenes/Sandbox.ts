@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls';
 //import { TimeS } from '../lib/w3ads/types/misc.type';
 //import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
 import { MusicConstruct } from '../constructs/Music';
+import { Player } from '../constructs/Player';
 
 export class SandboxScene extends Scene {
 
@@ -18,7 +19,8 @@ export class SandboxScene extends Scene {
     //k!: THREE.Mesh;
     //mainLibrary!: MainLibraryConstruct;
     musicRoom!: MusicConstruct;
-
+    player!: Player;
+    
     controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
@@ -34,6 +36,9 @@ export class SandboxScene extends Scene {
 
         this.musicRoom = new MusicConstruct(this.graphics, this.physics);
         this.addConstruct(this.musicRoom);
+        this.player = new Player(this.graphics, this.physics);
+        this.addConstruct(this.player);
+        
     };
 
 

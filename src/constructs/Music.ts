@@ -1,8 +1,12 @@
 import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, 
     PhysicsColliderFactory } from '../lib/index';
+import { Player } from './Player';
     
 export class MusicConstruct extends Construct{
+
+    player!: Player;
+
     floor!: THREE.Mesh;
     carpet!: THREE.MeshLambertMaterial;
     carpetData!: any;
@@ -16,6 +20,9 @@ export class MusicConstruct extends Construct{
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext) {
         super(graphics, physics);
+
+        this.player = new Player(this.graphics, this.physics);
+        //this.addConstruct(this.player);
     }
 
     create() {}
@@ -131,7 +138,7 @@ export class MusicConstruct extends Construct{
         const middleLight = new THREE.PointLight(0xffffff, 500, 100);
         middleLight.position.set(0,0,-10);
         this.floor.add(middleLight);
-        
+
 
 
         this.graphics.add(this.floor);
