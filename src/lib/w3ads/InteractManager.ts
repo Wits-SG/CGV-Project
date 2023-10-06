@@ -44,7 +44,7 @@ export class InteractManager {
         } satisfies InteractableObject);
     }
 
-    addPickupObject(object: THREE.Mesh, radius: number, inHandScale: number, onPickup: Function) {
+    addPickupObject(object: THREE.Object3D, radius: number, inHandScale: number, onPickup: Function) {
         object.userData.inHandScale = inHandScale;
         this.addInteractable(object, radius, onPickup, true);
     }
