@@ -4,6 +4,7 @@ import { Scene } from '../lib';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import { Player } from '../constructs/Player';
 import { GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib';
+import { Crystal } from '../constructs/Crystal';
 
 export class SandboxScene extends Scene {
 
@@ -17,6 +18,8 @@ export class SandboxScene extends Scene {
     placeSpot!: THREE.Mesh;
     player!: Player;
 
+    crystal: Crystal;
+
     controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
@@ -27,6 +30,9 @@ export class SandboxScene extends Scene {
 
         this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
+
+        this.crystal = new Crystal(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.crystal);
     }
 
     create(): void {
@@ -41,6 +47,7 @@ export class SandboxScene extends Scene {
         // this.graphics.mainCamera.lookAt(0, 0, 0);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
         this.player.root.position.set(0, 1, 0);
+        this.crystal.root.position.set(10 , 2, 10);
 
        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
