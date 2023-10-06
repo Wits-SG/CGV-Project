@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, 
     PhysicsColliderFactory } from '../lib/index';
 import { Player } from './Player';
+import { InteractManager } from '../lib/w3ads/InteractManager';
     
 export class MusicConstruct extends Construct{
 
-    player!: Player;
+   
 
     floor!: THREE.Mesh;
     carpet!: THREE.MeshLambertMaterial;
@@ -18,11 +19,10 @@ export class MusicConstruct extends Construct{
     conductorStand!: THREE.Group;
     phone!: THREE.Group;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
+        super(graphics, physics, interactions);
 
-        this.player = new Player(this.graphics, this.physics);
-        //this.addConstruct(this.player);
+        
     }
 
     create() {}

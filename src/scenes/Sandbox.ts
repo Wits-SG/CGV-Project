@@ -34,9 +34,9 @@ export class SandboxScene extends Scene {
         // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
         // this.addConstruct(this.mainLibrary);
 
-        this.musicRoom = new MusicConstruct(this.graphics, this.physics);
+        this.musicRoom = new MusicConstruct(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.musicRoom);
-        this.player = new Player(this.graphics, this.physics);
+        this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
         
     };
@@ -52,12 +52,14 @@ export class SandboxScene extends Scene {
     }
 
     build(): void {
+
+        this.player.root.position.set(0,30,0);
         // this.player.build();
         // this.player.setPosition(0, 0, 5);
-        this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera.position.set(1, 50, 1);
-        this.graphics.mainCamera.lookAt(0, 0,-50);
-        this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
+        // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
+        // this.graphics.mainCamera.position.set(1, 50, 1);
+        // this.graphics.mainCamera.lookAt(0, 0,-50);
+        // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
 
         // this.k.position.set(0, -10, 0);
         // this.k.scale.set(1, 1, 1);

@@ -85,7 +85,8 @@ export class InteractManager {
                 }
             }
 
-            // i.e. if no in range object was found
+           // i.e. if no in range object was found
+           if (this.interactableObjects.length != 0) {
             if (minDistanceSquared <= this.interactableObjects[minObj].radius**2) {
                 if (!this.interactableObjects[minObj].canPickup) {
                     interacting.object.userData.canInteract = true;
@@ -100,6 +101,8 @@ export class InteractManager {
             } else {
                 interacting.object.userData.canInteract = false;
             }
+        }
+
 
             // Place object search
             let minSpot = 0;
@@ -126,11 +129,13 @@ export class InteractManager {
                 }
             }
 
-            if (minSpotDistanceSquared <= this.pickupSpots[minSpot].radius**2) {
-                interacting.object.userData.canPlace = true;
-                interacting.object.userData.onPlace = this.pickupSpots[minSpot].onPlace;
-            } else {
-                interacting.object.userData.canPlace = false;
+            if (this.pickupSpots.length != 0) {
+                if (minSpotDistanceSquared <= this.pickupSpots[minSpot].radius**2) {
+                    interacting.object.userData.canPlace = true;
+                    interacting.object.userData.onPlace = this.pickupSpots[minSpot].onPlace;
+                } else {
+                    interacting.object.userData.canPlace = false;
+                }
             }
 
         }
