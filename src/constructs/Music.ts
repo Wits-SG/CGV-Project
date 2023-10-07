@@ -93,22 +93,22 @@ export class MusicConstruct extends Construct{
         // 
         // this.floor.add(tempPhone);
 
-        const phoneBoxGeom = new THREE.BoxGeometry(3, 2, 3); 
-        const phoneBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        const phoneBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
-        const phoneBox = new THREE.Mesh(phoneBoxGeom, phoneBoxMat);
-        phoneBox.position.set(0, 2, 25);
-        phoneBox.rotation.set(0, Math.PI/4, 0);
-        this.floor.add(phoneBox);
-        this.physics.addStatic(phoneBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
+        const guitarGeom = new THREE.BoxGeometry(3, 2, 3); 
+        const guitarBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        const guitarBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+        const guitarBox = new THREE.Mesh(guitarGeom, guitarBoxMat);
+        guitarBox.position.set(0, 2, 25);
+        guitarBox.rotation.set(0, Math.PI/4, 0);
+        this.floor.add(guitarBox);
+        this.physics.addStatic(guitarBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
 
-        this.interactions.addInteractable(phoneBox, 5, () => {
+        this.interactions.addInteractable(guitarBox, 5, () => {
             // Play sound, and add instrument to order array
 
-            if (phoneBox.material == phoneBoxMat)
-                phoneBox.material = phoneBoxMatBlue;
+            if (guitarBox.material == guitarBoxMat)
+                guitarBox.material = guitarBoxMatBlue;
             else
-                phoneBox.material = phoneBoxMat;
+                guitarBox.material = guitarBoxMat;
 
 
             // Check if order array size = number of instruments  --> done first for performance optimisation
