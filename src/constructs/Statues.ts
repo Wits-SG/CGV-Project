@@ -220,7 +220,7 @@ export class StatuesConstruct extends Construct {
             additionalPlinth.scale.set(0.3, 0.3, 0.3);
 
             // Position the additional plinths below the current one with spacing
-            additionalPlinth.position.set(22, 0, -21 + (i + 1) * plinthSpacing);
+            additionalPlinth.position.set(-21 + (i + 1) * plinthSpacing, 0, -22 );
             
             this.floor.add(additionalPlinth);
 
@@ -238,7 +238,7 @@ export class StatuesConstruct extends Construct {
 
         for (let i = 0; i < 5; i++){
             const plinths = new THREE.Mesh(plinthBoxGeom, plinthBoxMat);
-            plinths.position.set(22, 0, -21 + (i + 1) * plinthBoxSpacing);
+            plinths.position.set(-21 + (i + 1) * plinthBoxSpacing, 0, -22);
             this.physics.addStatic(plinths, PhysicsColliderFactory.box(1.5,3,1.5));
     
             this.floor.add(plinths);
