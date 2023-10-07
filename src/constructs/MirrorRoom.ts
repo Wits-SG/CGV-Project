@@ -8,6 +8,10 @@ import { InteractManager } from '../lib/w3ads/InteractManager';
 
 export class MirrorRoom extends Construct {
     mirrorCrystal: Crystal;
+    mirror!: Reflector;
+
+    wallTexture: any;
+    roofTexture: any;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
         super(graphics, physics, interactions);
@@ -21,7 +25,17 @@ export class MirrorRoom extends Construct {
     }
 
     async load(): Promise<void> {
+        try {
+            this.wallTexture = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
+        } catch(e: any) {
+            console.error(e);
+        }
 
+        try {
+            this.roofTexture = await this.graphics.loadTexture('assets/gray-scale-shot-textured-ceiling.jpg');
+        } catch(e: any) {
+            console.error(e);
+        }
     }
 
     build(): void {
@@ -41,7 +55,7 @@ export class MirrorRoom extends Construct {
             block.position.set(
                 blockPositions[i].x, blockPositions[i].y, blockPositions[i].z
             )
-            // block.layers.set(1);
+            block.layers.set(1);
             block.castShadow = true;
             block.layers.set(1);
             this.add(block);
@@ -53,18 +67,18 @@ export class MirrorRoom extends Construct {
         const floor = new THREE.Mesh(floorGeom, floorMat);
         floor.position.set(25, 0, 0);
 
-        const tempMirrorGeom = new THREE.PlaneGeometry(98, 38);
-        const mirror = new Reflector( tempMirrorGeom, {
+        const tempMirrorGeom = new THREE.PlaneGeometry( 98, 38 );
+        this.mirror = new Reflector( tempMirrorGeom, {
             clipBias: 0.003,
-            textureWidth: window.innerWidth * window.devicePixelRatio,
-            textureHeight: window.innerHeight * window.devicePixelRatio,
+            textureWidth: window.innerWidth * devicePixelRatio,
+            textureHeight: window.innerHeight * devicePixelRatio,
             color: 0xb5b5b5
         });
-        const cam = mirror.virtualCamera;
+        const cam = this.mirror.virtualCamera;
         cam.layers.enable(1);
-        mirror.position.set(49.9, 20, 0);
-        mirror.rotation.set(0, -Math.PI/2, Math.PI);
-        this.add(mirror);
+        this.mirror.position.set(49.9, 19, 0);
+        this.mirror.rotation.set(0, -Math.PI/2, Math.PI);
+        this.add(this.mirror);
 
         const mirrorFrameGeom = new THREE.PlaneGeometry(100, 40);
         const mirrorFrameMat = new THREE.MeshLambertMaterial({ color: 0xffff00 });
@@ -72,10 +86,13 @@ export class MirrorRoom extends Construct {
         mirrorFrame.position.set(50, 20, 0);
         mirrorFrame.rotation.set(0, -Math.PI/2, Math.PI);
 
-        const wallMat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
-        const backWallGeom = new THREE.PlaneGeometry(100, 20);
+        const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture });
+        const backWallGeom = new THREE.PlaneGeometry(40, 20);
         const sideWallGeom = new THREE.PlaneGeometry(50, 40);
-        const entranceWall = new THREE.Mesh(backWallGeom, wallMat);
+
+        const entranceWallLeft = new THREE.Mesh(backWallGeom, wallMat);
+        const entranceWallRight = new THREE.Mesh(backWallGeom, wallMat);
+
         const sideWallLeft = new THREE.Mesh(sideWallGeom, wallMat);
         const sideWallRight = new THREE.Mesh(sideWallGeom, wallMat);
 
@@ -84,10 +101,12 @@ export class MirrorRoom extends Construct {
         sideWallRight.position.set(25, 20, 50);
         sideWallRight.rotation.set(0, Math.PI, 0);
 
-        entranceWall.position.set(0, 10, 0);
-        entranceWall.rotation.set(0, Math.PI/2, Math.PI);
+        entranceWallLeft.position.set(0, 10, -30);
+        entranceWallLeft.rotation.set(0, Math.PI/2, Math.PI);
+        entranceWallRight.position.set(0, 10, 30);
+        entranceWallRight.rotation.set(0, Math.PI/2, Math.PI);
 
-        const roofMat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
+        const roofMat = new THREE.MeshLambertMaterial({ map: this.roofTexture });
         const roofGeom = new THREE.PlaneGeometry(54, 100);
         const roof = new THREE.Mesh(roofGeom, roofMat);
         roof.rotation.set(Math.PI/2, 0.38, 0);
@@ -96,7 +115,8 @@ export class MirrorRoom extends Construct {
         const roofLight = new THREE.PointLight(0xffffff, 1, 20, 0);
         roofLight.position.set(25, 25, 0);
 
-        this.physics.addStatic(entranceWall, PhysicsColliderFactory.box(50, 10, 0.1));
+        this.physics.addStatic(entranceWallLeft, PhysicsColliderFactory.box(20, 10, 0.1));
+        this.physics.addStatic(entranceWallRight, PhysicsColliderFactory.box(20, 10, 0.1));
         this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 20, 0.1));
 
@@ -104,17 +124,26 @@ export class MirrorRoom extends Construct {
         this.physics.addStatic(floor, PhysicsColliderFactory.box(25, 0.5, 50));
 
         this.add(roofLight);
-        this.add(entranceWall);
+
+        this.add(entranceWallLeft);
+        this.add(entranceWallRight);
+
         this.add(sideWallLeft);
         this.add(sideWallRight);
         this.add(mirrorFrame);
         this.add(roof);
         this.add(floor);
 
+        window.addEventListener('resize', () => {
+            this.mirror.getRenderTarget().setSize(
+                window.innerWidth * window.devicePixelRatio,
+                window.innerHeight * window.devicePixelRatio
+            );
+        })
+
     }
 
     update(): void {
-
     }
 
     destroy(): void {
