@@ -299,6 +299,10 @@ export class StatuesConstruct extends Construct {
 
             addedPieces.push(piece);
         }
+        const orderedPieces = addedPieces.slice().sort((a, b) => a.position.x - b.position.x);
+
+        console.log(orderedPieces);
+
 
 
         //Add point lights at the corners of board
