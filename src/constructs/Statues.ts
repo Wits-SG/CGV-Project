@@ -299,9 +299,30 @@ export class StatuesConstruct extends Construct {
 
             addedPieces.push(piece);
         }
+        // Order the pieces by column
         const orderedPieces = addedPieces.slice().sort((a, b) => a.position.x - b.position.x);
 
         console.log(orderedPieces);
+
+        const pieceTypesOrdered: string[] = [];
+
+        for (const piece of orderedPieces) {
+            if (piece === this.pawn) {
+                pieceTypesOrdered.push('pawn');
+            } else if (piece === this.bishop) {
+                pieceTypesOrdered.push('bishop');
+            } else if (piece === this.rook) {
+                pieceTypesOrdered.push('rook');
+            } else if (piece === this.queen) {
+                pieceTypesOrdered.push('queen');
+            } else if (piece === this.knight) {
+                pieceTypesOrdered.push('knight');
+            } else {
+                // Handle other cases or leave empty if not needed
+            }
+        }
+
+        console.log(pieceTypesOrdered);
 
 
 
