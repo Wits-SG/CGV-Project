@@ -290,7 +290,7 @@ export class StatuesConstruct extends Construct {
 
         const plinthBackLight5 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
         plinthBackLight5.position.set(25, 10, 5); 
-        this.floor.add(plinthBackLight5)
+        this.floor.add(plinthBackLight5);
 
         // Add the floor to the sceneq
         this.add(this.floor);
