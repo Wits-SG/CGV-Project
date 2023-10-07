@@ -44,7 +44,7 @@ export class InteractManager {
         } satisfies InteractableObject);
     }
 
-    addPickupObject(object: THREE.Mesh, radius: number, inHandScale: number, onPickup: Function) {
+    addPickupObject(object: THREE.Object3D, radius: number, inHandScale: number, onPickup: Function) {
         object.userData.inHandScale = inHandScale;
         this.addInteractable(object, radius, onPickup, true);
     }
@@ -85,20 +85,22 @@ export class InteractManager {
                 }
             }
 
-            // i.e. if no in range object was found
-            if (minDistanceSquared <= this.interactableObjects[minObj].radius**2) {
-                if (!this.interactableObjects[minObj].canPickup) {
-                    interacting.object.userData.canInteract = true;
-                    interacting.object.userData.onInteract = this.interactableObjects[minObj].onInteract;
-                } else {
-                    interacting.object.userData.canInteract = true;
-                    interacting.object.userData.onInteract = () => {
-                        this.interactableObjects[minObj].onInteract();
-                        interacting.onPickup(this.interactableObjects[minObj].object);
+            if (this.interactableObjects.length > 0) {
+                // i.e. if no in range object was found
+                if (minDistanceSquared <= this.interactableObjects[minObj].radius**2) {
+                    if (!this.interactableObjects[minObj].canPickup) {
+                        interacting.object.userData.canInteract = true;
+                        interacting.object.userData.onInteract = this.interactableObjects[minObj].onInteract;
+                    } else {
+                        interacting.object.userData.canInteract = true;
+                        interacting.object.userData.onInteract = () => {
+                            this.interactableObjects[minObj].onInteract();
+                            interacting.onPickup(this.interactableObjects[minObj].object);
+                        }
                     }
+                } else {
+                    interacting.object.userData.canInteract = false;
                 }
-            } else {
-                interacting.object.userData.canInteract = false;
             }
 
             // Place object search
@@ -126,11 +128,13 @@ export class InteractManager {
                 }
             }
 
-            if (minSpotDistanceSquared <= this.pickupSpots[minSpot].radius**2) {
-                interacting.object.userData.canPlace = true;
-                interacting.object.userData.onPlace = this.pickupSpots[minSpot].onPlace;
-            } else {
-                interacting.object.userData.canPlace = false;
+            if (this.pickupSpots.length > 0) {
+                if (minSpotDistanceSquared <= this.pickupSpots[minSpot].radius**2) {
+                    interacting.object.userData.canPlace = true;
+                    interacting.object.userData.onPlace = this.pickupSpots[minSpot].onPlace;
+                } else {
+                    interacting.object.userData.canPlace = false;
+                }
             }
 
         }

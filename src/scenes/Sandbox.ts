@@ -4,6 +4,8 @@ import { Scene } from '../lib';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import { Player } from '../constructs/Player';
 import { GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib';
+import { Crystal } from '../constructs/Crystal';
+import { CrystalDoor } from '../constructs/CrystalDoor';
 
 export class SandboxScene extends Scene {
 
@@ -17,6 +19,10 @@ export class SandboxScene extends Scene {
     placeSpot!: THREE.Mesh;
     player!: Player;
 
+    crystal1: Crystal;
+    crystal2: Crystal;
+    crystalDoor: CrystalDoor;
+
     controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
@@ -27,6 +33,14 @@ export class SandboxScene extends Scene {
 
         this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
+
+        this.crystal1 = new Crystal(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.crystal1);
+        this.crystal2 = new Crystal(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.crystal2);
+
+        this.crystalDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, 2);
+        this.addConstruct(this.crystalDoor);
     }
 
     create(): void {
@@ -41,6 +55,14 @@ export class SandboxScene extends Scene {
         // this.graphics.mainCamera.lookAt(0, 0, 0);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
         this.player.root.position.set(0, 1, 0);
+        this.crystal1.root.position.set(-80 , 2, 20);
+        this.crystal2.root.position.set(-80 , 2, 10);
+        this.crystalDoor.root.position.set(100, 20, 0);
+
+        const crystalPlinths = this.crystalDoor.crystalPlinths;
+        for (let i = 0; i < crystalPlinths.length; i++) {
+            crystalPlinths[i].position.set(-100, 2, i * 10);
+        }
 
        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: -1, z: 0 },
@@ -179,6 +201,7 @@ export class SandboxScene extends Scene {
         this.pickupBox.rotateX(rotateAmount);
         this.pickupBox.rotateY(rotateAmount);
         this.pickupBox.rotateZ(rotateAmount);
+
     }
 
     destroy(): void {
