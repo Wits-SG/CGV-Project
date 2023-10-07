@@ -7,7 +7,6 @@ import { InteractManager } from '../lib/w3ads/InteractManager';
 export class StatuesConstruct extends Construct {
 
     floor!: THREE.Mesh
-    floorTexture!: THREE.MeshLambertMaterial;
     textureFloorData!: any;
 
     wallTexture!: THREE.MeshLambertMaterial;
@@ -173,8 +172,8 @@ export class StatuesConstruct extends Construct {
 
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 1, 60);
-        this.floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
-        this.floor = new THREE.Mesh(geometry, this.floorTexture);
+        const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
+        this.floor = new THREE.Mesh(geometry, floorTexture);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
         // Wall and roof parameters
