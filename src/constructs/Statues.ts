@@ -283,11 +283,13 @@ export class StatuesConstruct extends Construct {
         // ------Logic-------
         
 
+
+
         // Create an array to represent the available squares
         const availableSquares: { row: number; col: number }[] = [];
 
-        for (let row = 0; row < numRows; row++) {
-            for (let col = 0; col < numCols; col++) {
+        for (let col = 0; col < numCols; col++) {
+            for (let row = 0; row < numRows; row++) {
                 availableSquares.push({ row, col });
             }
         }
@@ -298,26 +300,31 @@ export class StatuesConstruct extends Construct {
             [availableSquares[i], availableSquares[j]] = [availableSquares[j], availableSquares[i]];
         }
 
-        // Function to get a random available square in a specific column
-        const getRandomAvailableSquareInColumn = (column: number): { row: number; col: number } | undefined => {
-            const index = availableSquares.findIndex(square => square.col === column);
-            if (index !== -1) {
-                return availableSquares.splice(index, 1)[0];
+        // Function to check if a piece can be placed at a given square
+        const canPlacePiece = (square: { row: number; col: number }) => {
+            // Check if the square is not in the same row or column as any existing piece
+            for (const addedPiece of addedPieces) {
+                if (addedPiece.position.x === square.col * squareSize - (squareSize * (numCols - 1)) / 2) return false;
+                if (addedPiece.position.z === square.row * squareSize - (squareSize * (numRows - 1)) / 2) return false;
             }
-            return undefined;
+            return true;
         };
 
         // Add Chess pieces randomly
         const pieceTypes = [this.pawn, this.bishop, this.rook, this.queen, this.knight];
-        const addedPieceTypes: THREE.Group[] = [];
+        const addedPieces: THREE.Group[] = [];
 
         for (const pieceType of pieceTypes) {
-            const piece = pieceType.clone();
+            let piece;
             let square;
 
             do {
-                square = getRandomAvailableSquareInColumn(piece.position.x + numCols / 2);
-            } while (!square);
+                square = availableSquares.pop();
+                if (!square) break; // No available squares left
+                piece = pieceType
+            } while (!canPlacePiece(square));
+
+            if (!square || !piece) break; // No available squares left or no piece to place
 
             const { row, col } = square;
             piece.position.set(
@@ -330,8 +337,10 @@ export class StatuesConstruct extends Construct {
             this.interactions.addPickupObject(piece, 5, 1, () => {});
             this.board.add(piece);
 
-            addedPieceTypes.push(pieceType);
+            addedPieces.push(piece);
         }
+
+
         //Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
         cornerLight1.position.set(-15, 10, -15); // Adjust the position as per your needs
