@@ -36,8 +36,14 @@ export class StatuesConstruct extends Construct {
 
     font!: any;
 
+    solution: Array<number>;
+    current: Array<number>;
+    // numPiecesPlaced: number;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
         super(graphics, physics, interactions);
+        this.solution = [];
+        this.current = [-1, -1, -1, -1, -1];
     }
 
     create() { }
@@ -140,15 +146,14 @@ export class StatuesConstruct extends Construct {
         const squareSize = 3;
 
         // Create a 2D array to represent the chessboard grid
-        const chessboardGrid: number[][] = [];
+        const chessboardGrid: THREE.Mesh[][] = [];
 
         for (let row = 0; row < numRows; row++) {
-            const rowArray: number[] = [];
+            const rowArray: THREE.Mesh[] = [];
             
             for (let col = 0; col < numCols; col++) {
                 // Determine the texture based on row and column indices
                 const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
-                rowArray.push(texture);
 
                 const x = col * squareSize - (squareSize * (numCols - 1)) / 2;
                 const z = row * squareSize - (squareSize * (numRows - 1)) / 2;
@@ -157,6 +162,7 @@ export class StatuesConstruct extends Construct {
                 const material = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
 
                 const square = new THREE.Mesh(geometry, material);
+                rowArray.push(square);
                 square.position.set(x, 0.2, z);
                 this.board.add(square);
 
@@ -228,6 +234,18 @@ export class StatuesConstruct extends Construct {
                 additionalPlinth.add(placeObject);
                 placeObject.position.set(0, 10, 0);
                 placeObject.scale.setScalar(2);
+                this.current[i] = placeObject.userData.pieceType;
+                console.log(this.solution, this.current)
+
+                let result = true;
+                for (let j = 0; j < this.solution.length; ++j) {
+                    result = result  && this.solution[j] == this.current[j];
+                }
+
+                if (result) {
+                    console.log('you have solved the puzzle yaaaaa!');
+                }
+
             });
         }
 
@@ -245,124 +263,70 @@ export class StatuesConstruct extends Construct {
             plinths.removeFromParent();
         }
 
-        // Create an array to represent the available squares
-        const availableSquares: { row: number; col: number }[] = [];
+        const pieceArray = [
+            this.pawn, this.knight, this.bishop, this.rook, this.queen
+        ];
+        const usedColumns: Array<boolean> = [ false, false, false, false, false, false, false, false ];
+        let pieceColumns: Array<number> = [-1, -1, -1, -1, -1, -1, -1, -1];
 
-        for (let col = 0; col < numCols; col++) {
-            for (let row = 0; row < numRows; row++) {
-                availableSquares.push({ row, col });
-            }
-        }
+        for (let i = 0; i < pieceArray.length; ++i) {
+            const piece = pieceArray[i];
+            const row = Math.floor(Math.random() * 8);
+            let col = Math.floor(Math.random() * 8);
+            while ( usedColumns[col] ) { col = Math.floor(Math.random() * 8); }
+            usedColumns[col] = true;
+            pieceColumns[col] = i;
 
-        // Shuffle the array to randomize square selection
-        for (let i = availableSquares.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [availableSquares[i], availableSquares[j]] = [availableSquares[j], availableSquares[i]];
-        }
-
-        // Function to check if a piece can be placed at a given square
-        const canPlacePiece = (square: { row: number; col: number }) => {
-            // Check if the square is not in the same row or column as any existing piece
-            for (const addedPiece of addedPieces) {
-                if (addedPiece.position.x === square.col * squareSize - (squareSize * (numCols - 1)) / 2) return false;
-                if (addedPiece.position.z === square.row * squareSize - (squareSize * (numRows - 1)) / 2) return false;
-            }
-            return true;
-        };
-
-        // Add Chess pieces randomly
-        const pieceTypes = [this.pawn, this.bishop, this.rook, this.queen, this.knight];
-        const addedPieces: THREE.Group[] = [];
-
-        for (const pieceType of pieceTypes) {
-            let piece;
-            let square;
-
-            do {
-                square = availableSquares.pop();
-                if (!square) break; // No available squares left
-                piece = pieceType
-            } while (!canPlacePiece(square));
-
-            if (!square || !piece) break; // No available squares left or no piece to place
-
-            const { row, col } = square;
-            piece.position.set(
-                col * squareSize - (squareSize * (numCols - 1)) / 2,
-                0.3,
-                row * squareSize - (squareSize * (numRows - 1)) / 2
-            );
+            chessboardGrid[row][col].add(piece);
+            piece.position.set(0, 0, 0);
             piece.scale.setScalar(2);
-
+            piece.userData.pieceType = i;
             this.interactions.addPickupObject(piece, 5, 1, () => {});
-            this.board.add(piece);
 
-            addedPieces.push(piece);
-        }
-        // Order the pieces by column
-        const orderedPieces = addedPieces.slice().sort((a, b) => a.position.x - b.position.x);
-        console.log(addedPieces);
-        console.log(orderedPieces);
-
-        const pieceTypesOrdered: string[] = [];
-
-        for (const piece of orderedPieces) {
-            if (piece === this.pawn) {
-                pieceTypesOrdered.push('pawn');
-            } else if (piece === this.bishop) {
-                pieceTypesOrdered.push('bishop');
-            } else if (piece === this.rook) {
-                pieceTypesOrdered.push('rook');
-            } else if (piece === this.queen) {
-                pieceTypesOrdered.push('queen');
-            } else if (piece === this.knight) {
-                pieceTypesOrdered.push('knight');
-            }
         }
 
-        console.log(pieceTypesOrdered);
-
+        this.solution = pieceColumns.filter(val => val != -1);
 
         //Add point lights at the corners of board
-        const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
+        const cornerLight1 = new THREE.PointLight(0xffffff, 1, 100);
         cornerLight1.position.set(-15, 10, -15); // Adjust the position as per your needs
         this.board.add(cornerLight1);
 
-        const cornerLight2 = new THREE.PointLight(0xffffff, 500, 100);
+        const cornerLight2 = new THREE.PointLight(0xffffff, 1, 100);
         cornerLight2.position.set(15, 10, -15); 
         this.board.add(cornerLight2);
 
-        const cornerLight3 = new THREE.PointLight(0xffffff, 500, 100);
+        const cornerLight3 = new THREE.PointLight(0xffffff, 1, 100);
         cornerLight3.position.set(-15, 10, 15); 
         this.board.add(cornerLight3);
 
-        const cornerLight4 = new THREE.PointLight(0xffffff, 500, 100);
+        const cornerLight4 = new THREE.PointLight(0xffffff, 1, 100);
         cornerLight4.position.set(15, 10, 15); 
         this.board.add(cornerLight4);
 
-        const middleLight = new THREE.PointLight(0xffffff, 500, 100);
+        const middleLight = new THREE.PointLight(0xffffff, 1, 100);
         middleLight.position.set(0,10,0);
         this.board.add(middleLight);
         
 
         // Add point lights to the back of each plinth
-        const plinthBackLight1 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        const plinthBackLight1 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
         plinthBackLight1.position.set(25, 10, -15); 
         this.floor.add(plinthBackLight1);
 
-        const plinthBackLight2 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        const plinthBackLight2 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
         plinthBackLight2.position.set(25, 10, -10); 
         this.floor.add(plinthBackLight2);
 
-        const plinthBackLight3 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        const plinthBackLight3 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
         plinthBackLight3.position.set(25, 10, -15); 
         this.floor.add(plinthBackLight3);
 
-        const plinthBackLight4 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        const plinthBackLight4 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
         plinthBackLight4.position.set(25, 10, 0); 
         this.floor.add(plinthBackLight4);
 
-        const plinthBackLight5 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
+        const plinthBackLight5 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
         plinthBackLight5.position.set(25, 10, 5); 
         this.floor.add(plinthBackLight5);
 
