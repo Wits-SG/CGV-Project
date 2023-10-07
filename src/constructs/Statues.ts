@@ -10,6 +10,9 @@ export class StatuesConstruct extends Construct {
     floorTexture!: THREE.MeshLambertMaterial;
     textureFloorData!: any;
 
+    wallTexture!: THREE.MeshLambertMaterial;
+    wallTextureData!: any;
+
     // chess board
     board!: THREE.Mesh;
 
@@ -158,6 +161,12 @@ export class StatuesConstruct extends Construct {
             console.error(e);
         }
 
+        try {
+            this.wallTextureData = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
     }
 
     build() {
@@ -167,7 +176,43 @@ export class StatuesConstruct extends Construct {
         this.floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, this.floorTexture);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
-        
+
+        // Wall and roof parameters
+        const wallThickness = 1; // Adjust the thickness of the walls as needed
+        const wallHeight = 20;   // Adjust the height of the walls as needed
+        const roofHeight = wallThickness; // Roof height matches wall thickness
+
+        const wallMaterial = new THREE.MeshLambertMaterial({ map: this.wallTextureData, side: THREE.DoubleSide }); 
+        const roofMaterial = new THREE.MeshLambertMaterial({ color: 0xCCCCCC });
+
+        // Wall positions and dimensions
+        const wallPositions = [
+        { position: new THREE.Vector3(-30, wallHeight / 2, 0), dimensions: new THREE.Vector3(wallThickness, wallHeight, 60) },
+        { position: new THREE.Vector3(30, wallHeight / 2, 0), dimensions: new THREE.Vector3(wallThickness, wallHeight, 60) },
+        { position: new THREE.Vector3(0, wallHeight / 2, -30), dimensions: new THREE.Vector3(60, wallHeight, wallThickness) },
+        ];
+
+        // Roof position and dimensions
+        const roofPosition = new THREE.Vector3(0, wallHeight + roofHeight / 2, 0);
+        const roofDimensions = new THREE.Vector3(60, wallThickness, 60);
+
+        // Create the walls and roof using a loop
+        for (let i = 0; i < wallPositions.length; i++) {
+        const wallGeometry = new THREE.BoxGeometry(wallPositions[i].dimensions.x, wallPositions[i].dimensions.y, wallPositions[i].dimensions.z);
+        const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+        wall.position.copy(wallPositions[i].position);
+        // Add colliders for the walls
+        this.physics.addStatic(wall, PhysicsColliderFactory.box(wallPositions[i].dimensions.x / 2, wallPositions[i].dimensions.y / 2, wallPositions[i].dimensions.z / 2));
+        this.add(wall);
+        }
+
+        const roofGeometry = new THREE.BoxGeometry(roofDimensions.x, roofDimensions.y, roofDimensions.z);
+        const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+        roof.position.copy(roofPosition);
+        // Add a collider for the roof
+        this.physics.addStatic(roof, PhysicsColliderFactory.box(roofDimensions.x / 2, roofDimensions.y / 2, roofDimensions.z / 2));
+        this.add(roof);
+
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 0.2, 30);
         const boardColour = new THREE.MeshLambertMaterial({ color: 0x393939 });
