@@ -118,19 +118,19 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
         
         // Chess board
-        const board_base = new THREE.BoxGeometry(30, 0.4, 30);
+        const board_base = new THREE.BoxGeometry(30, 0.2, 30);
         const boardColour = new THREE.MeshLambertMaterial({ color: 0x393939 });
         this.board = new THREE.Mesh(board_base, boardColour);
-        this.board.position.set(0, 0.7, 0);
+        this.board.position.set(0, 0.6, 0);
 
-        // // Define the number of rows and columns on the chessboard
+        // Define the number of rows and columns on the chessboard
         const numRows = 8;
         const numCols = 8;
 
-        // // Size of each square
+        // Size of each square
         const squareSize = 3;
 
-        // // Initialize arrays to hold black and white squares
+        // Initialize arrays to hold black and white squares
         this.blackSquares = [];
         this.whiteSquares = [];
 
@@ -139,13 +139,12 @@ export class StatuesConstruct extends Construct {
                 const x = col * squareSize - (squareSize * (numCols - 1)) / 2;
                 const z = row * squareSize - (squareSize * (numRows - 1)) / 2;
 
-                const geometry = new THREE.BoxGeometry(squareSize, squareSize, 0.5);
+                const geometry = new THREE.BoxGeometry(squareSize, 0.2, squareSize);
                 const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
                 const material = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
 
                 const square = new THREE.Mesh(geometry, material);
-                //square.rotation.set(Math.PI/2, 0, 0);
-                square.position.set(x, z, -0.4);
+                square.position.set(x, 0.2, z);
 
                 if ((row + col) % 2 === 0) {
                     this.blackSquares.push(square);
@@ -157,32 +156,32 @@ export class StatuesConstruct extends Construct {
             }
         }
 
-        // // Text
+        // Text
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
 
-            // Plinth numbering
-            const plinthSpace = 5;
-            const startingPlinth = -10;
+        //     // Plinth numbering
+        //     const plinthSpace = 5;
+        //     const startingPlinth = -10;
 
-            for (let i = 1; i <=5; i++){
-                const numberText = i.toString();
-                const geometry = new TextGeometry(numberText, {
-                    font: font,
-                    size: 0.5,
-                    height: 0,
-                });
+        //     for (let i = 1; i <=5; i++){
+        //         const numberText = i.toString();
+        //         const geometry = new TextGeometry(numberText, {
+        //             font: font,
+        //             size: 0.5,
+        //             height: 0,
+        //         });
 
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0x000000 })]);
+        //         const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0x000000 })]);
 
-                const xOffset = startingPlinth + (i - 1) * plinthSpace;
-                textMesh.position.set(23.45, 0.7, xOffset);
-                textMesh.rotation.set(Math.PI/2, 3*Math.PI/2, Math.PI/2);
+        //         const xOffset = startingPlinth + (i - 1) * plinthSpace;
+        //         textMesh.position.set(23.45, 0.7, xOffset);
+        //         textMesh.rotation.set(Math.PI/2, 3*Math.PI/2, Math.PI/2);
 
-                this.graphics.add(textMesh);
-            }
+        //         this.graphics.add(textMesh);
+        //     }
 
-            // Board Numbers
+        // Board Numbers
             const numberSpacing = 3; // Adjust the spacing between numbers
             const startingNumberX = -11; // Adjust the starting X position
 
@@ -197,8 +196,8 @@ export class StatuesConstruct extends Construct {
                 const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
 
                 const xOffset = startingNumberX + (i - 1) * numberSpacing;
-                textMesh.position.set(xOffset, -14, -0.3);
-                textMesh.rotation.set(0, Math.PI, Math.PI/2);
+                textMesh.position.set(xOffset, 0.3, -14);
+                textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI/2);
 
                 this.board.add(textMesh);
             }
@@ -218,103 +217,110 @@ export class StatuesConstruct extends Construct {
                 const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
         
                 const xOffset = startingLetterX + i * letterSpacing + 3;
-                textMesh.position.set(-14, xOffset, -0.3); // Adjust the Z position to place letters at the bottom
-                textMesh.rotation.set(0, Math.PI, Math.PI / 2);
+                textMesh.position.set(-14, 0.3, xOffset); // Adjust the Z position to place letters at the bottom
+                textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI / 2);
         
                 this.board.add(textMesh);
             }
         });
 
         // Plinths (using the chess_plinth model)
-        const plinthSpacing = 5;
+        const plinthSpacing = 7;
 
-        // Clone the chess_plinth model for each plinth
         for (let i = 0; i < 5; i++) {
-            const plinthClone = this.chessPlinths.clone();
+            const additionalPlinth = this.chessPlinths.clone();
+            additionalPlinth.scale.set(0.3, 0.3, 0.3);
 
-            // Position and rotation adjustments
-            plinthClone.position.y += (i + 1) * plinthSpacing;
-            plinthClone.position.x = 25; // Adjust the X position as needed
-            plinthClone.position.z = -0.9; // Adjust the Z position as needed
-            plinthClone.rotation.set(Math.PI / 2, 0, 0);
-
-            // Add the plinth clone to the floor
-            this.physics.addStatic(plinthClone, PhysicsColliderFactory.box(1.5, 4, 1.5));
-            this.floor.add(plinthClone);
+            // Position the additional plinths below the current one with spacing
+            additionalPlinth.position.set(22, 0, -21 + (i + 1) * plinthSpacing);
+            this.floor.add(additionalPlinth);
         }
 
-        // Add Chess pieces
-        const tempPawn = this.pawn.clone();
-        tempPawn.position.set(-10.5,-10.5,-0.6);
-        tempPawn.rotation.set(-Math.PI/2, Math.PI, 0);
-        tempPawn.scale.set(2,2,2);
-        this.board.add(tempPawn);
+        // Plinths colliders
+        const plinthBoxSpacing = 7;
+        const plinthBoxGeom = new THREE.BoxGeometry(3,6,2);
+        const plinthBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00});
 
-        const tempBishop = this.bishop.clone();
-        tempBishop.position.set(-4.5,-7.5,-0.6);
-        tempBishop.rotation.set(-Math.PI/2, Math.PI, 0);
-        tempBishop.scale.set(2,2,2);
-        this.board.add(tempBishop);
+        for (let i = 0; i < 5; i++){
+            const plinths = new THREE.Mesh(plinthBoxGeom, plinthBoxMat);
+            plinths.position.set(22, 0, -21 + (i + 1) * plinthBoxSpacing);
+            this.physics.addStatic(plinths, PhysicsColliderFactory.box(1.5,3,1.5));
+            this.floor.add(plinths);
+            plinths.removeFromParent();
+        }
 
-        const tempRook = this.rook.clone();
-        tempRook.position.set(7.5,-1.5,-0.6);
-        tempRook.rotation.set(-Math.PI/2, Math.PI, 0);
-        tempRook.scale.set(2,2,2);
-        this.board.add(tempRook);
+        // // Add Chess pieces
+        // const tempPawn = this.pawn.clone();
+        // tempPawn.position.set(-10.5,-10.5,-0.6);
+        // tempPawn.rotation.set(-Math.PI/2, Math.PI, 0);
+        // tempPawn.scale.set(2,2,2);
+        // this.board.add(tempPawn);
 
-        const tempQueen = this.queen.clone();
-        tempQueen.position.set(-7.5,1.5,-0.6);
-        tempQueen.rotation.set(-Math.PI/2, Math.PI, 0);
-        tempQueen.scale.set(2,2,2);
-        this.board.add(tempQueen);
+        // const tempBishop = this.bishop.clone();
+        // tempBishop.position.set(-4.5,-7.5,-0.6);
+        // tempBishop.rotation.set(-Math.PI/2, Math.PI, 0);
+        // tempBishop.scale.set(2,2,2);
+        // this.board.add(tempBishop);
 
-        const tempKnight = this.knight.clone();
-        tempKnight.position.set(1.5,10.5,-0.6);
-        tempKnight.rotation.set(-Math.PI/2, Math.PI, 0);
-        tempKnight.scale.set(2,2,2);
-        this.board.add(tempKnight);
+        // const tempRook = this.rook.clone();
+        // tempRook.position.set(7.5,-1.5,-0.6);
+        // tempRook.rotation.set(-Math.PI/2, Math.PI, 0);
+        // tempRook.scale.set(2,2,2);
+        // this.board.add(tempRook);
 
-        Add point lights at the corners of board
+        // const tempQueen = this.queen.clone();
+        // tempQueen.position.set(-7.5,1.5,-0.6);
+        // tempQueen.rotation.set(-Math.PI/2, Math.PI, 0);
+        // tempQueen.scale.set(2,2,2);
+        // this.board.add(tempQueen);
+
+        // const tempKnight = this.knight.clone();
+        // tempKnight.position.set(1.5,10.5,-0.6);
+        // tempKnight.rotation.set(-Math.PI/2, Math.PI, 0);
+        // tempKnight.scale.set(2,2,2);
+        // this.board.add(tempKnight);
+
+        //Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
-        cornerLight1.position.set(-15, -15, -10); // Adjust the position as per your needs
+        cornerLight1.position.set(-15, 10, -15); // Adjust the position as per your needs
         this.board.add(cornerLight1);
 
         const cornerLight2 = new THREE.PointLight(0xffffff, 500, 100);
-        cornerLight2.position.set(15, -15, -10); 
+        cornerLight2.position.set(15, 10, -15); 
         this.board.add(cornerLight2);
 
         const cornerLight3 = new THREE.PointLight(0xffffff, 500, 100);
-        cornerLight3.position.set(-15, 15, -10); 
+        cornerLight3.position.set(-15, 10, 15); 
         this.board.add(cornerLight3);
 
         const cornerLight4 = new THREE.PointLight(0xffffff, 500, 100);
-        cornerLight4.position.set(15, 15, -10); 
+        cornerLight4.position.set(15, 10, 15); 
         this.board.add(cornerLight4);
 
         const middleLight = new THREE.PointLight(0xffffff, 500, 100);
-        middleLight.position.set(0,0,-10);
+        middleLight.position.set(0,10,0);
         this.board.add(middleLight);
         
 
         // Add point lights to the back of each plinth
         const plinthBackLight1 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
-        plinthBackLight1.position.set(25, -15, -10); 
+        plinthBackLight1.position.set(25, 10, -15); 
         this.floor.add(plinthBackLight1);
 
         const plinthBackLight2 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
-        plinthBackLight2.position.set(25, -10, -10); 
+        plinthBackLight2.position.set(25, 10, -10); 
         this.floor.add(plinthBackLight2);
 
         const plinthBackLight3 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
-        plinthBackLight3.position.set(25, -5, -10); 
+        plinthBackLight3.position.set(25, 10, -15); 
         this.floor.add(plinthBackLight3);
 
         const plinthBackLight4 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
-        plinthBackLight4.position.set(25, 0, -10); 
+        plinthBackLight4.position.set(25, 10, 0); 
         this.floor.add(plinthBackLight4);
 
         const plinthBackLight5 = new THREE.PointLight(0xffffff, 40, 20); // Adjust intensity and distance
-        plinthBackLight5.position.set(25, 5, -10); 
+        plinthBackLight5.position.set(25, 10, 5); 
         this.floor.add(plinthBackLight5)
 
         // Add the floor to the sceneq

@@ -21,6 +21,7 @@ export class SandboxScene extends Scene {
     statueRoom!: StatuesConstruct;
 
     player!: Player;
+    controls: any;
 
     constructor(AmmoLib: any) {
         super(
