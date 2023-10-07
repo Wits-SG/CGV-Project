@@ -139,34 +139,35 @@ export class StatuesConstruct extends Construct {
         // Size of each square
         const squareSize = 3;
 
-        // Initialize arrays to hold black and white squares
-        this.blackSquares = [];
-        this.whiteSquares = [];
+        // Create a 2D array to represent the chessboard grid
+        const chessboardGrid: number[][] = [];
 
         for (let row = 0; row < numRows; row++) {
+            const rowArray: number[] = [];
+            
             for (let col = 0; col < numCols; col++) {
+                // Determine the texture based on row and column indices
+                const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
+                rowArray.push(texture);
+
                 const x = col * squareSize - (squareSize * (numCols - 1)) / 2;
                 const z = row * squareSize - (squareSize * (numRows - 1)) / 2;
 
                 const geometry = new THREE.BoxGeometry(squareSize, 0.2, squareSize);
-                const texture = (row + col) % 2 === 0 ? this.blackSquareData : this.whiteSquareData;
                 const material = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
 
                 const square = new THREE.Mesh(geometry, material);
                 square.position.set(x, 0.2, z);
-
-                if ((row + col) % 2 === 0) {
-                    this.blackSquares.push(square);
-                } else {
-                    this.whiteSquares.push(square);
-                }
                 this.board.add(square);
+
                 this.interactions.addPickupSpot(square, 5, (placeObject: THREE.Object3D) => {
                     square.add(placeObject);
                     placeObject.position.set(0, 0, 0);
                     placeObject.scale.setScalar(2);
                 });
             }
+
+            chessboardGrid.push(rowArray);
         }
 
         // Board Numbers
@@ -251,26 +252,31 @@ export class StatuesConstruct extends Construct {
         // Add Chess pieces
         const tempPawn = this.pawn;
         tempPawn.position.set(-10.5,0.3,-10.5);
+        tempPawn.scale.setScalar(2);
         this.interactions.addPickupObject(tempPawn, 5, 1, ()=> {})
         this.board.add(tempPawn);
 
         const tempBishop = this.bishop;
         tempBishop.position.set(-4.5,0.3,-7.5);
+        tempBishop.scale.setScalar(2);
         this.interactions.addPickupObject(tempBishop, 5, 1, ()=> {})
         this.board.add(tempBishop);
 
         const tempRook = this.rook;
         tempRook.position.set(7.5,0.3,-1.5);
+        tempRook.scale.setScalar(2);
         this.interactions.addPickupObject(tempRook, 5, 1, ()=> {})
         this.board.add(tempRook);
 
         const tempQueen = this.queen;
         tempQueen.position.set(-7.5,0.3,1.5);
+        tempQueen.scale.setScalar(2);
         this.interactions.addPickupObject(tempQueen, 5, 1, ()=> {})
         this.board.add(tempQueen);
 
         const tempKnight = this.knight;
         tempKnight.position.set(1.5,0.3,10.5);
+        tempKnight.scale.setScalar(2);
         this.interactions.addPickupObject(tempKnight, 5, 1, ()=> {})
         this.board.add(tempKnight);
 
