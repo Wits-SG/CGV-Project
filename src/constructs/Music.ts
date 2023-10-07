@@ -182,14 +182,15 @@ export class MusicConstruct extends Construct{
 
         this.physics.addStatic(gramBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
         
-        this.interactions.addInteractable(guitarBox, 5, () => {
+        this.interactions.addInteractable(gramBox, 5, () => {
             // Play sound, and add instrument to order array
 
            
-            audioLoader.load( 'sound/129109437-vintage-tunes-no3-016.m4e', function( buffer ) {
+            audioLoader.load( 'sound/129109437-vintage-tunes-no3-016.mp3', function( buffer ) {
                 sound.setBuffer( buffer );
                 sound.setLoop( false );
                 sound.setVolume( 0.5 );
+                
                 sound.play();
             });
             
