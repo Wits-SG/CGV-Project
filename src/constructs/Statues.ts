@@ -171,46 +171,46 @@ export class StatuesConstruct extends Construct {
         }
 
         // Board Numbers
-            const numberSpacing = 3; // Adjust the spacing between numbers
-            const startingNumberX = -11; // Adjust the starting X position
+        const numberSpacing = 3; // Adjust the spacing between numbers
+        const startingNumberX = -10 ; // Adjust the starting X position
 
-            for (let i = 1; i <= 8; i++) {
-                const numberText = i.toString();
-                const geometry = new TextGeometry(numberText, {
-                    font: this.font,
-                    size: 1,
-                    height: 0,
-                });
+        for (let i = 1; i <= 8; i++) {
+            const numberText = i.toString();
+            const geometry = new TextGeometry(numberText, {
+                font: this.font,
+                size: 1,
+                height: 0,
+            });
 
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
+            const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
 
-                const xOffset = startingNumberX + (i - 1) * numberSpacing;
-                textMesh.position.set(xOffset, 0.3, -14);
-                textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI/2);
+            const yOffset = startingNumberX + (i - 1) * numberSpacing;
+            textMesh.position.set(-14, 0.3, yOffset);
+            textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI);
 
-                this.board.add(textMesh);
-            }
+            this.board.add(textMesh);
+        }
 
-            // Board Letters
-            const letterSpacing = 3; // Adjust the spacing between letters
-            const startingLetterX = -14; // Adjust the starting X position
-        
-            for (let i = 0; i < 8; i++) {
-                const letterText = String.fromCharCode(65 + i); // Convert ASCII code to letters (A-H)
-                const geometry = new TextGeometry(letterText, {
-                    font: this.font,
-                    size: 1,
-                    height: 0,
-                });
-        
-                const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
-        
-                const xOffset = startingLetterX + i * letterSpacing + 3;
-                textMesh.position.set(-14, 0.3, xOffset); // Adjust the Z position to place letters at the bottom
-                textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI / 2);
-        
-                this.board.add(textMesh);
-            }
+        // Board Letters
+        const letterSpacing = 3; // Adjust the spacing between letters
+        const startingLetterX = -11; // Adjust the starting X position
+    
+        for (let i = 0; i < 8; i++) {
+            const letterText = String.fromCharCode(65 + i); // Convert ASCII code to letters (A-H)
+            const geometry = new TextGeometry(letterText, {
+                font: this.font,
+                size: 1,
+                height: 0,
+            });
+    
+            const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
+    
+            const xOffset = startingLetterX + (i - 1) * letterSpacing + 3;
+            textMesh.position.set(xOffset, 0.3, 14); 
+            textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI);
+    
+            this.board.add(textMesh);
+        }
 
         // Plinths (using the chess_plinth model)
         const plinthSpacing = 7;
@@ -229,10 +229,6 @@ export class StatuesConstruct extends Construct {
                 placeObject.position.set(0, 10, 0);
                 placeObject.scale.setScalar(2);
             });
-
-            const worldPos = new THREE.Vector3();
-            additionalPlinth.getWorldPosition(worldPos);
-            console.log(worldPos);
         }
 
         // Plinths colliders
@@ -248,42 +244,6 @@ export class StatuesConstruct extends Construct {
             this.floor.add(plinths);
             plinths.removeFromParent();
         }
-
-        // // Add Chess pieces
-        // const tempPawn = this.pawn;
-        // tempPawn.position.set(-10.5,0.3,-10.5);
-        // tempPawn.scale.setScalar(2);
-        // this.interactions.addPickupObject(tempPawn, 5, 1, ()=> {})
-        // this.board.add(tempPawn);
-
-        // const tempBishop = this.bishop;
-        // tempBishop.position.set(-4.5,0.3,-7.5);
-        // tempBishop.scale.setScalar(2);
-        // this.interactions.addPickupObject(tempBishop, 5, 1, ()=> {})
-        // this.board.add(tempBishop);
-
-        // const tempRook = this.rook;
-        // tempRook.position.set(7.5,0.3,-1.5);
-        // tempRook.scale.setScalar(2);
-        // this.interactions.addPickupObject(tempRook, 5, 1, ()=> {})
-        // this.board.add(tempRook);
-
-        // const tempQueen = this.queen;
-        // tempQueen.position.set(-7.5,0.3,1.5);
-        // tempQueen.scale.setScalar(2);
-        // this.interactions.addPickupObject(tempQueen, 5, 1, ()=> {})
-        // this.board.add(tempQueen);
-
-        // const tempKnight = this.knight;
-        // tempKnight.position.set(1.5,0.3,10.5);
-        // tempKnight.scale.setScalar(2);
-        // this.interactions.addPickupObject(tempKnight, 5, 1, ()=> {})
-        // this.board.add(tempKnight);
-
-        // ------Logic-------
-        
-
-
 
         // Create an array to represent the available squares
         const availableSquares: { row: number; col: number }[] = [];
