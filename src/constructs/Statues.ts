@@ -34,6 +34,8 @@ export class StatuesConstruct extends Construct {
 
     chessPlinths!: THREE.Group;
 
+    font!: any;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
         super(graphics, physics, interactions);
     }
@@ -107,6 +109,13 @@ export class StatuesConstruct extends Construct {
             console.log(e);
         }
 
+        try {
+            const textData: any = await this.graphics.loadFont('assets/fonts/Montserrat_Bold.json');
+            this.font = textData;
+        } catch (e: any) {
+            console.log(e)
+        }
+
     }
 
     build() {
@@ -151,14 +160,14 @@ export class StatuesConstruct extends Construct {
                 } else {
                     this.whiteSquares.push(square);
                 }
-
                 this.board.add(square);
+                this.interactions.addPickupSpot(square, 5, (placeObject: THREE.Object3D) => {
+                    square.add(placeObject);
+                    placeObject.position.set(0, 0, 0);
+                    placeObject.scale.setScalar(2);
+                });
             }
         }
-
-        // Text
-        const loader = new FontLoader();
-        loader.load('src/fonts/Montserrat_Bold.json', (font) => {
 
         // Board Numbers
             const numberSpacing = 3; // Adjust the spacing between numbers
@@ -167,7 +176,7 @@ export class StatuesConstruct extends Construct {
             for (let i = 1; i <= 8; i++) {
                 const numberText = i.toString();
                 const geometry = new TextGeometry(numberText, {
-                    font: font,
+                    font: this.font,
                     size: 1,
                     height: 0,
                 });
@@ -188,7 +197,7 @@ export class StatuesConstruct extends Construct {
             for (let i = 0; i < 8; i++) {
                 const letterText = String.fromCharCode(65 + i); // Convert ASCII code to letters (A-H)
                 const geometry = new TextGeometry(letterText, {
-                    font: font,
+                    font: this.font,
                     size: 1,
                     height: 0,
                 });
@@ -201,7 +210,6 @@ export class StatuesConstruct extends Construct {
         
                 this.board.add(textMesh);
             }
-        });
 
         // Plinths (using the chess_plinth model)
         const plinthSpacing = 7;
@@ -212,7 +220,18 @@ export class StatuesConstruct extends Construct {
 
             // Position the additional plinths below the current one with spacing
             additionalPlinth.position.set(22, 0, -21 + (i + 1) * plinthSpacing);
+            
             this.floor.add(additionalPlinth);
+
+            this.interactions.addPickupSpot(additionalPlinth, 5, (placeObject: THREE.Object3D) => {
+                additionalPlinth.add(placeObject);
+                placeObject.position.set(0, 10, 0);
+                placeObject.scale.setScalar(2);
+            });
+
+            const worldPos = new THREE.Vector3();
+            additionalPlinth.getWorldPosition(worldPos);
+            console.log(worldPos);
         }
 
         // Plinths colliders
@@ -224,6 +243,7 @@ export class StatuesConstruct extends Construct {
             const plinths = new THREE.Mesh(plinthBoxGeom, plinthBoxMat);
             plinths.position.set(22, 0, -21 + (i + 1) * plinthBoxSpacing);
             this.physics.addStatic(plinths, PhysicsColliderFactory.box(1.5,3,1.5));
+    
             this.floor.add(plinths);
             plinths.removeFromParent();
         }
@@ -231,22 +251,27 @@ export class StatuesConstruct extends Construct {
         // Add Chess pieces
         const tempPawn = this.pawn;
         tempPawn.position.set(-10.5,0.3,-10.5);
+        this.interactions.addPickupObject(tempPawn, 5, 1, ()=> {})
         this.board.add(tempPawn);
 
         const tempBishop = this.bishop;
         tempBishop.position.set(-4.5,0.3,-7.5);
+        this.interactions.addPickupObject(tempBishop, 5, 1, ()=> {})
         this.board.add(tempBishop);
 
         const tempRook = this.rook;
         tempRook.position.set(7.5,0.3,-1.5);
+        this.interactions.addPickupObject(tempRook, 5, 1, ()=> {})
         this.board.add(tempRook);
 
         const tempQueen = this.queen;
         tempQueen.position.set(-7.5,0.3,1.5);
+        this.interactions.addPickupObject(tempQueen, 5, 1, ()=> {})
         this.board.add(tempQueen);
 
         const tempKnight = this.knight;
         tempKnight.position.set(1.5,0.3,10.5);
+        this.interactions.addPickupObject(tempKnight, 5, 1, ()=> {})
         this.board.add(tempKnight);
 
         //Add point lights at the corners of board
@@ -301,7 +326,8 @@ export class StatuesConstruct extends Construct {
     
     
 
-    update() { }
+    update() { 
+    }
 
     destroy() { }
 }

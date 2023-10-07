@@ -88,7 +88,6 @@ export class SandboxScene extends Scene {
 
     //@ts-ignore
     update(time: number, delta: number): void {
-
     }
 
     destroy(): void {
