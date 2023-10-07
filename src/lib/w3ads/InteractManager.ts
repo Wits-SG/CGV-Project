@@ -22,6 +22,7 @@ type PickupSpot = {
 }
 
 export class InteractManager {
+    [x: string]: any;
     public interactingObjects: Array<InteractingObject>;
     public interactableObjects: Array<InteractableObject>;
     public pickupSpots: Array<PickupSpot>;

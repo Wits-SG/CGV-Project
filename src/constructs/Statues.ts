@@ -301,7 +301,7 @@ export class StatuesConstruct extends Construct {
         }
         // Order the pieces by column
         const orderedPieces = addedPieces.slice().sort((a, b) => a.position.x - b.position.x);
-
+        console.log(addedPieces);
         console.log(orderedPieces);
 
         const pieceTypesOrdered: string[] = [];
@@ -317,13 +317,10 @@ export class StatuesConstruct extends Construct {
                 pieceTypesOrdered.push('queen');
             } else if (piece === this.knight) {
                 pieceTypesOrdered.push('knight');
-            } else {
-                // Handle other cases or leave empty if not needed
             }
         }
 
         console.log(pieceTypesOrdered);
-
 
 
         //Add point lights at the corners of board
