@@ -32,6 +32,12 @@ export class StatuesConstruct extends Construct {
     queen!: THREE.Group;
     knight!: THREE.Group;
 
+    pawnImg!: any;
+    bishopImg!: any;
+    rookImg!: any;
+    queenImg!: any;
+    knightImg!: any;
+
     chessPlinths!: THREE.Group;
 
     font!: any;
@@ -120,6 +126,36 @@ export class StatuesConstruct extends Construct {
             this.font = textData;
         } catch (e: any) {
             console.log(e)
+        }
+
+        try {
+            this.pawnImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/pawn.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.bishopImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/bishop.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.knightImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/knight.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.queenImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/queen.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.rookImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/rook.png');
+        } catch (e: any) {
+            console.error(e);
         }
 
     }
@@ -266,6 +302,10 @@ export class StatuesConstruct extends Construct {
         const pieceArray = [
             this.pawn, this.knight, this.bishop, this.rook, this.queen
         ];
+
+        const pieceImgArray = [
+            this.pawnImg, this.knightImg, this.bishopImg, this.rookImg, this.queenImg
+        ];
         const usedColumns: Array<boolean> = [ false, false, false, false, false, false, false, false ];
         let pieceColumns: Array<number> = [-1, -1, -1, -1, -1, -1, -1, -1];
 
@@ -282,6 +322,11 @@ export class StatuesConstruct extends Construct {
             piece.scale.setScalar(2);
             piece.userData.pieceType = i;
             this.interactions.addPickupObject(piece, 5, 1, () => {});
+
+            const pieceImage = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshLambertMaterial({map: pieceImgArray[i], side: THREE.DoubleSide}));
+            pieceImage.position.set(0,0.2,0);
+            pieceImage.rotation.set(Math.PI/2, 0, Math.PI);
+            chessboardGrid[row][col].add(pieceImage);
 
         }
 
