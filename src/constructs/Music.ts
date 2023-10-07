@@ -9,7 +9,6 @@ export class MusicConstruct extends Construct{
    
 
     floor!: THREE.Mesh;
-    carpet!: THREE.MeshLambertMaterial;
     carpetData!: any;
 
     //Music instruments
@@ -19,9 +18,13 @@ export class MusicConstruct extends Construct{
     conductorStand!: THREE.Group;
     phone!: THREE.Group;
 
+    player!: Player;
+    
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
         super(graphics, physics, interactions);
-
+        this.player = new Player(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.player);
         
     }
 
@@ -75,12 +78,27 @@ export class MusicConstruct extends Construct{
     }
 
     build() {
+
+        // create an AudioListener and add it to the camera
+        const listener = new THREE.AudioListener();
+        this.player.root.add( listener );
+
+        // create a global audio source
+        const sound = new THREE.Audio( listener );
+
+        // load a sound and set it as the Audio object's buffer
+        const audioLoader = new THREE.AudioLoader();
+
+
+        
         const geometry = new THREE.BoxGeometry(60,1,60);
-       
+        
+        
+        
         //carpet plane 
         
-        this.carpet = new THREE.MeshLambertMaterial({ map: this.carpetData, side: THREE.DoubleSide });
-        this.floor = new THREE.Mesh(geometry, this.carpet);
+        const carpet = new THREE.MeshLambertMaterial({ map: this.carpetData, side: THREE.DoubleSide });
+        this.floor = new THREE.Mesh(geometry, carpet);
         this.floor.position.set(0,0,0);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30)); 
 
@@ -103,10 +121,14 @@ export class MusicConstruct extends Construct{
         this.interactions.addInteractable(guitarBox, 5, () => {
             // Play sound, and add instrument to order array
 
-            if (guitarBox.material == guitarBoxMat)
-                guitarBox.material = guitarBoxMatBlue;
-            else
-                guitarBox.material = guitarBoxMat;
+           
+            audioLoader.load( 'sound/guitar-riff-159089.mp3', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setLoop( false );
+                sound.setVolume( 0.5 );
+                sound.play();
+            });
+            
 
 
             // Check if order array size = number of instruments  --> done first for performance optimisation
@@ -128,6 +150,23 @@ export class MusicConstruct extends Construct{
         //this.floor.add(pianoBox);
         this.physics.addStatic(pianoBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
 
+        this.interactions.addInteractable(pianoBox, 5, () => {
+            // Play sound, and add instrument to order array
+
+           
+            audioLoader.load( 'sound/piano-g-6200.mp3', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setLoop( false );
+                sound.setVolume( 0.5 );
+                sound.play();
+            });
+            
+
+
+            // Check if order array size = number of instruments  --> done first for performance optimisation
+            // then check if instruments are in correct order --> done second for performance optimisation
+            // then spawn crystal
+        });
 
         //GRAMOPHONE
         const gramGeom = new THREE.BoxGeometry(3, 2, 3); 
@@ -143,6 +182,23 @@ export class MusicConstruct extends Construct{
 
         this.physics.addStatic(gramBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
         
+        this.interactions.addInteractable(guitarBox, 5, () => {
+            // Play sound, and add instrument to order array
+
+           
+            audioLoader.load( 'sound/129109437-vintage-tunes-no3-016.m4e', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setLoop( false );
+                sound.setVolume( 0.5 );
+                sound.play();
+            });
+            
+
+
+            // Check if order array size = number of instruments  --> done first for performance optimisation
+            // then check if instruments are in correct order --> done second for performance optimisation
+            // then spawn crystal
+        });
 
        //STAND
        const standGeom = new THREE.BoxGeometry(2, 2, 2); 
