@@ -34,7 +34,6 @@ export class Reflector extends THREE.Mesh {
 
     constructor(geometry: any, options: any) {
         super(geometry);
-        this.type = 'Reflector';
         options = options || {};
 
         this.colour = ( options.colour !== undefined ) ? new THREE.Color( options.colour ) : new THREE.Color( 0x7f7f7f );
