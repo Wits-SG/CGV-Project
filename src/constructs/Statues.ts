@@ -160,27 +160,6 @@ export class StatuesConstruct extends Construct {
         const loader = new FontLoader();
         loader.load('src/fonts/Montserrat_Bold.json', (font) => {
 
-        //     // Plinth numbering
-        //     const plinthSpace = 5;
-        //     const startingPlinth = -10;
-
-        //     for (let i = 1; i <=5; i++){
-        //         const numberText = i.toString();
-        //         const geometry = new TextGeometry(numberText, {
-        //             font: font,
-        //             size: 0.5,
-        //             height: 0,
-        //         });
-
-        //         const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0x000000 })]);
-
-        //         const xOffset = startingPlinth + (i - 1) * plinthSpace;
-        //         textMesh.position.set(23.45, 0.7, xOffset);
-        //         textMesh.rotation.set(Math.PI/2, 3*Math.PI/2, Math.PI/2);
-
-        //         this.graphics.add(textMesh);
-        //     }
-
         // Board Numbers
             const numberSpacing = 3; // Adjust the spacing between numbers
             const startingNumberX = -11; // Adjust the starting X position
@@ -249,36 +228,26 @@ export class StatuesConstruct extends Construct {
             plinths.removeFromParent();
         }
 
-        // // Add Chess pieces
-        // const tempPawn = this.pawn.clone();
-        // tempPawn.position.set(-10.5,-10.5,-0.6);
-        // tempPawn.rotation.set(-Math.PI/2, Math.PI, 0);
-        // tempPawn.scale.set(2,2,2);
-        // this.board.add(tempPawn);
+        // Add Chess pieces
+        const tempPawn = this.pawn;
+        tempPawn.position.set(-10.5,0.3,-10.5);
+        this.board.add(tempPawn);
 
-        // const tempBishop = this.bishop.clone();
-        // tempBishop.position.set(-4.5,-7.5,-0.6);
-        // tempBishop.rotation.set(-Math.PI/2, Math.PI, 0);
-        // tempBishop.scale.set(2,2,2);
-        // this.board.add(tempBishop);
+        const tempBishop = this.bishop;
+        tempBishop.position.set(-4.5,0.3,-7.5);
+        this.board.add(tempBishop);
 
-        // const tempRook = this.rook.clone();
-        // tempRook.position.set(7.5,-1.5,-0.6);
-        // tempRook.rotation.set(-Math.PI/2, Math.PI, 0);
-        // tempRook.scale.set(2,2,2);
-        // this.board.add(tempRook);
+        const tempRook = this.rook;
+        tempRook.position.set(7.5,0.3,-1.5);
+        this.board.add(tempRook);
 
-        // const tempQueen = this.queen.clone();
-        // tempQueen.position.set(-7.5,1.5,-0.6);
-        // tempQueen.rotation.set(-Math.PI/2, Math.PI, 0);
-        // tempQueen.scale.set(2,2,2);
-        // this.board.add(tempQueen);
+        const tempQueen = this.queen;
+        tempQueen.position.set(-7.5,0.3,1.5);
+        this.board.add(tempQueen);
 
-        // const tempKnight = this.knight.clone();
-        // tempKnight.position.set(1.5,10.5,-0.6);
-        // tempKnight.rotation.set(-Math.PI/2, Math.PI, 0);
-        // tempKnight.scale.set(2,2,2);
-        // this.board.add(tempKnight);
+        const tempKnight = this.knight;
+        tempKnight.position.set(1.5,0.3,10.5);
+        this.board.add(tempKnight);
 
         //Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
