@@ -9,8 +9,7 @@ export class StatuesConstruct extends Construct {
     floor!: THREE.Mesh
     textureFloorData!: any;
 
-    wallTexture!: THREE.MeshLambertMaterial;
-    wallTextureData!: any;
+    wallTexture!: any;
 
     // chess board
     board!: THREE.Mesh;
@@ -161,7 +160,7 @@ export class StatuesConstruct extends Construct {
         }
 
         try {
-            this.wallTextureData = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
+            this.wallTexture = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
         } catch (e: any) {
             console.error(e);
         }
@@ -177,41 +176,32 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
         // Wall and roof parameters
-        const wallThickness = 1; // Adjust the thickness of the walls as needed
-        const wallHeight = 20;   // Adjust the height of the walls as needed
-        const roofHeight = wallThickness; // Roof height matches wall thickness
+        const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
+        const backWallGeom = new THREE.BoxGeometry(60,20,1);
+        const sideWallGeom = new THREE.BoxGeometry(1,20,60);
 
-        const wallMaterial = new THREE.MeshLambertMaterial({ map: this.wallTextureData, side: THREE.DoubleSide }); 
-        const roofMaterial = new THREE.MeshLambertMaterial({ color: 0xCCCCCC });
+        const backWall = new THREE.Mesh(backWallGeom, wallMat);
+        const sideWallLeft = new THREE.Mesh(sideWallGeom, wallMat);
+        const sideWallRight = new THREE.Mesh(sideWallGeom, wallMat);
 
-        // Wall positions and dimensions
-        const wallPositions = [
-        { position: new THREE.Vector3(-30, wallHeight / 2, 0), dimensions: new THREE.Vector3(wallThickness, wallHeight, 60) },
-        { position: new THREE.Vector3(30, wallHeight / 2, 0), dimensions: new THREE.Vector3(wallThickness, wallHeight, 60) },
-        { position: new THREE.Vector3(0, wallHeight / 2, -30), dimensions: new THREE.Vector3(60, wallHeight, wallThickness) },
-        ];
+        sideWallLeft.position.set(-29.5,10,0);
+        sideWallRight.position.set(29.5,10,0);
+        backWall.position.set(0,10,-30);
 
-        // Roof position and dimensions
-        const roofPosition = new THREE.Vector3(0, wallHeight + roofHeight / 2, 0);
-        const roofDimensions = new THREE.Vector3(60, wallThickness, 60);
+        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(1, 10, 30));
+        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
+        this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        // Create the walls and roof using a loop
-        for (let i = 0; i < wallPositions.length; i++) {
-        const wallGeometry = new THREE.BoxGeometry(wallPositions[i].dimensions.x, wallPositions[i].dimensions.y, wallPositions[i].dimensions.z);
-        const wall = new THREE.Mesh(wallGeometry, wallMaterial);
-        wall.position.copy(wallPositions[i].position);
-        // Add colliders for the walls
-        this.physics.addStatic(wall, PhysicsColliderFactory.box(wallPositions[i].dimensions.x / 2, wallPositions[i].dimensions.y / 2, wallPositions[i].dimensions.z / 2));
-        this.add(wall);
-        }
+        const roofLight = new THREE.PointLight(0xffffff, 2, 100 ,0);
+        roofLight.position.set(0,19,0);
 
-        const roofGeometry = new THREE.BoxGeometry(roofDimensions.x, roofDimensions.y, roofDimensions.z);
-        const roof = new THREE.Mesh(roofGeometry, roofMaterial);
-        roof.position.copy(roofPosition);
-        // Add a collider for the roof
-        this.physics.addStatic(roof, PhysicsColliderFactory.box(roofDimensions.x / 2, roofDimensions.y / 2, roofDimensions.z / 2));
-        this.add(roof);
+        const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
+        const roofGeom = new THREE.PlaneGeometry(60,60);
+        const roof = new THREE.Mesh(roofGeom, roofMat);
 
+        roof.rotation.set(Math.PI/2, 0, 0);
+        roof.position.set(0,20,0);
+        
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 0.2, 30);
         const boardColour = new THREE.MeshLambertMaterial({ color: 0x393939 });
@@ -307,7 +297,7 @@ export class StatuesConstruct extends Construct {
 
             // Position the additional plinths below the current one with spacing
             additionalPlinth.position.set(-21 + (i + 1) * plinthSpacing, 0, -22 );
-            
+            additionalPlinth.castShadow = true;
             this.floor.add(additionalPlinth);
 
             this.interactions.addPickupSpot(additionalPlinth, 5, (placeObject: THREE.Object3D) => {
@@ -362,6 +352,7 @@ export class StatuesConstruct extends Construct {
             pieceColumns[col] = i;
 
             chessboardGrid[row][col].add(piece);
+            piece.castShadow = true;
             piece.position.set(0, 0, 0);
             piece.scale.setScalar(2);
             piece.userData.pieceType = i;
@@ -421,6 +412,11 @@ export class StatuesConstruct extends Construct {
 
         // Add the floor to the sceneq
         this.add(this.floor);
+        this.add(sideWallLeft);
+        this.add(sideWallRight);
+        this.add(backWall);
+        this.add(roof);
+        this.add(roofLight);
         // Add chessboard to the scene
         this.add(this.board);
     }
