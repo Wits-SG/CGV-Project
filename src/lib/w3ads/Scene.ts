@@ -81,4 +81,9 @@ export abstract class Scene {
         this.constructs.push(newConstruct);
         this.graphics.add(newConstruct.root);
     }
+
+    changeScene(sceneKey: string) {
+        const event = new CustomEvent("changeScene", { detail: sceneKey });
+        document.dispatchEvent(event);
+    }
 }
