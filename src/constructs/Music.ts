@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, 
+import { Construct, GraphicsContext, PhysicsContext,
     PhysicsColliderFactory } from '../lib/index';
 import { Player } from './Player';
 import { InteractManager } from '../lib/w3ads/InteractManager';
@@ -302,7 +302,6 @@ export class MusicConstruct extends Construct{
         //GRAMOPHONE
         const gramGeom = new THREE.BoxGeometry(3, 2, 3); 
         const gramBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        const gramBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
         const gramBox = new THREE.Mesh(gramGeom, gramBoxMat);
         gramBox.position.set(10, 1, 4);
         this.gram.position.set(10,1,4);
