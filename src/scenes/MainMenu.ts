@@ -182,7 +182,7 @@ export class MainMenu extends Scene {
             developers.appendChild(devTitle);
 
             const devNames = [
-                'Lisa Godwin', 'Brendan Griffiths', 'Nihal Ranchod', 'Zach Schwark', 'Ashlea Smith'
+                'Lisa Godwin', 'Brendan Griffiths', 'Yonatan Oudmayer', 'Nihal Ranchod', 'Zach Schwark', 'Ashlea Smith'
             ];
             const devList = document.createElement('ul');
             devList.className = 'p-3 flex flex-col justify-center items-start gap-1'
@@ -206,7 +206,7 @@ export class MainMenu extends Scene {
 
             const allAssets = [
                 { artist: 'Okapiguy', title: 'Victorian Bookshelf', type: 'Model', license: 'CC-BY-NC-4.0', link: 'https://sketchfab.com/3d-models/victorian-bookshelf-9f548046646f404782b8838ec14932f8' },
-                { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0' },
+                { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/wooden-table-0dc1c7d6cbab4d74bef7c4f82abf2caf' },
             ];
             const assetsList = document.createElement('ul');
             assetsList.className = 'p-3 flex flex-col justify-center items-start gap-1'
