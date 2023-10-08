@@ -218,13 +218,21 @@ export class MainMenu extends Scene {
 
             const allAssets = [
                 // { artist: '', title: '', type: '', license: '', link: '' },
-                { artist: 'Okapiguy', title: 'Victorian Bookshelf', type: 'Model', license: 'CC-BY-NC-4.0', link: 'https://sketchfab.com/3d-models/victorian-bookshelf-9f548046646f404782b8838ec14932f8' },
+                { artist: 'Nihal Ranchod', title: 'Chess Plinths', type: 'Model', license: 'None (made for project)', link: '' },
+                { artist: 'flithycent', title: 'bookshelf', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/bookshelf-3c782b0787cc41f1b5974dbd7a1f8f53' },
                 { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/wooden-table-0dc1c7d6cbab4d74bef7c4f82abf2caf' },
+                { artist: 'sergeilihandristov', title: 'Desk lamp', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/desk-lamp-ac5135b505694287a64b4370ea2cda8d' },
+                { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Pawn', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-pawn-3443007498c54b5b9a31a08697a3b1b3' },
+                { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Knight', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-knight-112534cb4cbb47588c2cf566441f37fc' },
+                { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Bishop', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-bishop-75681488e5fe457280813781cf3d15c1' },
+                { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Rook', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-rook-cbd416e785f64648bff3675fd45b3594' },
+                { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Queen', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-queen-ab958c61eb2a405aa7a7b0cec91c79b0' },
             ];
             const assetsList = document.createElement('ul');
-            assetsList.className = 'p-3 flex flex-col justify-center items-start gap-1 overflow-y-auto max-h-44'
+            assetsList.className = 'p-3 flex flex-col justify-start items-start gap-1 max-h-44 overflow-y-scroll'
             assets.appendChild(assetsList);
             for (let asset of allAssets) {
+                console.log(asset);
                 const assetP = document.createElement('li');
                 assetP.innerHTML = `<a href='${asset.link}' class='text-sky-700 underline' >${asset.title}<a> - ${asset.artist} - ${asset.type} - ${asset.license}`;
                 assetsList.appendChild(assetP);
