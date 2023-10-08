@@ -3,6 +3,7 @@ import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, P
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { InteractManager } from '../lib/w3ads/InteractManager';
+import { Crystal } from './Crystal';
 
 export class StatuesConstruct extends Construct {
 
@@ -47,10 +48,15 @@ export class StatuesConstruct extends Construct {
     current: Array<number>;
     // numPiecesPlaced: number;
 
+    crystal!: Crystal; 
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
         super(graphics, physics, interactions);
         this.solution = [];
         this.current = [-1, -1, -1, -1, -1];
+
+        this.crystal = new Crystal(graphics, physics, interactions);
+        this.addConstruct(this.crystal);
     }
 
     create() { }
@@ -174,6 +180,8 @@ export class StatuesConstruct extends Construct {
         const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, floorTexture);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
+
+        this.crystal.root.position.set(0,-10,0);
 
         // Wall and roof parameters
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
@@ -312,7 +320,8 @@ export class StatuesConstruct extends Construct {
                 }
 
                 if (result) {
-                    console.log('you have solved the puzzle yaaaaa!');
+                    this.crystal.root.position.set(0,5,0);
+                    //qconsole.log('you have solved the puzzle yaaaaa!');
                 }
 
             });
