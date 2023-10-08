@@ -7,8 +7,12 @@ import { Crystal } from '../constructs/Crystal';
 
 export class MainMenu extends Scene {
 
-    root!: HTMLDivElement;
     camera!: THREE.PerspectiveCamera;
+
+    container!: HTMLDivElement;
+    root!: HTMLDivElement;
+    menu!: HTMLDivElement;
+    credits!: HTMLDivElement;
 
     numCrystals: number;
     door: CrystalDoor;
@@ -78,51 +82,23 @@ export class MainMenu extends Scene {
             this.crystals[i].root.position.set(x, 4, z);
         }
 
+        this.container = document.createElement('div');
+        this.container.className = 'flex justify-start items-center w-screen h-screen fixed top-0 left-0 z-10 p-10';
+        document.body.appendChild(this.container);
+
         this.root = document.createElement('div');
-        this.root.className = 'flex justify-start items-center w-screen h-screen fixed top-0 left-0 z-10 p-10';
-        document.body.appendChild(this.root);
+        this.root.className = 'flex justify-start items-start gap-5';
+        this.container.appendChild(this.root);
 
-        const parent = document.createElement('div');
-        parent.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2'
-        this.root.appendChild(parent);
+        this.menu = document.createElement('div');
+        this.menu.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2'
+        this.root.appendChild(this.menu);
 
-        const title = document.createElement('h1');
-        title.className = 'text-4xl';
-        title.innerText = 'The Magic Library';
-        parent.appendChild(title);
+        this.credits = document.createElement('div');
+        this.credits.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2 p-5'
 
-        const group = document.createElement('h2');
-        group.className = 'text-xl';
-        group.innerText = 'The Spice Girls';
-        parent.appendChild(group);
-
-        const buttonClasses = 'p-2 bg-stone-100 hover:bg-stone-200 rounded-md w-64';
-
-        for (let i = 0; i < 3; ++i) {
-            const levelButton = document.createElement('button');
-            levelButton.className = buttonClasses;
-            levelButton.innerText = `Level ${i + 1}`;
-            levelButton.onclick =  () => {
-                this.changeScene(`level-${i + 1}`);
-            };
-            parent.appendChild(levelButton);
-        }
-
-        const sandbox = document.createElement('button');
-        sandbox.className = buttonClasses;
-        sandbox.innerText = 'Play Sandbox';
-        sandbox.onclick =  () => {
-            this.changeScene('sandbox');
-        };
-
-        parent.appendChild(sandbox);
-
-        const credits = document.createElement('button');
-        credits.className = buttonClasses;
-        credits.innerText = 'Credits';
-        credits.onclick =  () => {
-        };
-        parent.appendChild(credits);
+        this.drawMenu();
+        this.drawCredits();
 
     }
 
@@ -141,7 +117,104 @@ export class MainMenu extends Scene {
     }
 
     destroy(): void {
-        document.body.removeChild(this.root);
+        document.body.removeChild(this.container);
     }
 
+    drawMenu() {
+        const title = document.createElement('h1');
+        title.className = 'text-4xl';
+        title.innerText = 'The Magic Library';
+        this.menu.appendChild(title);
+
+        const group = document.createElement('h2');
+        group.className = 'text-xl';
+        group.innerText = 'The Spice Girls';
+        this.menu.appendChild(group);
+
+        const buttonClasses = 'p-2 bg-stone-100 hover:bg-stone-200 rounded-md w-64';
+
+        for (let i = 0; i < 3; ++i) {
+            const levelButton = document.createElement('button');
+            levelButton.className = buttonClasses;
+            levelButton.innerText = `Level ${i + 1}`;
+            levelButton.onclick =  () => {
+                this.changeScene(`level-${i + 1}`);
+            };
+            this.menu.appendChild(levelButton);
+        }
+
+        const sandbox = document.createElement('button');
+        sandbox.className = buttonClasses;
+        sandbox.innerText = 'Play Sandbox';
+        sandbox.onclick =  () => {
+            this.changeScene('sandbox');
+        };
+
+        this.menu.appendChild(sandbox);
+
+        const showCredits = document.createElement('button');
+        showCredits.className = buttonClasses;
+        showCredits.innerText = 'Credits';
+        showCredits.onclick =  () => {
+            this.root.appendChild(this.credits);
+        };
+        this.menu.appendChild(showCredits);
+    }
+
+    drawCredits() {
+        const title = document.createElement('h1');
+        title.innerText = 'Credits';
+        title.className = 'text-4xl';
+        this.credits.appendChild(title);
+
+        const content = document.createElement('div');
+        content.className = 'flex justify-center items-start gap-5'
+        this.credits.appendChild(content);
+
+        // Developer Credits
+            const developers = document.createElement('section');
+            developers.className = 'w-[10vw]'
+            content.appendChild(developers);
+
+            const devTitle = document.createElement('h2');
+            devTitle.innerText = 'Developers';
+            devTitle.className = 'text-xl border-b-2 border-stone-950 flex justify-center items-center'
+            developers.appendChild(devTitle);
+
+            const devNames = [
+                'Lisa Godwin', 'Brendan Griffiths', 'Nihal Ranchod', 'Zach Schwark', 'Ashlea Smith'
+            ];
+            const devList = document.createElement('ul');
+            devList.className = 'p-3 flex flex-col justify-center items-start gap-1'
+            developers.appendChild(devList);
+            for (let dev of devNames) {
+                const devP = document.createElement('li');
+                devP.innerText = dev;
+                devP.className = 'text-md'
+                devList.appendChild(devP);
+            }
+
+        // Asset Credits
+            const assets = document.createElement('section');
+            assets.className = 'w-[25vw]'
+            content.appendChild(assets);
+
+            const assetTitle = document.createElement('h2');
+            assetTitle.innerText = 'Assets';
+            assetTitle.className = 'text-xl border-b-2 border-stone-950 flex justify-center items-center'
+            assets.appendChild(assetTitle);
+
+            const allAssets = [
+                { artist: 'Okapiguy', title: 'Victorian Bookshelf', type: 'Model', license: 'CC-BY-NC-4.0', link: 'https://sketchfab.com/3d-models/victorian-bookshelf-9f548046646f404782b8838ec14932f8' },
+                { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0' },
+            ];
+            const assetsList = document.createElement('ul');
+            assetsList.className = 'p-3 flex flex-col justify-center items-start gap-1'
+            assets.appendChild(assetsList);
+            for (let asset of allAssets) {
+                const assetP = document.createElement('li');
+                assetP.innerHTML = `<a href='${asset.link}' class='text-sky-700 underline' >${asset.title}<a> - ${asset.artist} - ${asset.type} - ${asset.license}`;
+                assetsList.appendChild(assetP);
+            }
+    }
 }
