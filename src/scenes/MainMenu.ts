@@ -79,16 +79,16 @@ export class MainMenu extends Scene {
         }
 
         this.root = document.createElement('div');
-        this.root.className = 'flex justify-start items-center w-screen h-screen fixed top-0 left-0 z-10 p-20';
+        this.root.className = 'flex justify-start items-center w-screen h-screen fixed top-0 left-0 z-10 p-10';
         document.body.appendChild(this.root);
 
         const parent = document.createElement('div');
-        parent.className = 'flex flex-col gap-5 justify-center items-center bg-zinc-100 p-10 rounded-lg'
+        parent.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2'
         this.root.appendChild(parent);
 
         const title = document.createElement('h1');
         title.className = 'text-4xl';
-        title.innerText = 'CGV Project';
+        title.innerText = 'The Magic Library';
         parent.appendChild(title);
 
         const group = document.createElement('h2');
@@ -96,7 +96,7 @@ export class MainMenu extends Scene {
         group.innerText = 'The Spice Girls';
         parent.appendChild(group);
 
-        const buttonClasses = 'p-2 bg-zinc-200 rounded-md w-64';
+        const buttonClasses = 'p-2 bg-stone-100 hover:bg-stone-200 rounded-md w-64';
 
         for (let i = 0; i < 3; ++i) {
             const levelButton = document.createElement('button');
