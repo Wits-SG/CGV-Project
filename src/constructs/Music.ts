@@ -18,17 +18,15 @@ export class MusicConstruct extends Construct{
     conductorStand!: THREE.Group;
     phone!: THREE.Group;
 
-    player!: Player;
+    player: Player;
     crystal!: Crystal;
     
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, player: Player) {
         super(graphics, physics, interactions);
-        this.player = new Player(this.graphics, this.physics, this.interactions);
-        this.addConstruct(this.player);
+        this.player = player;
         this.crystal = new Crystal(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.crystal);
-        
     }
      // Check if order array size = number of instruments  --> done first for performance optimisation
             // then check if instruments are in correct order --> done second for performance optimisation
