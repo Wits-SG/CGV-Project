@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib/index';
+import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 
 export class MainLibraryConstruct extends Construct {
@@ -45,7 +45,6 @@ export class MainLibraryConstruct extends Construct {
 		const quaternion = new THREE.Quaternion();
 		const scale = new THREE.Vector3();
         const matrix = new THREE.Matrix4();
-        let material = new THREE.MeshNormalMaterial();
 
         matrix.compose( position, quaternion, scale );
 
@@ -160,11 +159,11 @@ export class MainLibraryConstruct extends Construct {
      //   [18.5,-10,-100], [18.5,-10,-90],[18.5,-10,-80],[18.5,-10,-70],[18.5,-10,-60], [18.5,-10,-50], [18.5,-10,-40],[18.5,-10,-30],[18.5,-10,-20]
       //  ];
 
-        const tableVertices = [[-2,111.5,100], [-2,111.5,90],[-2,111.5,80],[-2,111.5,70],[-2,111.5,60],[-2,111.5,50], [-2,111.5,40],[-2,111.5,30],[-2,111.5,20],
-        [2,111.5,100], [2,111.5,90],[2,111.5,80],[2,111.5,70],[2,111.5,60],[2,111.5,50], [2,111.5,40],[2,111.5,30],[2,111.5,20],
-        [-2,111.5,-100], [-2,111.5,-90],[-2,111.5,-80],[-2,111.5,-70],[-2,111.5,-60],[-2,111.5,-50], [-2,111.5,-40],[-2,111.5,-30],[-2,111.5,-20],
-        [2,111.5,-100], [2,111.5,-90],[2,111.5,-80],[2,111.5,-70],[2,111.5,-60],[2,111.5,-50], [2,111.5,-40],[2,111.5,-30],[2,111.5,-20],
-        ];
+        // const tableVertices = [[-2,111.5,100], [-2,111.5,90],[-2,111.5,80],[-2,111.5,70],[-2,111.5,60],[-2,111.5,50], [-2,111.5,40],[-2,111.5,30],[-2,111.5,20],
+        // [2,111.5,100], [2,111.5,90],[2,111.5,80],[2,111.5,70],[2,111.5,60],[2,111.5,50], [2,111.5,40],[2,111.5,30],[2,111.5,20],
+        // [-2,111.5,-100], [-2,111.5,-90],[-2,111.5,-80],[-2,111.5,-70],[-2,111.5,-60],[-2,111.5,-50], [-2,111.5,-40],[-2,111.5,-30],[-2,111.5,-20],
+        // [2,111.5,-100], [2,111.5,-90],[2,111.5,-80],[2,111.5,-70],[2,111.5,-60],[2,111.5,-50], [2,111.5,-40],[2,111.5,-30],[2,111.5,-20],
+        // ];
 
       this.walls = [];
        for(let i = 0; i<vertices.length; i++){
