@@ -21,15 +21,69 @@ export class MainLibraryConstruct extends Construct {
     character!:THREE.Mesh;
     table!: THREE.Group;
     tables!: Array<THREE.Group>;
+    Lamp!: THREE.Group;
+    TableGeometry!: THREE.BufferGeometry;
+    TableMaterial!: THREE.MeshNormalMaterial;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
         super(graphics, physics, interactions);
     }
 
+    /*      const tempBookShelf = this.bookshelf.clone();
+            tempBookShelf.rotation.set(0,Math.PI/4,0);
+            tempBookShelf.scale.set(3,3,3);
+            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1],bookShelfsVertices[i][2]);
+            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(1, 1,1));
+            this.graphics.add(tempBookShelf);
+            this.bookShelfs.push(tempBookShelf);*/
+
+
+
+
+    drawTables(TableGeometry:THREE.BufferGeometry){
+        const position = new THREE.Vector3();
+		const quaternion = new THREE.Quaternion();
+		const scale = new THREE.Vector3();
+        const matrix = new THREE.Matrix4();
+        let material = new THREE.MeshNormalMaterial();
+
+        matrix.compose( position, quaternion, scale );
+
+        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 40);
+        position.z = -100;
+        for ( let i = 0; i < 40; i ++ ) {
+            if(i<20){
+                position.x = -2.5;
+                position.y = -8.75;
+                position.z = position.z+20;
+                scale.x = scale.y = scale.z = 0.025;
+                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
+                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
+                matrix.compose( position, quaternion, scale );
+                mesh.setMatrixAt( i, matrix );
+            }
+            if(i>=20){
+                if(i==20){position.z = -100;}
+                position.x = 2.5;
+                position.y = -8.75;
+                position.z = position.z+20;
+                scale.x = scale.y = scale.z = 0.025;
+                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
+                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
+                matrix.compose( position, quaternion, scale );
+                mesh.setMatrixAt( i, matrix );
+            }
+        }
+        this.physics.addStatic(mesh,PhysicsColliderFactory.box(2, 2, 2));
+        this.graphics.add(mesh);
+    }
+
+
+
     create() {}
 
     async load(): Promise<void>{
-        try {
+        /*try {
             const gltfData: any = await this.graphics.loadModel('assets/BookShelf/scene.gltf');
             this.bookshelf = gltfData.scene;
         } catch(e: any) {
@@ -37,11 +91,30 @@ export class MainLibraryConstruct extends Construct {
         }
 
         try {
+            const gltfData: any = await this.graphics.loadModel('assets/Desk_Lamp/scene.gltf');
+            this.Lamp = gltfData.scene;
+        } catch(e: any) {
+            console.error(e);
+        }
+
+
+        try {
+            var glTFGeometry = new THREE.BufferGeometry();
+            var gltfMaterial = new THREE.MeshNormalMaterial();
             const gltfData: any = await this.graphics.loadModel('assets/wooden_table/scene.gltf');
             this.table = gltfData.scene;
+            gltfData.scene.traverse(function (child:any){
+                if( child.isMesh){
+                    //child.material.envMap = envMap;
+                    gltfMaterial = child.material
+                    glTFGeometry = child.geometry;
+                }
+            })
+            this.TableGeometry=glTFGeometry;
+            this.TableMaterial = gltfMaterial;
         } catch(e: any) {
                 console.error(e);
-        }
+        }*/
 
         try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
@@ -66,26 +139,26 @@ export class MainLibraryConstruct extends Construct {
 
     build() {
 
-        const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [0,0,-112.5],[-60,0,12.5],[-60,0,-12.5],[60,0,12.5],[60,0,-12.5]];
-        const scaleArr = [[80, 20, 0],[ 100, 20,0], [100, 20,0], [ 100, 20,0], [100, 20,0],[80, 20,0],[40, 20,0],[40, 20,0],[40, 20,0],[40, 20,0]];
-        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+        const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [-22.5,0,-112.5],[22.5,0,-112.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
+        const scaleArr = [[80, 20, 0.1],[ 100, 20,0.1], [100, 20,0.1], [ 100, 20,0.1], [100, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];
+        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
 
-        const floorVertices = [[0,-10,0],[60,-10,0],[-60,-10,0]];
-        const floorScale = [[80, 225,0],[40, 25,0],[40, 25,0]];
+        const floorVertices = [[0,-10,0],[100,-10,0],[-100,-10,0]];
+        const floorScale = [[80, 225,0],[120, 25,0],[120, 25,0]];
     
-        const ceilingVertices = [[0,10,0],[60,10,0],[-60,10,0]];
-        const ceilingScale = [[80, 225,0],[40, 25,0],[40, 25,0]];
+        const ceilingVertices = [[0,10,0],[100,10,0],[-100,10,0]];
+        const ceilingScale = [[80, 225,0.1],[120, 25,0.1],[120, 25,0.1]];
 
-        const bookShelfsVertices = [[-25,-10,100], [-25,-10,90],[-25,-10,80],[-25,-10,70],[-25,-10,60],[-25,-10,50], [-25,-10,40],[-25,-10,30],[-25,-10,20],
-        [-18.5,-10,100], [-18.5,-10,90],[-18.5,-10,80],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,50], [-18.5,-10,40],[-18.5,-10,30],[-18.5,-10,20],
-        [25,-10,100], [25,-10,90],[25,-10,80],[25,-10,70],[25,-10,60], [25,-10,50], [25,-10,40],[25,-10,30],[25,-10,20],
-        [18.5,-10,100], [18.5,-10,90],[18.5,-10,80],[18.5,-10,70],[18.5,-10,60], [18.5,-10,50], [18.5,-10,40],[18.5,-10,30],[18.5,-10,20],
+       // const bookShelfsVertices = [[-15,-10,100], [-25,-10,90],[-25,-10,80],[-25,-10,70],[-25,-10,60],[-25,-10,50], [-25,-10,40],[-25,-10,30],[-25,-10,20],
+       // [-18.5,-10,100], [-18.5,-10,90],[-18.5,-10,80],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,50], [-18.5,-10,40],[-18.5,-10,30],[-18.5,-10,20],
+       // [25,-10,100], [25,-10,90],[25,-10,80],[25,-10,70],[25,-10,60], [25,-10,50], [25,-10,40],[25,-10,30],[25,-10,20],
+       // [18.5,-10,100], [18.5,-10,90],[18.5,-10,80],[18.5,-10,70],[18.5,-10,60], [18.5,-10,50], [18.5,-10,40],[18.5,-10,30],[18.5,-10,20],
 
-        [-25,-10,-100], [-25,-10,-90],[-25,-10,-80],[-25,-10,-70],[-25,-10,-60],[-25,-10,-50], [-25,-10,-40],[-25,-10,-30],[-25,-10,-20],
-        [-18.5,-10,-100], [-18.5,-10,-90],[-18.5,-10,-80],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-50], [-18.5,-10,-40],[-18.5,-10,-30],[-18.5,-10,-20],
-        [25,-10,-100], [25,-10,-90],[25,-10,-80],[25,-10,-70],[25,-10,-60], [25,-10,-50], [25,-10,-40],[25,-10,-30],[25,-10,-20],
-        [18.5,-10,-100], [18.5,-10,-90],[18.5,-10,-80],[18.5,-10,-70],[18.5,-10,-60], [18.5,-10,-50], [18.5,-10,-40],[18.5,-10,-30],[18.5,-10,-20]
-        ];
+     //   [-25,-10,-100], [-25,-10,-90],[-25,-10,-80],[-25,-10,-70],[-25,-10,-60],[-25,-10,-50], [-25,-10,-40],[-25,-10,-30],[-25,-10,-20],
+     //   [-18.5,-10,-100], [-18.5,-10,-90],[-18.5,-10,-80],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-50], [-18.5,-10,-40],[-18.5,-10,-30],[-18.5,-10,-20],
+     //   [25,-10,-100], [25,-10,-90],[25,-10,-80],[25,-10,-70],[25,-10,-60], [25,-10,-50], [25,-10,-40],[25,-10,-30],[25,-10,-20],
+     //   [18.5,-10,-100], [18.5,-10,-90],[18.5,-10,-80],[18.5,-10,-70],[18.5,-10,-60], [18.5,-10,-50], [18.5,-10,-40],[18.5,-10,-30],[18.5,-10,-20]
+      //  ];
 
         const tableVertices = [[-2,111.5,100], [-2,111.5,90],[-2,111.5,80],[-2,111.5,70],[-2,111.5,60],[-2,111.5,50], [-2,111.5,40],[-2,111.5,30],[-2,111.5,20],
         [2,111.5,100], [2,111.5,90],[2,111.5,80],[2,111.5,70],[2,111.5,60],[2,111.5,50], [2,111.5,40],[2,111.5,30],[2,111.5,20],
@@ -93,72 +166,66 @@ export class MainLibraryConstruct extends Construct {
         [2,111.5,-100], [2,111.5,-90],[2,111.5,-80],[2,111.5,-70],[2,111.5,-60],[2,111.5,-50], [2,111.5,-40],[2,111.5,-30],[2,111.5,-20],
         ];
 
-
-        this.character = GraphicsPrimitiveFactory.box({
-            position: { x: 0, y: -8.5, z:95},
-            scale: { x: 2, y: 3, z: 1},
-            rotation: { x: 0, y: 0, z: 0 },
-            colour: 0x98fb98,
-            shadows: true,
-        });
-        this.graphics.add(this.character);
-
-        this.walls = [];
-       for(let i =0; i<10; i++){
+      this.walls = [];
+       for(let i = 0; i<vertices.length; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
             this.wallsTexture = new THREE.MeshBasicMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
             const wall = new THREE.Mesh(geometry, this.wallsTexture);
-            wall.scale.set(scaleArr[i][0],scaleArr[i][1],scaleArr[i][2]);
+            wall.scale.set(scaleArr[i][0],scaleArr[i][1],0.01);
             wall.position.set(vertices[i][0],vertices[i][1],vertices[i][2]);
             wall.rotation.set(rotation[i][0],rotation[i][1],rotation[i][2]);
             this.walls.push(wall);
-            this.physics.addStatic(wall,PhysicsColliderFactory.box(scaleArr[i][0]/2, scaleArr[i][1]/2, 0.1));
+            this.physics.addStatic(wall,PhysicsColliderFactory.box(scaleArr[i][0]/2, scaleArr[i][1]/2, 0.01));
             this.graphics.add(wall);
         }
         this.floors = [];
         for(let i = 0; i<3; i++){
-            const geometry = new THREE.PlaneGeometry( 1, 1);
+            const geometry = new THREE.PlaneGeometry( 1,1,1);
             this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
-            const floor= new THREE.Mesh(geometry, this.floorTexture);
+            const floor= new THREE.Mesh(geometry,this.floorTexture);
             floor.position.set(floorVertices[i][0],floorVertices[i][1],floorVertices[i][2]);
             floor.rotation.set(Math.PI/2,0,0);
-            floor.scale.set(floorScale[i][0],floorScale[i][1],floorScale[i][2]);
+           //floor.scale.set(floorScale[i][0],floorScale[i][1],floorScale[i][2]);
+            floor.scale.set(floorScale[i][0],floorScale[i][1],0.01);
             this.floors.push(floor);
-            this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2, floorScale[i][0]/2, 0.1));
+            this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2,floorScale[i][1]/2, 0.01));
             this.graphics.add( floor);
         }
-        this.bookShelfs = [];
-        for ( let i = 0; i<bookShelfsVertices.length; i++){
+        /*this.bookShelfs = [];
+        for ( let i = 0; i<1; i++){
             const tempBookShelf = this.bookshelf.clone();
-            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1],bookShelfsVertices[i][2]);
-            tempBookShelf.rotation.set(0,Math.PI/2,0);
-            tempBookShelf.scale.set(2.25,2.25,2.25);
-            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(2.25/2, 2.25/2, 1.1));
+            tempBookShelf.rotation.set(0,0,0);
+            //tempBookShelf.scale.set(0.05,0.05,0.05);
+            tempBookShelf.position.set(0,0,0);
+            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(1, 21, 6));
             this.graphics.add(tempBookShelf);
             this.bookShelfs.push(tempBookShelf);
-        }
+        }*/
 
-        this.FbookShelfs = [];
+       /* this.FbookShelfs = [];
         for ( let i = 0; i<bookShelfsVertices.length; i++){
             const tempBookShelf = this.bookshelf.clone();
-            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1],bookShelfsVertices[i][2]+2);
+            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1]+475,bookShelfsVertices[i][2]+2);
             tempBookShelf.rotation.set(0,-Math.PI/2,0);
             tempBookShelf.scale.set(2.25,2.25,2.25);
             this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(2.25/2, 2.25/2, 1.1));
             this.graphics.add(tempBookShelf);
             this.bookShelfs.push(tempBookShelf);
-        }
+        }*/
 
-        this.tables = [];
-        for ( let i = 0; i<tableVertices.length; i++){
+
+        //this.drawTables(this.TableGeometry);
+
+       /*this.tables = [];
+        for ( let i = 0; i < 1; i++){
             const tempTable= this.table.clone();
-            tempTable.position.set(tableVertices[i][0],tableVertices[i][1],tableVertices[i][2]+2);
-            tempTable.rotation.set(0,Math.PI,0);
-            tempTable.scale.set(2,1.5,2);
-            this.physics.addStatic(tempTable,PhysicsColliderFactory.box(1, 0.75, 1));
+            tempTable.position.set(0, 0, 0);
+            tempTable.rotation.set(0, 0, 0);
+            tempTable.scale.set(2,2,2);
+            this.physics.addStatic(tempTable,PhysicsColliderFactory.box(1, 1, 1));
             this.graphics.add(tempTable);
             this.tables.push(tempTable);
-        }
+        }*/
 
         this.ceilings = [];
         for(let i = 0; i<3; i++){
@@ -167,18 +234,23 @@ export class MainLibraryConstruct extends Construct {
             const ceiling = new THREE.Mesh(geometry,this.ceilingTexture);
             ceiling.position.set(ceilingVertices[i][0],ceilingVertices[i][1],ceilingVertices[i][2]);
             ceiling.rotation.set(Math.PI/2,0,0);
-            ceiling.scale.set(ceilingScale[i][0],ceilingScale[i][1],ceilingScale[i][2]);
+            ceiling.scale.set(ceilingScale[i][0],ceilingScale[i][1],0.01);
             this.floors.push(ceiling);
-            this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScale[i][0]/2, ceilingScale[i][0]/2, 0.1));
+            this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScale[i][0]/2, ceilingScale[i][0]/2, 0.01));
             this.graphics.add( ceiling);
         }
+       // const tempLamp= this.Lamp.clone();
+        //tempLamp.position.set(-1.5,-8.25,22);
+        //tempLamp.scale.set(2,2,2);
+        //this.physics.addStatic(tempLamp,PhysicsColliderFactory.box(1, 1,1));
+       // this.graphics.add(tempLamp);
 
-        this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,1.5);
+        this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
         this.lightHemisphere.position.set(0, 100, 0);
         
-        this.lightDirectional = new THREE.DirectionalLight(0xffffff, 1);
+        this.lightDirectional = new THREE.DirectionalLight(0xffffff, 0.5);
         this.lightDirectional.color.setHSL(0.1, 1, 0.95);
         this.lightDirectional.position.set(0, 20, 100);
         this.lightDirectional.position.multiplyScalar(100);
