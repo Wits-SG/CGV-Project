@@ -39,7 +39,15 @@ export class Player extends Construct {
             if (event.key == 'Shift') { this.speed = 0.05 }
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
+            
+            const worldPos = new THREE.Vector3();
+            this.root.getWorldPosition(worldPos);
+            
+
             if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
+            if (event.key == 'b' || event.key == 'B'){
+                console.log(worldPos);
+            }
             if (this.root.userData.canInteract) {
                 if (event.key == 'e' || event.key == 'E') {
                     this.root.userData.onInteract();
@@ -96,7 +104,7 @@ export class Player extends Construct {
             shadows: false 
         })
 
-        this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.5, 2000);
+        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.5, 2000);
         this.camera.rotation.set(0 , -Math.PI / 2, 0);
         this.camera.layers.enable(0);
         this.camera.layers.set(0);

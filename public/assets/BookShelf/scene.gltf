@@ -3,24 +3,24 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 36353,
+      "count": 340,
       "max": [
-        14.88924503326416,
-        150.37844848632813,
-        228.84063720703125
+        40.94490051269531,
+        7.874000072479248,
+        82.67720031738281
       ],
       "min": [
-        -43.28312301635742,
-        -150.37844848632813,
-        -9.903784505005137e-16
+        -40.94490051269531,
+        -11.810999870300293,
+        0.0
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 436236,
+      "byteOffset": 4080,
       "componentType": 5126,
-      "count": 36353,
+      "count": 340,
       "max": [
         1.0,
         1.0,
@@ -36,7 +36,7 @@
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 36353,
+      "count": 340,
       "max": [
         1.0,
         1.0,
@@ -54,61 +54,136 @@
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 36353,
+      "count": 340,
       "max": [
-        0.9935514330863953,
-        0.9978320598602295
+        0.9986000061035156,
+        0.9987000226974487
       ],
       "min": [
-        0.0,
-        2.127140760421753e-06
+        0.0013000000035390258,
+        0.0010999999940395355
       ],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 118404,
+      "count": 744,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 8160,
+      "componentType": 5126,
+      "count": 12672,
+      "max": [
+        36.31151580810547,
+        6.187442779541016,
+        79.52046966552734
+      ],
+      "min": [
+        -36.02447509765625,
+        -7.8517584800720215,
+        7.866921424865723
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 160224,
+      "componentType": 5126,
+      "count": 12672,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 5440,
+      "componentType": 5126,
+      "count": 12672,
+      "max": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 2720,
+      "componentType": 5126,
+      "count": 12672,
+      "max": [
+        0.9989320039749146,
+        0.9998830556869507
+      ],
+      "min": [
+        0.00044436100870370865,
+        0.001580703305080533
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 2976,
+      "componentType": 5125,
+      "count": 19008,
       "type": "SCALAR"
     }
   ],
   "asset": {
     "extras": {
-      "author": "Okapiguy (https://sketchfab.com/Okapiguy)",
-      "license": "CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)",
-      "source": "https://sketchfab.com/3d-models/victorian-bookshelf-9f548046646f404782b8838ec14932f8",
-      "title": "Victorian Bookshelf"
+      "author": "filthycent (https://sketchfab.com/filthycent)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/bookshelf-3c782b0787cc41f1b5974dbd7a1f8f53",
+      "title": "bookshelf"
     },
-    "generator": "Sketchfab-15.8.0",
+    "generator": "Sketchfab-12.68.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 473616,
+      "byteLength": 79008,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 290824,
-      "byteOffset": 473616,
+      "byteLength": 104096,
+      "byteOffset": 79008,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 872472,
-      "byteOffset": 764440,
+      "byteLength": 312288,
+      "byteOffset": 183104,
       "byteStride": 12,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 581648,
-      "byteOffset": 1636912,
+      "byteLength": 208192,
+      "byteOffset": 495392,
       "byteStride": 16,
       "name": "floatBufferViews",
       "target": 34962
@@ -116,41 +191,71 @@
   ],
   "buffers": [
     {
-      "byteLength": 2218560,
-      "uri": "ltf.bin"
+      "byteLength": 703584,
+      "uri": "scene.bin"
     }
   ],
   "images": [
     {
-      "uri": "textures/lambert1_baseColor.png"
+      "uri": "textures/bookshelf_baseColor.png"
     },
     {
-      "uri": "textures/lambert1_metallicRoughness.png"
+      "uri": "textures/bookshelf_metallicRoughness.png"
     },
     {
-      "uri": "textures/lambert1_normal.png"
+      "uri": "textures/bookshelf_normal.png"
+    },
+    {
+      "uri": "textures/books_baseColor.png"
+    },
+    {
+      "uri": "textures/books_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/books_normal.png"
     }
   ],
   "materials": [
     {
-      "doubleSided": true,
-      "name": "lambert1",
+      "name": "bookshelf",
       "normalTexture": {
         "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
       },
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
+        "metallicFactor": 0.0,
         "metallicRoughnessTexture": {
           "index": 1
+        }
+      }
+    },
+    {
+      "name": "books",
+      "normalTexture": {
+        "index": 5
+      },
+      "occlusionTexture": {
+        "index": 4
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicFactor": 0.0,
+        "metallicRoughnessTexture": {
+          "index": 4
         }
       }
     }
   ],
   "meshes": [
     {
-      "name": "pCube286_lambert1_0",
+      "name": "Cylinder005_bookshelf_0",
       "primitives": [
         {
           "attributes": {
@@ -164,6 +269,22 @@
           "mode": 4
         }
       ]
+    },
+    {
+      "name": "Object001_books_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
     }
   ],
   "nodes": [
@@ -172,21 +293,21 @@
         1
       ],
       "matrix": [
-        1.0,
+        0.008334981959017274,
+        -1.924638120502475e-18,
+        0.008667799522317998,
         0.0,
+        -0.008667799522317998,
+        -4.520843085858466e-18,
+        0.008334981959017274,
         0.0,
+        1.924638120502475e-18,
+        -0.012025085277855396,
+        -4.520843085858466e-18,
         0.0,
-        0.0,
-        2.220446049250313e-16,
-        -1.0,
-        0.0,
-        0.0,
-        1.0,
-        2.220446049250313e-16,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
+        0,
+        0,
+        0,
         1.0
       ],
       "name": "Sketchfab_model"
@@ -196,28 +317,29 @@
         2
       ],
       "matrix": [
-        0.009999999776482582,
+        1.0,
         0.0,
         0.0,
         0.0,
         0.0,
+        -1.0,
         0.0,
-        0.009999999776482582,
         0.0,
         0.0,
-        -0.009999999776482582,
         0.0,
+        -1.0,
         0.0,
         0.0,
         0.0,
         0.0,
         1.0
       ],
-      "name": "5e33617f593b498cad7c940da19834a2.fbx"
+      "name": "f9975f3d322242a9b0797efe69668448.fbx"
     },
     {
       "children": [
-        3
+        3,
+        5
       ],
       "name": "RootNode"
     },
@@ -226,28 +348,56 @@
         4
       ],
       "matrix": [
-        1.0,
+        2.5399999618530273,
         0.0,
         0.0,
         0.0,
         0.0,
-        2.220446049250313e-16,
-        -1.0,
+        2.5399999618530273,
         0.0,
         0.0,
-        1.0,
-        2.220446049250313e-16,
+        0.0,
+        0.0,
+        2.5399999618530273,
         0.0,
         0.0,
         0.0,
         0.0,
         1.0
       ],
-      "name": "pCube286"
+      "name": "Cylinder005"
     },
     {
       "mesh": 0,
-      "name": "pCube286_lambert1_0"
+      "name": "Cylinder005_bookshelf_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        2.5399999618530273,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.5399999618530273,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.5399999618530273,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Object001"
+    },
+    {
+      "mesh": 1,
+      "name": "Object001_books_0"
     }
   ],
   "samplers": [
@@ -279,6 +429,18 @@
     {
       "sampler": 0,
       "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
     }
   ]
 }
