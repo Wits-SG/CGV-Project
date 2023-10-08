@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib/index';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js'
+import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
