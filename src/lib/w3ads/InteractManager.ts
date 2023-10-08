@@ -46,6 +46,7 @@ export class InteractManager {
     }
 
     addPickupObject(object: THREE.Object3D, radius: number, inHandScale: number, onPickup: Function) {
+    addPickupObject(object: THREE.Object3D, radius: number, inHandScale: number, onPickup: Function) {
         object.userData.inHandScale = inHandScale;
         this.addInteractable(object, radius, onPickup, true);
     }
@@ -87,8 +88,8 @@ export class InteractManager {
                 }
             }
 
-            // i.e. if no in range object was found
-            if (this.interactableObjects.length != 0) {
+            if (this.interactableObjects.length > 0) {
+                // i.e. if no in range object was found
                 if (minDistanceSquared <= this.interactableObjects[minObj].radius**2) {
                     if (!this.interactableObjects[minObj].canPickup) {
                         interacting.object.userData.canInteract = true;
@@ -131,7 +132,7 @@ export class InteractManager {
                 }
             }
 
-            if (this.pickupSpots.length != 0) {
+            if (this.pickupSpots.length > 0) {
                 if (minSpotDistanceSquared <= this.pickupSpots[minSpot].radius**2) {
                     interacting.object.userData.canPlace = true;
                     interacting.object.userData.onPlace = this.pickupSpots[minSpot].onPlace;
@@ -139,6 +140,7 @@ export class InteractManager {
                     interacting.object.userData.canPlace = false;
                 }
             }
+
         }
     }
 }
