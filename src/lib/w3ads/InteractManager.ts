@@ -22,6 +22,7 @@ type PickupSpot = {
 }
 
 export class InteractManager {
+    [x: string]: any;
     public interactingObjects: Array<InteractingObject>;
     public interactableObjects: Array<InteractableObject>;
     public pickupSpots: Array<PickupSpot>;
@@ -44,6 +45,7 @@ export class InteractManager {
         } satisfies InteractableObject);
     }
 
+
     addPickupObject(object: THREE.Object3D, radius: number, inHandScale: number, onPickup: Function) {
         object.userData.inHandScale = inHandScale;
         this.addInteractable(object, radius, onPickup, true);
@@ -63,6 +65,7 @@ export class InteractManager {
             // Interact Search to find closest object
             let minObj = 0;
             let minDistanceSquared = Number.MAX_VALUE;
+
             for (let i = 0; i < this.interactableObjects.length; ++i) {
                 let worldPos = new THREE.Vector3();
                 this.interactableObjects[i].object.getWorldPosition(worldPos);
@@ -102,6 +105,7 @@ export class InteractManager {
                     interacting.object.userData.canInteract = false;
                 }
             }
+           
 
             // Place object search
             let minSpot = 0;
