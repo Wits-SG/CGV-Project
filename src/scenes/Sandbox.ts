@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import { Scene } from '../lib';
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
+//import { TimeS } from '../lib/w3ads/types/misc.type';
+//import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+import { StatuesConstruct } from '../constructs/Statues';
 import { Player } from '../constructs/Player';
-import { GraphicsPrimitiveFactory, PhysicsColliderFactory } from '../lib';
-import { Crystal } from '../constructs/Crystal';
-import { CrystalDoor } from '../constructs/CrystalDoor';
 
 export class SandboxScene extends Scene {
 
@@ -14,16 +14,14 @@ export class SandboxScene extends Scene {
 
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
-    ball!: THREE.Mesh;
-    pickupBox!: THREE.Mesh;
-    placeSpot!: THREE.Mesh;
+    ballKinematic!: THREE.Mesh;
+    //testConstruct: TestConstruct;
+    //k!: THREE.Mesh;
+    //mainLibrary!: MainLibraryConstruct;
+    statueRoom!: StatuesConstruct;
+
     player!: Player;
-
-    crystal1: Crystal;
-    crystal2: Crystal;
-    crystalDoor: CrystalDoor;
-
-    controls!: OrbitControls;
+    controls: any;
 
     constructor(AmmoLib: any) {
         super(
@@ -31,22 +29,25 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
+       // this.testConstruct = new TestConstruct(this.graphics, this.physics);
+       // this.addConstruct(this.testConstruct);
+        // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
+        // this.addConstruct(this.mainLibrary);
+
+        this.statueRoom = new StatuesConstruct(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.statueRoom);
+
         this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
+    };
 
-        this.crystal1 = new Crystal(this.graphics, this.physics, this.interactions);
-        this.addConstruct(this.crystal1);
-        this.crystal2 = new Crystal(this.graphics, this.physics, this.interactions);
-        this.addConstruct(this.crystal2);
-
-        this.crystalDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, 2);
-        this.addConstruct(this.crystalDoor);
-    }
 
     create(): void {
     }
 
     async load(): Promise<void> {
+        // const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
+        // this.k = gltfData.scene;
     }
 
     build(): void {
@@ -54,76 +55,9 @@ export class SandboxScene extends Scene {
         // this.graphics.mainCamera.position.set(5, 5, 5);
         // this.graphics.mainCamera.lookAt(0, 0, 0);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
-        this.player.root.position.set(0, 1, 0);
-        this.crystal1.root.position.set(-80 , 2, 20);
-        this.crystal2.root.position.set(-80 , 2, 10);
-        this.crystalDoor.root.position.set(100, 20, 0);
+        this.player.root.position.set(0, 30, 0);
 
-        const crystalPlinths = this.crystalDoor.crystalPlinths;
-        for (let i = 0; i < crystalPlinths.length; i++) {
-            crystalPlinths[i].position.set(-100, 2, i * 10);
-        }
-
-       this.floor = GraphicsPrimitiveFactory.box({
-            position: { x: 0, y: -1, z: 0 },
-            scale: { x: 1000, y: 0.1, z: 1000 },
-            rotation: { x: 0, y: 0, z: 0 },
-            colour: 0x98fb98,
-            shadows: true,
-        });
-
-        this.walls = [];
-        for (let i = 0; i < 4; ++i) {
-            this.walls.push(
-                GraphicsPrimitiveFactory.box({
-                    position: { x: 0, y: 0, z: i * 10 + 10 },
-                    scale: { x: 40, y: 2, z: 0.2 },
-                    rotation: { x: 0, y: 0, z: 0 },
-                    colour: 0x0000ff,
-                    shadows: true,
-                })
-            );
-
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
-            this.graphics.add(this.walls[i]);
-        }
-        for (let i = 4; i < 8; ++i) {
-            this.walls.push(
-                GraphicsPrimitiveFactory.box({
-                    position: { x: 0, y: 0, z: (i - 4) * -10 - 10 },
-                    scale: { x: 40, y: 2, z: 0.2 },
-                    rotation: { x: 0, y: 0, z: 0 },
-                    colour: 0x0000ff,
-                    shadows: true,
-                })
-            );
-
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
-            this.graphics.add(this.walls[i]);
-        }
-        this.walls.push(
-            GraphicsPrimitiveFactory.box({
-                position: { x: 25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 6, z: 80 },
-                rotation: { x: 0, y: 0, z: 0 },
-                colour: 0x0000ff,
-                shadows: true,
-            })
-        );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 3, 40));
-        this.graphics.add(this.walls[8]);
-
-        this.walls.push(
-            GraphicsPrimitiveFactory.box({
-                position: { x: -25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 6, z: 80 },
-                rotation: { x: 0, y: 0, z: 0 },
-                colour: 0x0000ff,
-                shadows: true,
-            })
-        );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 3, 40));
-        this.graphics.add(this.walls[9]);
+        //this.statueRoom.root.scale.set(0.2,0.2,0.2);
 
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
@@ -142,66 +76,18 @@ export class SandboxScene extends Scene {
         this.lightDirectional.shadow.camera.right = 50;
         this.lightDirectional.shadow.camera.top = 50;
         this.lightDirectional.shadow.camera.bottom = -50;
-        
-        this.ball = GraphicsPrimitiveFactory.sphere({
-            position: { x: 0, y: 10, z: 1 },
-            rotation: { x: 0, y: 0, z: 0 },
-            radius: 1,
-            shadows: true,
-            colour: 0xff0000
-        });
-        const blueMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        const redMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
-        this.ball.material = blueMat;
-        this.physics.addDynamic(this.ball, PhysicsColliderFactory.sphere(1), {
-            linearVelocity: { x: 0, y: 0, z: 0 },
-            mass: 10,
-            friction: 1
-        })
-        this.interactions.addInteractable(this.ball, 5, () => {
-            if (this.ball.material == blueMat)
-                this.ball.material = redMat
-            else if (this.ball.material == redMat)
-                this.ball.material = blueMat
-        });
 
-        this.pickupBox = GraphicsPrimitiveFactory.box({
-            position: { x: 0, y: 2, z: 50 },
-            rotation: { x: 0, y: 0, z: 0},
-            scale: { x: 5, y: 5, z: 5 },
-            shadows: true,
-            colour: 0xff00ff
-        })
-        this.interactions.addPickupObject(this.pickupBox, 8, 1, () => {});
 
-        const placeGeom = new THREE.BoxGeometry(1, 3, 1);
-        const placeMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
-        this.placeSpot = new THREE.Mesh(placeGeom, placeMat);
-        this.placeSpot.position.set(0, 0, -50);
-        this.interactions.addPickupSpot(this.placeSpot, 8, (placedObject: THREE.Mesh) => {
-            this.placeSpot.add(placedObject);
-            placedObject.position.set(0, 2.5, 0);
-            placedObject.scale.set(2, 2, 2);
-            placedObject.material = new THREE.MeshLambertMaterial({ color: 0x00ffff });
-        })
-
-        this.graphics.add(this.pickupBox);
-        this.graphics.add(this.placeSpot);
-        this.graphics.add(this.ball);
-        this.graphics.add(this.floor);
+        //this.graphics.add(this.floor);
         this.graphics.add(this.lightHemisphere);
         this.graphics.add(this.lightDirectional);
-        this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
+        // this.graphics.add(this.k);
+
+        //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
     //@ts-ignore
     update(time: number, delta: number): void {
-        delta = delta / 1000;
-        const rotateAmount = delta * 45 * Math.PI/180;
-        this.pickupBox.rotateX(rotateAmount);
-        this.pickupBox.rotateY(rotateAmount);
-        this.pickupBox.rotateZ(rotateAmount);
-
     }
 
     destroy(): void {
