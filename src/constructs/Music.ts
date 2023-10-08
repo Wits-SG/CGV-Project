@@ -6,7 +6,7 @@ import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
 export class MusicConstruct extends Construct{
 
-   
+    
 
     floor!: THREE.Mesh;
     carpetData!: any;
@@ -34,6 +34,11 @@ export class MusicConstruct extends Construct{
             // then check if instruments are in correct order --> done second for performance optimisation
                 // then spawn crystal
     checkPuzzle(puzzle:Array<Number>, userPuzzle:Array<Number>){
+        const listener = new THREE.AudioListener();
+        this.player.root.add( listener );
+        const sound = new THREE.Audio( listener );
+        const audioLoader = new THREE.AudioLoader();
+
 
         if(userPuzzle.length == puzzle.length){
             let result: boolean = true;
@@ -44,12 +49,24 @@ export class MusicConstruct extends Construct{
                 //will put victory sound here and the crystal thing
                 console.log("Success!");
                 this.crystal.root.position.set(0,3,0);
+                audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                    sound.setBuffer( buffer );
+                    sound.setLoop( false );
+                    sound.setVolume( 0.5 );
+                    
+                    sound.play();
+                });
+                
+
             } else{
                 console.log("Wrong");
-                userPuzzle =[];
+                
+               userPuzzle =[];
             }
+            
         }
     }
+   
 
     create() {}
 
@@ -99,7 +116,22 @@ export class MusicConstruct extends Construct{
     build() {
         
         this.crystal.root.position.set(0,-10,0);
-        const puzzle = [0, 1, 2];
+        let puzzle: Array<Number> =[];
+        let n: number =0;
+        
+        while(puzzle.length < 3){
+            n = Math.floor(Math.random()*3);
+            if(puzzle.indexOf(n) === -1) puzzle.push(n);
+        }
+        // for(let i=0; i< 3; i++){
+        //     n = Math.floor(Math.random()*3);
+
+        //     while(!puzzle.includes(n)){
+        //         n = Math.floor(Math.random()*3);
+        //         puzzle.push(n);
+        //     }
+        // }
+        console.log(puzzle);
         let userPuzzle: Array<Number> = [];
         
         
@@ -118,12 +150,34 @@ export class MusicConstruct extends Construct{
         const geometry = new THREE.BoxGeometry(60,1,60);
         
         //carpet plane 
-        
         const carpet = new THREE.MeshLambertMaterial({ map: this.carpetData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, carpet);
         this.floor.position.set(0,0,0);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30)); 
 
+        // Wall and roof parameters
+        //const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
+        const backWallGeom = new THREE.BoxGeometry(60,20,1);
+        const sideWallGeom = new THREE.BoxGeometry(1,20,60);
+
+        const backWall = new THREE.Mesh(backWallGeom);
+        const sideWallLeft = new THREE.Mesh(sideWallGeom);
+        const sideWallRight = new THREE.Mesh(sideWallGeom);
+
+        sideWallLeft.position.set(-29.5,10,0);
+        sideWallRight.position.set(29.5,10,0);
+        backWall.position.set(0,10,30);
+
+        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(1, 10, 30));
+        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
+        this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
+
+        const roofLight = new THREE.PointLight(0xffffff, 2, 100 ,0);
+        roofLight.position.set(0,19,0);
+        const roofGeom = new THREE.PlaneGeometry(60,60);
+        const roof = new THREE.Mesh(roofGeom);
+        roof.rotation.set(Math.PI/2, 0, 0);
+        roof.position.set(0,20,0);
 
         
         //Guitar
@@ -153,8 +207,34 @@ export class MusicConstruct extends Construct{
             if(!userPuzzle.includes(this.guitar.userData.instrumentid)){
                 userPuzzle.push(this.guitar.userData.instrumentid);
             }
+        
+            if(userPuzzle.length == puzzle.length){
+                let result: boolean = true;
+                for(let i=0; i<puzzle.length; i++){
+                    result = result && userPuzzle[i] == puzzle[i];
+                }
+                if(result){
+                    //will put victory sound here and the crystal thing
+                    console.log("Success!");
+                    this.crystal.root.position.set(0,3,0);
+                    audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                        sound.setBuffer( buffer );
+                        sound.setLoop( false );
+                        sound.setVolume( 0.5 );
+                        
+                        sound.play();
+                    });
+                    
+    
+                } else{
+                    console.log("Wrong");
+                    
+                   userPuzzle =[];
+                }
+                
+            }
+            console.log(userPuzzle);
             
-            this.checkPuzzle(puzzle, userPuzzle);
             
             
         });
@@ -162,7 +242,7 @@ export class MusicConstruct extends Construct{
         //PIANO
         const pianoGeom = new THREE.BoxGeometry(3, 2, 3); 
         const pianoBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        const pianoBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+        
         const pianoBox = new THREE.Mesh(pianoGeom, pianoBoxMat);
         pianoBox.position.set(0, 1, 4);
 
@@ -189,8 +269,34 @@ export class MusicConstruct extends Construct{
             }
                 
              
-            this.checkPuzzle(puzzle, userPuzzle);
+            if(userPuzzle.length == puzzle.length){
+                let result: boolean = true;
+                for(let i=0; i<puzzle.length; i++){
+                    result = result && userPuzzle[i] == puzzle[i];
+                }
+                if(result){
+                    //will put victory sound here and the crystal thing
+                    console.log("Success!");
+                    this.crystal.root.position.set(0,3,0);
+                    audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                        sound.setBuffer( buffer );
+                        sound.setLoop( false );
+                        sound.setVolume( 0.5 );
+                        
+                        sound.play();
+                    });
+                    
+    
+                } else{
+                    console.log("Wrong");
+                    
+                   userPuzzle =[];
+                   
+                }
                 
+            }
+            
+            console.log(userPuzzle);
 
                 
         });
@@ -226,8 +332,32 @@ export class MusicConstruct extends Construct{
             }
             
             
-            this.checkPuzzle(puzzle,userPuzzle);
-            
+            if(userPuzzle.length == puzzle.length){
+                let result: boolean = true;
+                for(let i=0; i<puzzle.length; i++){
+                    result = result && userPuzzle[i] == puzzle[i];
+                }
+                if(result){
+                    //will put victory sound here and the crystal thing
+                    console.log("Success!");
+                    this.crystal.root.position.set(0,3,0);
+                    audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                        sound.setBuffer( buffer );
+                        sound.setLoop( false );
+                        sound.setVolume( 0.5 );
+                        
+                        sound.play();
+                    });
+                    
+    
+                } else{
+                    console.log("Wrong");
+                    
+                   userPuzzle =[];
+                }
+                
+            }
+            console.log(userPuzzle);
 
 
            
@@ -236,7 +366,7 @@ export class MusicConstruct extends Construct{
        //STAND
        const standGeom = new THREE.BoxGeometry(2, 2, 2); 
        const standBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-       const standBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+      
        const standBox = new THREE.Mesh(standGeom, standBoxMat);
        standBox.position.set(0, 1, -8);
        this.conductorStand.position.set(0 , 1 ,-8);
@@ -270,6 +400,10 @@ export class MusicConstruct extends Construct{
         
 
         this.add(this.floor);
+        this.add(sideWallLeft);
+        this.add(sideWallRight);
+        this.add(backWall);
+        this.add(roof);
     } //all geometry (where place objects)
 
     update() {}
