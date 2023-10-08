@@ -3,7 +3,7 @@ import { Construct, GraphicsContext, PhysicsContext, GraphicsPrimitiveFactory,
     PhysicsColliderFactory } from '../lib/index';
 import { Player } from './Player';
 import { InteractManager } from '../lib/w3ads/InteractManager';
-    
+import { Crystal } from './Crystal';
 export class MusicConstruct extends Construct{
 
    
@@ -19,19 +19,42 @@ export class MusicConstruct extends Construct{
     phone!: THREE.Group;
 
     player!: Player;
+    crystal!: Crystal;
     
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
         super(graphics, physics, interactions);
         this.player = new Player(this.graphics, this.physics, this.interactions);
         this.addConstruct(this.player);
+        this.crystal = new Crystal(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.crystal);
         
+    }
+     // Check if order array size = number of instruments  --> done first for performance optimisation
+            // then check if instruments are in correct order --> done second for performance optimisation
+                // then spawn crystal
+    checkPuzzle(puzzle:Array<Number>, userPuzzle:Array<Number>){
+
+        if(userPuzzle.length == puzzle.length){
+            let result: boolean = true;
+            for(let i=0; i<puzzle.length; i++){
+                result = result && userPuzzle[i] == puzzle[i];
+            }
+            if(result){
+                //will put victory sound here and the crystal thing
+                console.log("Success!");
+                this.crystal.root.position.set(0,3,0);
+            } else{
+                console.log("Wrong");
+                userPuzzle =[];
+            }
+        }
     }
 
     create() {}
 
     async load():Promise<void>{ //
-
+        
     
         try{ //Carpet
             this.carpetData = await this.graphics.loadTexture('assets/music/carpet2.png');
@@ -42,6 +65,7 @@ export class MusicConstruct extends Construct{
         try {//guitar object
             const gltfData: any = await this.graphics.loadModel('assets/music/acoustic_guitar/scene.gltf');
             this.guitar = gltfData.scene;
+            this.guitar.userData.instrumentid = 0;
         } catch (e: any) {
             console.error(e);
         }
@@ -49,6 +73,7 @@ export class MusicConstruct extends Construct{
         try {//piano object
             const gltfData: any = await this.graphics.loadModel('assets/music/piano_low_poly/scene.gltf');
             this.piano = gltfData.scene;
+            this.piano.userData.instrumentid = 1;
         } catch (e: any) {
             console.error(e);
         }
@@ -56,29 +81,28 @@ export class MusicConstruct extends Construct{
         try {//gramophone object
             const gltfData: any = await this.graphics.loadModel('assets/music/gramophone/scene.gltf');
             this.gram = gltfData.scene;
+            this.gram.userData.instrumentid = 2;
         } catch (e: any) {
             console.error(e);
         }
 
-        try {//gramophone object
+        try {//stand object
             const gltfData: any = await this.graphics.loadModel('assets/music/manhasset_music_stand/scene.gltf');
             this.conductorStand = gltfData.scene;
         } catch (e: any) {
             console.error(e);
         }
 
-        // try {//phone object
-        //     const gltfData: any = await this.graphics.loadModel('assets/phone/scene.gltf');
-        //     this.phone = gltfData.scene;
-        // } catch (e: any) {
-        //     console.error(e);
-        // }
-
 
     }
 
     build() {
-
+        
+        this.crystal.root.position.set(0,-10,0);
+        const puzzle = [0, 1, 2];
+        let userPuzzle: Array<Number> = [];
+        
+        
         // create an AudioListener and add it to the camera
         const listener = new THREE.AudioListener();
         this.player.root.add( listener );
@@ -93,8 +117,6 @@ export class MusicConstruct extends Construct{
         
         const geometry = new THREE.BoxGeometry(60,1,60);
         
-        
-        
         //carpet plane 
         
         const carpet = new THREE.MeshLambertMaterial({ map: this.carpetData, side: THREE.DoubleSide });
@@ -104,18 +126,17 @@ export class MusicConstruct extends Construct{
 
 
         
-
+        //Guitar
         const guitarGeom = new THREE.BoxGeometry(3, 2, 3); 
         const guitarBoxMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        const guitarBoxMatBlue = new THREE.MeshLambertMaterial({ color: 0x0000ff });
         const guitarBox = new THREE.Mesh(guitarGeom, guitarBoxMat);
         guitarBox.position.set(-10, 1, 4);
-        //guitarBox.rotation.set(0, Math.PI/4, 0);
+        
         this.guitar.position.set(-10,1,4);
         this.guitar.scale.set(0.05,0.05,0.05);
         this.guitar.rotation.set(0,3*Math.PI/4,0);
         this.floor.add(this.guitar);
-        //this.floor.add(guitarBox);
+        
         this.physics.addStatic(guitarBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
 
         this.interactions.addInteractable(guitarBox, 5, () => {
@@ -129,11 +150,13 @@ export class MusicConstruct extends Construct{
                 sound.play();
             });
             
-
-
-            // Check if order array size = number of instruments  --> done first for performance optimisation
-            // then check if instruments are in correct order --> done second for performance optimisation
-            // then spawn crystal
+            if(!userPuzzle.includes(this.guitar.userData.instrumentid)){
+                userPuzzle.push(this.guitar.userData.instrumentid);
+            }
+            
+            this.checkPuzzle(puzzle, userPuzzle);
+            
+            
         });
 
         //PIANO
@@ -150,22 +173,26 @@ export class MusicConstruct extends Construct{
         //this.floor.add(pianoBox);
         this.physics.addStatic(pianoBox, PhysicsColliderFactory.box(1.5, 1, 1.5));
 
-        this.interactions.addInteractable(pianoBox, 5, () => {
+        
+        this.interactions.addInteractable(this.piano, 5, () => {
             // Play sound, and add instrument to order array
 
-           
+            
             audioLoader.load( 'sound/piano-g-6200.mp3', function( buffer ) {
                 sound.setBuffer( buffer );
                 sound.setLoop( false );
                 sound.setVolume( 0.5 );
-                sound.play();
+                 sound.play();
             });
-            
+            if(!userPuzzle.includes(this.piano.userData.instrumentid)){
+                userPuzzle.push(this.piano.userData.instrumentid);
+            }
+                
+             
+            this.checkPuzzle(puzzle, userPuzzle);
+                
 
-
-            // Check if order array size = number of instruments  --> done first for performance optimisation
-            // then check if instruments are in correct order --> done second for performance optimisation
-            // then spawn crystal
+                
         });
 
         //GRAMOPHONE
@@ -194,11 +221,16 @@ export class MusicConstruct extends Construct{
                 sound.play();
             });
             
+            if(!userPuzzle.includes(this.gram.userData.instrumentid)){
+                userPuzzle.push(this.gram.userData.instrumentid);
+            }
+            
+            
+            this.checkPuzzle(puzzle,userPuzzle);
+            
 
 
-            // Check if order array size = number of instruments  --> done first for performance optimisation
-            // then check if instruments are in correct order --> done second for performance optimisation
-            // then spawn crystal
+           
         });
 
        //STAND
@@ -213,18 +245,6 @@ export class MusicConstruct extends Construct{
        //this.floor.add(standBox)
        
        this.physics.addStatic(standBox, PhysicsColliderFactory.box(1, 1, 1));
-
-        // const tempGram = this.gram.clone();
-        // tempGram.position.set(20, -15, 0);
-        // tempGram.rotation.set(-Math.PI/2, -3*Math.PI/4, 0);
-        // tempGram.scale.set(15,15,15);
-        // this.floor.add(tempGram);
-
-        // const tempStand = this.conductorStand.clone();
-        // tempStand.position.set(0,5,-1);
-        // tempStand.rotation.set(-Math.PI/2,Math.PI, 0);
-        // tempStand.scale.set(0.5,0.5,0.5);
-        // this.floor.add(tempStand);
 
         // Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 500, 100);
@@ -247,7 +267,7 @@ export class MusicConstruct extends Construct{
         middleLight.position.set(0,0,-10);
         this.floor.add(middleLight);
 
-
+        
 
         this.add(this.floor);
     } //all geometry (where place objects)
