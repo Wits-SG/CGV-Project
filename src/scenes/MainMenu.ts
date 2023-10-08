@@ -232,7 +232,6 @@ export class MainMenu extends Scene {
             assetsList.className = 'p-3 flex flex-col justify-start items-start gap-1 max-h-44 overflow-y-scroll'
             assets.appendChild(assetsList);
             for (let asset of allAssets) {
-                console.log(asset);
                 const assetP = document.createElement('li');
                 assetP.innerHTML = `<a href='${asset.link}' class='text-sky-700 underline' >${asset.title}<a> - ${asset.artist} - ${asset.type} - ${asset.license}`;
                 assetsList.appendChild(assetP);
