@@ -82,7 +82,7 @@ export class MainLibraryConstruct extends Construct {
     create() {}
 
     async load(): Promise<void>{
-        try {
+        /*try {
             const gltfData: any = await this.graphics.loadModel('assets/BookShelf/scene.gltf');
             this.bookshelf = gltfData.scene;
         } catch(e: any) {
@@ -113,7 +113,7 @@ export class MainLibraryConstruct extends Construct {
             this.TableMaterial = gltfMaterial;
         } catch(e: any) {
                 console.error(e);
-        }
+        }*/
 
         try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
@@ -138,17 +138,17 @@ export class MainLibraryConstruct extends Construct {
 
     build() {
 
-        const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [0,0,-112.5],[-60,0,12.5],[-60,0,-12.5],[60,0,12.5],[60,0,-12.5]];
-        const scaleArr = [[80, 20, 0.1],[ 100, 20,0.1], [100, 20,0.1], [ 100, 20,0.1], [100, 20,0.1],[80, 20,0.1],[40, 20,0.1],[40, 20,0.1],[40, 20,0],[40, 20,0.1]];
-        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+        const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [-22.5,0,-112.5],[22.5,0,-112.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
+        const scaleArr = [[80, 20, 0.1],[ 100, 20,0.1], [100, 20,0.1], [ 100, 20,0.1], [100, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];
+        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
 
-        const floorVertices = [[0,-10,0],[60,-10,0],[-60,-10,0]];
-        const floorScale = [[80, 225,0],[40, 25,0],[40, 25,0]];
+        const floorVertices = [[0,-10,0],[100,-10,0],[-100,-10,0]];
+        const floorScale = [[80, 225,0],[120, 25,0],[120, 25,0]];
     
-        const ceilingVertices = [[0,10,0],[60,10,0],[-60,10,0]];
-        const ceilingScale = [[80, 225,0.1],[40, 25,0.1],[40, 25,0.1]];
+        const ceilingVertices = [[0,10,0],[100,10,0],[-100,10,0]];
+        const ceilingScale = [[80, 225,0.1],[120, 25,0.1],[120, 25,0.1]];
 
-        const bookShelfsVertices = [[-15,-10,100], [-25,-10,90],[-25,-10,80],[-25,-10,70],[-25,-10,60],[-25,-10,50], [-25,-10,40],[-25,-10,30],[-25,-10,20],
+       // const bookShelfsVertices = [[-15,-10,100], [-25,-10,90],[-25,-10,80],[-25,-10,70],[-25,-10,60],[-25,-10,50], [-25,-10,40],[-25,-10,30],[-25,-10,20],
        // [-18.5,-10,100], [-18.5,-10,90],[-18.5,-10,80],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,50], [-18.5,-10,40],[-18.5,-10,30],[-18.5,-10,20],
        // [25,-10,100], [25,-10,90],[25,-10,80],[25,-10,70],[25,-10,60], [25,-10,50], [25,-10,40],[25,-10,30],[25,-10,20],
        // [18.5,-10,100], [18.5,-10,90],[18.5,-10,80],[18.5,-10,70],[18.5,-10,60], [18.5,-10,50], [18.5,-10,40],[18.5,-10,30],[18.5,-10,20],
@@ -157,7 +157,7 @@ export class MainLibraryConstruct extends Construct {
      //   [-18.5,-10,-100], [-18.5,-10,-90],[-18.5,-10,-80],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-50], [-18.5,-10,-40],[-18.5,-10,-30],[-18.5,-10,-20],
      //   [25,-10,-100], [25,-10,-90],[25,-10,-80],[25,-10,-70],[25,-10,-60], [25,-10,-50], [25,-10,-40],[25,-10,-30],[25,-10,-20],
      //   [18.5,-10,-100], [18.5,-10,-90],[18.5,-10,-80],[18.5,-10,-70],[18.5,-10,-60], [18.5,-10,-50], [18.5,-10,-40],[18.5,-10,-30],[18.5,-10,-20]
-        ];
+      //  ];
 
         const tableVertices = [[-2,111.5,100], [-2,111.5,90],[-2,111.5,80],[-2,111.5,70],[-2,111.5,60],[-2,111.5,50], [-2,111.5,40],[-2,111.5,30],[-2,111.5,20],
         [2,111.5,100], [2,111.5,90],[2,111.5,80],[2,111.5,70],[2,111.5,60],[2,111.5,50], [2,111.5,40],[2,111.5,30],[2,111.5,20],
@@ -165,18 +165,8 @@ export class MainLibraryConstruct extends Construct {
         [2,111.5,-100], [2,111.5,-90],[2,111.5,-80],[2,111.5,-70],[2,111.5,-60],[2,111.5,-50], [2,111.5,-40],[2,111.5,-30],[2,111.5,-20],
         ];
 
-
-        this.character = GraphicsPrimitiveFactory.box({
-            position: { x: 0, y: -8.5, z:95},
-            scale: { x: 2, y: 3, z: 1},
-            rotation: { x: 0, y: 0, z: 0 },
-            colour: 0x98fb98,
-            shadows: true,
-        });
-        this.graphics.add(this.character);
-
       this.walls = [];
-       for(let i =0; i<10; i++){
+       for(let i = 0; i<vertices.length; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
             this.wallsTexture = new THREE.MeshBasicMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
             const wall = new THREE.Mesh(geometry, this.wallsTexture);
@@ -200,7 +190,7 @@ export class MainLibraryConstruct extends Construct {
             this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2,floorScale[i][1]/2, 0.01));
             this.graphics.add( floor);
         }
-        this.bookShelfs = [];
+        /*this.bookShelfs = [];
         for ( let i = 0; i<1; i++){
             const tempBookShelf = this.bookshelf.clone();
             tempBookShelf.rotation.set(0,0,0);
@@ -209,7 +199,7 @@ export class MainLibraryConstruct extends Construct {
             this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(1, 21, 6));
             this.graphics.add(tempBookShelf);
             this.bookShelfs.push(tempBookShelf);
-        }
+        }*/
 
        /* this.FbookShelfs = [];
         for ( let i = 0; i<bookShelfsVertices.length; i++){
@@ -223,7 +213,7 @@ export class MainLibraryConstruct extends Construct {
         }*/
 
 
-        this.drawTables(this.TableGeometry);
+        //this.drawTables(this.TableGeometry);
 
        /*this.tables = [];
         for ( let i = 0; i < 1; i++){
