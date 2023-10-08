@@ -305,7 +305,6 @@ export class StatuesConstruct extends Construct {
                 placeObject.position.set(0, 10, 0);
                 placeObject.scale.setScalar(2);
                 this.current[i] = placeObject.userData.pieceType;
-                console.log(this.solution, this.current)
 
                 let result = true;
                 for (let j = 0; j < this.solution.length; ++j) {
