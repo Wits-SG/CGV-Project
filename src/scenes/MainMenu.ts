@@ -13,6 +13,7 @@ export class MainMenu extends Scene {
     root!: HTMLDivElement;
     menu!: HTMLDivElement;
     credits!: HTMLDivElement;
+    levelMenus!: Array<HTMLDivElement>;
 
     numCrystals: number;
     door: CrystalDoor;
@@ -40,6 +41,8 @@ export class MainMenu extends Scene {
             );
             this.addConstruct(this.crystals[i]);
         }
+
+        this.levelMenus = [];
     }
 
     create(): void {
@@ -69,7 +72,7 @@ export class MainMenu extends Scene {
         this.door.root.position.set(0, 0, -29);
 
         const angleBetween = 2 * Math.PI / this.numCrystals;
-        const distanceFromCenter = 5;
+        const distanceFromCenter = 7;
         for (let i = 0; i < this.numCrystals; ++i) {
             const x = distanceFromCenter * Math.sin(i * angleBetween);
             const z = distanceFromCenter * Math.cos(i * angleBetween);
@@ -86,20 +89,29 @@ export class MainMenu extends Scene {
         this.container.className = 'flex justify-start items-center w-screen h-screen fixed top-0 left-0 z-10 p-10';
         document.body.appendChild(this.container);
 
+        const panelClass = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2'
+
         this.root = document.createElement('div');
         this.root.className = 'flex justify-start items-start gap-5';
         this.container.appendChild(this.root);
 
         this.menu = document.createElement('div');
-        this.menu.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2'
+        this.menu.className = panelClass;
         this.root.appendChild(this.menu);
 
         this.credits = document.createElement('div');
-        this.credits.className = 'flex flex-col gap-5 justify-center items-center bg-stone-300 p-10 rounded-lg border-stone-950 border-2 p-5'
+        this.credits.className = panelClass;
+
+        this.credits = document.createElement('div');
+        this.credits.className = panelClass;
 
         this.drawMenu();
         this.drawCredits();
-
+        for (let i = 0; i < 3; ++i) {
+            this.levelMenus.push( document.createElement('div') );
+            this.levelMenus[i].className = panelClass;
+            this.drawLevelMenu(i);
+        }
     }
 
 
@@ -138,7 +150,7 @@ export class MainMenu extends Scene {
             levelButton.className = buttonClasses;
             levelButton.innerText = `Level ${i + 1}`;
             levelButton.onclick =  () => {
-                this.changeScene(`level-${i + 1}`);
+                this.root.appendChild(this.levelMenus[i]);
             };
             this.menu.appendChild(levelButton);
         }
@@ -205,16 +217,65 @@ export class MainMenu extends Scene {
             assets.appendChild(assetTitle);
 
             const allAssets = [
+                // { artist: '', title: '', type: '', license: '', link: '' },
                 { artist: 'Okapiguy', title: 'Victorian Bookshelf', type: 'Model', license: 'CC-BY-NC-4.0', link: 'https://sketchfab.com/3d-models/victorian-bookshelf-9f548046646f404782b8838ec14932f8' },
                 { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/wooden-table-0dc1c7d6cbab4d74bef7c4f82abf2caf' },
             ];
             const assetsList = document.createElement('ul');
-            assetsList.className = 'p-3 flex flex-col justify-center items-start gap-1'
+            assetsList.className = 'p-3 flex flex-col justify-center items-start gap-1 overflow-y-auto max-h-44'
             assets.appendChild(assetsList);
             for (let asset of allAssets) {
                 const assetP = document.createElement('li');
                 assetP.innerHTML = `<a href='${asset.link}' class='text-sky-700 underline' >${asset.title}<a> - ${asset.artist} - ${asset.type} - ${asset.license}`;
                 assetsList.appendChild(assetP);
             }
+
+        const closeCredits = document.createElement('button');
+        closeCredits.innerText = 'Close Credits';
+        closeCredits.className = 'w-32 bg-stone-100 hover:bg-stone-200 rounded-md p-2';
+        closeCredits.onclick = () => { this.root.removeChild(this.credits); }
+        this.credits.appendChild(closeCredits);
+    }
+
+    drawLevelMenu(level: number) {
+        const difficulties = ['easy', 'medium', 'hard'];
+        const numPuzzles = [1, 3, 5];
+        const levelRoot = this.levelMenus[level];
+
+        const title = document.createElement('h1');
+        title.innerText = `Level ${level + 1}`;
+        title.className = 'text-4xl';
+        levelRoot.appendChild(title);
+        
+        const description = document.createElement('h2');
+        description.innerText = 'Description';
+        description.className = 'text-xl border-b-2 border-stone-950 flex justify-center items-center'
+        levelRoot.appendChild(description);
+
+        const difficulty = document.createElement('p');
+        difficulty.innerHTML = `<b class='font-bold'>Difficulty:</b> ${difficulties[level]}`;
+        difficulty.className = 'text-md';
+        levelRoot.appendChild(difficulty);
+
+        const puzzles = document.createElement('p');
+        puzzles.innerHTML = `<b class='font-bold'>Number of puzzles:</b> ${numPuzzles[level]}`;
+        puzzles.className = 'text-md';
+        levelRoot.appendChild(puzzles);
+
+        const leaderboardTitle = document.createElement('h2');
+        leaderboardTitle.innerText = 'Leaderboard';
+        leaderboardTitle.className = 'text-xl border-b-2 border-stone-950 flex justify-center items-center'
+        levelRoot.appendChild(leaderboardTitle);
+
+        const playLevel = document.createElement('button');
+        playLevel.innerText = `Play Level ${level + 1}`;
+        playLevel.className = 'w-32 bg-stone-100 hover:bg-stone-200 rounded-md p-2';
+        levelRoot.appendChild(playLevel);
+
+        const closeLevel = document.createElement('button');
+        closeLevel.innerText = 'Close';
+        closeLevel.className = 'w-16 bg-stone-100 hover:bg-stone-200 rounded-md p-2';
+        closeLevel.onclick = () => this.root.removeChild(levelRoot);
+        levelRoot.appendChild(closeLevel);
     }
 }
