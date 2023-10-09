@@ -83,6 +83,7 @@ export class Project {
     }
 
     play() {
+        if (!this.currentScene.graphics.mainCamera || !this.currentScene.graphics.root) { return; }
         requestAnimationFrame(this.update.bind(this));
     }
 
