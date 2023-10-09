@@ -4,6 +4,7 @@ import { Construct, GraphicsContext, PhysicsContext,
 import { Player } from './Player';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 export class MusicConstruct extends Construct{
 
     
@@ -22,10 +23,10 @@ export class MusicConstruct extends Construct{
     crystal!: Crystal;
     
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, player: Player) {
-        super(graphics, physics, interactions);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, player: Player) {
+        super(graphics, physics, interactions, userInterface);
         this.player = player;
-        this.crystal = new Crystal(this.graphics, this.physics, this.interactions);
+        this.crystal = new Crystal(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.crystal);
     }
      // Check if order array size = number of instruments  --> done first for performance optimisation
