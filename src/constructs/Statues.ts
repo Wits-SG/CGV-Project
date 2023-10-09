@@ -57,7 +57,6 @@ export class StatuesConstruct extends Construct {
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.crystal);
-        console.log(this.crystal.root);
     }
 
     create() { }
@@ -175,10 +174,6 @@ export class StatuesConstruct extends Construct {
     }
 
     build() {
-        const temp = new THREE.Vector3();
-        this.crystal.root.getWorldPosition(temp)
-        console.log(this.crystal.root.position, temp);
-
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 1, 60);
         const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
@@ -333,10 +328,6 @@ export class StatuesConstruct extends Construct {
 
                 if (result) {
                     this.crystal.root.position.set(0,5,0);
-                    //qconsole.log('you have solved the puzzle yaaaaa!');
-                    const temp = new THREE.Vector3();
-                    this.crystal.root.getWorldPosition(temp)
-                    console.log(this.crystal.root.position, temp);
                 }
 
             });

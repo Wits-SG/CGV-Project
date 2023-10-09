@@ -46,7 +46,6 @@ export class MusicConstruct extends Construct{
             }
             if(result){
                 //will put victory sound here and the crystal thing
-                console.log("Success!");
                 this.crystal.root.position.set(0,3,0);
                 audioLoader.load( 'sound/success.mp3', function( buffer ) {
                     sound.setBuffer( buffer );
@@ -58,8 +57,6 @@ export class MusicConstruct extends Construct{
                 
 
             } else{
-                console.log("Wrong");
-                
                userPuzzle =[];
             }
             
@@ -130,7 +127,6 @@ export class MusicConstruct extends Construct{
         //         puzzle.push(n);
         //     }
         // }
-        console.log(puzzle);
         let userPuzzle: Array<Number> = [];
         
         
@@ -296,9 +292,6 @@ export class MusicConstruct extends Construct{
                 
             }
             
-            console.log(userPuzzle);
-
-                
         });
 
         //GRAMOPHONE
