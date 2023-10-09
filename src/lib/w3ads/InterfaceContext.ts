@@ -6,6 +6,7 @@ export class InterfaceContext {
         this.root = document.createElement('div');
         this.root.className = 'flex flex-col gap-5 justify-center items-center w-screen h-screen fixed top-0 left-0 z-10';
         this.elements = [];
+        document.body.appendChild(this.root);
     }
 
     addElement(element: HTMLElement, time: number | undefined) {
