@@ -27,7 +27,7 @@ export abstract class Construct {
         this.create();
 
         for (let construct of this.constructs) {
-            construct.create();
+            construct._create();
         }
     }
 
@@ -35,13 +35,13 @@ export abstract class Construct {
         await this.load();
 
         for (let construct of this.constructs) {
-            await construct.load();
+            await construct._load();
         }
     }
 
     _build(): void {
         for (let construct of this.constructs) {
-            construct.build();
+            construct._build();
         }
 
         this.build();
@@ -53,13 +53,13 @@ export abstract class Construct {
         this.update(time, delta);
 
         for (let construct of this.constructs) {
-            construct.update(time, delta);
+            construct._update(time, delta);
         }
     }
 
     _destroy() {
         for (let construct of this.constructs) {
-            construct.destroy();
+            construct._destroy();
         }
 
         this.destroy();
@@ -73,7 +73,7 @@ export abstract class Construct {
 
     addConstruct(newConstruct: Construct) {
         this.constructs.push(newConstruct);
-        this.graphics.add(newConstruct.root);
+        this.add(newConstruct.root);
     }
 
     add(newObj: THREE.Object3D) {
