@@ -31,7 +31,7 @@ export class MainMenu extends Scene {
             this.numCrystals = 3;
         }
 
-        this.door = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
+        this.door = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals, 'mainmenu');
         this.addConstruct(this.door);
 
         this.crystals = [];
@@ -277,6 +277,7 @@ export class MainMenu extends Scene {
         const playLevel = document.createElement('button');
         playLevel.innerText = `Play Level ${level + 1}`;
         playLevel.className = 'w-32 bg-stone-100 hover:bg-stone-200 rounded-md p-2';
+        playLevel.onclick = () => this.changeScene(`level${level + 1}`);
         levelRoot.appendChild(playLevel);
 
         const closeLevel = document.createElement('button');

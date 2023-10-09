@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { buildGameOver } from '../lib/GameOverScreen';
 
 export class CrystalDoor extends Construct {
 
@@ -10,12 +11,16 @@ export class CrystalDoor extends Construct {
     exitDoor!: THREE.Mesh;
     crystalPlinths!: Array<THREE.Mesh>;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number) {
+    gameOver: HTMLDivElement;
+
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, levelKey: string) {
         super(graphics, physics, interactions, userInterface);
 
         this.numCrystals = numCrystals;
         this.numFoundCrystals = 0;
         this.crystalPlinths = [];
+
+        this.gameOver = buildGameOver(this.userInterface, levelKey, 0);
     }
 
     create(): void {}
@@ -29,9 +34,12 @@ export class CrystalDoor extends Construct {
         this.exitDoor = new THREE.Mesh(doorGeom, doorMat);
 
         this.interactions.addInteractable(this.root, 20, () => {
-            
             if (this.numFoundCrystals == this.numCrystals) {
-                console.log("Game over - you win");
+                document.exitPointerLock();
+                setTimeout(() => {
+                    this.userInterface.clear()
+                    this.userInterface.addElement(this.gameOver, undefined);
+                }, 30) ; // Brendan: Get rid of pause menu because I am to lazy to handle this properly
             } else {
                 console.log("Not enough crystals have been found to open the door");
             }

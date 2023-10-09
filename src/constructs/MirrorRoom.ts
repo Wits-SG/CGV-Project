@@ -43,6 +43,7 @@ export class MirrorRoom extends Construct {
 
         this.mirrorCrystal.root.position.set(25, 25, 0);
 
+
         const blockPositions = [
             {x: 10, y: 2, z: 0}, {x: 10, y: 4.5, z: -15}, {x: 10, y: 7, z: -30},
             {x: 25, y: 9.5, z: -30}, {x: 40, y: 12, z: -30},
@@ -113,16 +114,10 @@ export class MirrorRoom extends Construct {
         roof.rotation.set(Math.PI/2, 0.38, 0);
         roof.position.set(25, 29, 0);
 
-        const roofLight = new THREE.PointLight(0xffffff, 1, 20, 0);
+        const roofLight = new THREE.PointLight(0xffffff, 2, 200, 0);
         roofLight.position.set(25, 25, 0);
 
-        this.physics.addStatic(entranceWallLeft, PhysicsColliderFactory.box(20, 10, 0.1));
-        this.physics.addStatic(entranceWallRight, PhysicsColliderFactory.box(20, 10, 0.1));
-        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
-        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 20, 0.1));
 
-        this.physics.addStatic(mirrorFrame, PhysicsColliderFactory.box(50, 20, 0.1));
-        this.physics.addStatic(floor, PhysicsColliderFactory.box(25, 0.5, 50));
 
         this.add(roofLight);
 
@@ -134,6 +129,15 @@ export class MirrorRoom extends Construct {
         this.add(mirrorFrame);
         this.add(roof);
         this.add(floor);
+
+        this.physics.addStatic(entranceWallLeft, PhysicsColliderFactory.box(20, 10, 0.1));
+        this.physics.addStatic(entranceWallRight, PhysicsColliderFactory.box(20, 10, 0.1));
+        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
+        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 20, 0.1));
+
+        this.physics.addStatic(mirrorFrame, PhysicsColliderFactory.box(50, 20, 0.1));
+        this.physics.addStatic(floor, PhysicsColliderFactory.box(25, 0.5, 50));
+
 
         window.addEventListener('resize', () => {
             this.mirror.getRenderTarget().setSize(

@@ -174,11 +174,11 @@ export class StatuesConstruct extends Construct {
     }
 
     build() {
-
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 1, 60);
         const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, floorTexture);
+        this.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
         this.crystal.root.position.set(0,-10,0);
@@ -196,6 +196,10 @@ export class StatuesConstruct extends Construct {
         sideWallRight.position.set(29.5,10,0);
         backWall.position.set(0,10,-30);
 
+        this.add(sideWallLeft);
+        this.add(sideWallRight);
+        this.add(backWall);
+
         this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
@@ -209,6 +213,9 @@ export class StatuesConstruct extends Construct {
 
         roof.rotation.set(Math.PI/2, 0, 0);
         roof.position.set(0,20,0);
+
+        this.add(roof);
+        this.add(roofLight);
         
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 0.2, 30);
@@ -321,7 +328,6 @@ export class StatuesConstruct extends Construct {
 
                 if (result) {
                     this.crystal.root.position.set(0,5,0);
-                    //qconsole.log('you have solved the puzzle yaaaaa!');
                 }
 
             });
@@ -335,9 +341,8 @@ export class StatuesConstruct extends Construct {
         for (let i = 0; i < 5; i++){
             const plinths = new THREE.Mesh(plinthBoxGeom, plinthBoxMat);
             plinths.position.set(-21 + (i + 1) * plinthBoxSpacing, 0, -22);
-            this.physics.addStatic(plinths, PhysicsColliderFactory.box(1.5,3,1.5));
-    
             this.floor.add(plinths);
+            this.physics.addStatic(plinths, PhysicsColliderFactory.box(1.5,3,1.5));
             plinths.removeFromParent();
         }
 
@@ -419,12 +424,6 @@ export class StatuesConstruct extends Construct {
         this.floor.add(plinthBackLight5);
 
         // Add the floor to the sceneq
-        this.add(this.floor);
-        this.add(sideWallLeft);
-        this.add(sideWallRight);
-        this.add(backWall);
-        this.add(roof);
-        this.add(roofLight);
         // Add chessboard to the scene
         this.add(this.board);
     }

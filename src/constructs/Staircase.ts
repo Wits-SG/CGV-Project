@@ -1,12 +1,14 @@
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory} from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import * as THREE from 'three';
 
 export class Staircase extends Construct {
 
     private texture!: any;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
+        super(graphics, physics, interactions, userInterface);
     }
 
 
@@ -61,7 +63,10 @@ export class Staircase extends Construct {
             currentAngle += angleIncrement;
         }
 
-        this.graphics.add(staircaseGroup);
+        this.add(staircaseGroup);
+        for (let step of staircaseGroup.children) {
+            this.physics.addStatic(step, PhysicsColliderFactory.box(3.2, 0.35, 1.2));
+        }
     }
 
     update(/*time?: TimeS, delta?: TimeMS*/): void {
