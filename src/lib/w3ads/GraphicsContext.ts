@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 
 export class GraphicsContext {
     public renderer!: THREE.WebGLRenderer;
@@ -7,11 +8,13 @@ export class GraphicsContext {
     public mainCamera!: THREE.Camera;
     public modelLoader: GLTFLoader;
     public textureLoader: THREE.TextureLoader;
+    public fontLoader: FontLoader;
 
     constructor() {
         this.root = new THREE.Scene();
         this.modelLoader = new GLTFLoader();
         this.textureLoader = new THREE.TextureLoader();
+        this.fontLoader = new FontLoader();
         // TODO move this to a build method called automagically by the Scene Class
     }
 
@@ -33,6 +36,12 @@ export class GraphicsContext {
             this.textureLoader.load(url, data => resolve(data), undefined, reject);
         });
 
+    }
+
+    async loadFont(url: string) {
+        return new Promise((resolve, reject) => {
+            this.fontLoader.load(url, (data: any) => resolve(data), undefined, reject);
+        })
     }
 }
 

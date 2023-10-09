@@ -19,16 +19,17 @@ export class Project {
 
     config: ProjectConfig;
     scenes: Map<string, typeof Scene>;
+    fallbackScene!: string;
     currentScene!: Scene;
 
-    constructor(scenes: Map<string, typeof Scene>, config: ProjectConfig) {
+    constructor(scenes: Map<string, typeof Scene>, fallbackScene: string, config: ProjectConfig) {
         this.config = config;
         this.scenes = scenes;
+        this.fallbackScene = fallbackScene;
 
         this.clock = new THREE.Clock();
         this.renderer = new THREE.WebGLRenderer();
         
-
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor( 0xbfd1e5 );
         this.renderer.shadowMap.enabled = config.shadows;
@@ -41,11 +42,11 @@ export class Project {
 
         document.body.appendChild(this.renderer.domElement);
 
-
-        this.renderer.domElement.addEventListener('click', async () => {
-
-            // await this.renderer.domElement.requestPointerLock();
-            this.play();
+        document.addEventListener('changeScene', async (event: any) => {
+            this.changeScene(event.detail !== undefined ? event.detail: '').catch((e: any) => {
+                console.error(`Failed to change scene - ${e}`);
+                this.changeScene(this.fallbackScene)
+            });
         });
 
         document.addEventListener('pointerlockchange', () => {
@@ -71,6 +72,7 @@ export class Project {
         const [firstScene] = scenes.keys(); 
         this.changeScene(firstScene !== undefined ? firstScene : '').catch((e: any) => {
             console.error(`Failed to load first scene - ${e}`);
+            this.changeScene(this.fallbackScene);
         })
 
 

@@ -3,20 +3,26 @@ import { TimeMS, TimeS } from './types/misc.type';
 import { PhysicsContext } from './PhysicsContext';
 import { GraphicsContext } from './GraphicsContext';
 import { Construct } from './Construct';
+import { InteractManager } from './InteractManager';
+import { InterfaceContext } from './InterfaceContext';
 
 export abstract class Scene {
     public sceneKey: string;    
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
+    public userInterface: InterfaceContext;
+    public interactions: InteractManager;
 
     public constructs: Array<Construct>;
 
     constructor( key: string, AmmoLib: any ) {
         this.sceneKey = key;
+        this.interactions = new InteractManager();
         this.graphics = new GraphicsContext();
         this.physics= new PhysicsContext(AmmoLib, {
             gravity: { x: 0, y: -10, z:0 },
         });
+        this.userInterface = new InterfaceContext();
         this.constructs = [];
     }
 
@@ -51,9 +57,9 @@ export abstract class Scene {
 
     _update(time: TimeS, delta: TimeMS): void {
         this.physics.update(delta);
+        this.interactions.update();
 
         this.update(time, delta);
-
         for (let construct of this.constructs) {
             construct._update(time, delta);
         }
@@ -77,5 +83,10 @@ export abstract class Scene {
     addConstruct(newConstruct: Construct) {
         this.constructs.push(newConstruct);
         this.graphics.add(newConstruct.root);
+    }
+
+    changeScene(sceneKey: string) {
+        const event = new CustomEvent("changeScene", { detail: sceneKey });
+        document.dispatchEvent(event);
     }
 }
