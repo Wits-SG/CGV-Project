@@ -35,7 +35,7 @@ export class Fence extends Construct {
             fenceClone.scale.set(3.5, 3.5, 3);
             fenceClone.position.set(-4.6 + (i * this.xOffset), 5.5, -7.1);
             fenceClone.rotateY(Math.PI);
-            this.graphics.add(fenceClone);
+            this.add(fenceClone);
         }
     
 
@@ -44,14 +44,14 @@ export class Fence extends Construct {
     fenceLeft.scale.set(2.2, 3.5, 3);
     fenceLeft.position.set(-6.84, 5.5, -8.47);
     fenceLeft.rotateY(Math.PI/2);
-    this.graphics.add(fenceLeft);
+    this.add(fenceLeft);
 
     const fenceRight = this.fenceModel.clone();
 
     fenceRight.scale.set(2.2, 3.5, 3);
     fenceRight.position.set( 6.65, 5.5, -8.47);
     fenceRight.rotateY(Math.PI/2);
-    this.graphics.add(fenceRight);
+    this.add(fenceRight);
 
     // physics 
 

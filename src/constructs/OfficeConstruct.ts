@@ -52,25 +52,34 @@ export class OfficeConstruct extends Construct {
     async load(): Promise<void>{
 
         // LOAD MODELS //
+        const fallbackMat = new THREE.MeshLambertMaterial({ color: 0x800080 });
+        const fallbackGeom = new THREE.BoxGeometry(1, 1, 1);
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/antique_wooden_desk/scene.gltf');
             this.table = gltfData.scene;
         } catch(e: any) {
-                console.error(e);
+            this.table = new THREE.Group();
+            this.table.add(new THREE.Mesh(fallbackGeom, fallbackMat));
+            console.error(e);
         }
 
-        try {
-            const gltfData: any = await this.graphics.loadModel('assets/fence/scene.gltf');
-            this.fence = gltfData.scene;
-        } catch(e: any) {
-                console.error(e);
-        }
+        // BRENDAN: fence is a construct? why are you assigning to it here
+        // try {
+        //     const gltfData: any = await this.graphics.loadModel('assets/fence/scene.gltf');
+        //     this.fence = gltfData.scene;
+        // } catch(e: any) {
+        //     // this.fence = new THREE.Group();
+        //     // this.fence.children.push(new THREE.Mesh(fallbackGeom, fallbackMat));
+        //         console.error(e);
+        // }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/medieval_fireplace_free/scene.gltf');
             this.firePlace = gltfData.scene;
         } catch(e: any) {
+            this.firePlace = new THREE.Group();
+            this.firePlace.add(new THREE.Mesh(fallbackGeom, fallbackMat));
                 console.error(e);
         }
 
@@ -78,6 +87,8 @@ export class OfficeConstruct extends Construct {
             const gltfData: any = await this.graphics.loadModel('/assets/wooden_shelf/scene.gltf');
             this.woodenShelf = gltfData.scene;
         } catch(e: any) {
+            this.woodenShelf = new THREE.Group();
+            this.woodenShelf.add(new THREE.Mesh(fallbackGeom, fallbackMat));
                 console.error(e);
         }
 
@@ -85,6 +96,8 @@ export class OfficeConstruct extends Construct {
             const gltfData: any = await this.graphics.loadModel('assets/alchemy_shelf/scene.gltf');
             this.alchemyShelf = gltfData.scene;
         } catch(e: any) {
+            this.alchemyShelf = new THREE.Group();
+            this.alchemyShelf.add(new THREE.Mesh(fallbackGeom, fallbackMat));
                 console.error(e);
         }
 
@@ -92,6 +105,8 @@ export class OfficeConstruct extends Construct {
             const gltfData: any = await this.graphics.loadModel('assets/bookshelf_office/scene.gltf');
             this.bookShelfOffice = gltfData.scene;
         } catch(e: any) {
+            this.bookShelfOffice = new THREE.Group();
+            this.bookShelfOffice.add(new THREE.Mesh(fallbackGeom, fallbackMat));
                 console.error(e);
         }
          
@@ -167,13 +182,13 @@ export class OfficeConstruct extends Construct {
 
         const wallB = new THREE.Mesh(new THREE.BoxGeometry(30, 13.2, 0.1), new THREE.MeshBasicMaterial({ map: this.wallTexture }));
         wallB.position.set(0,6.6,-24.95);
-        this.graphics.add(wallB);
+        this.add(wallB);
         this.physics.addStatic(wallB,PhysicsColliderFactory.box(15, 6.6 , 0.5));
 
-        const wallF = new THREE.Mesh(new THREE.BoxGeometry(30, 13.2, 0.1), new THREE.MeshBasicMaterial({ map: this.wallTexture }));
-        wallF.position.set(0,6.6,24.95);
-        this.graphics.add(wallF);
-        this.physics.addStatic(wallF,PhysicsColliderFactory.box(15, 6.6 , 0.5));
+        // const wallF = new THREE.Mesh(new THREE.BoxGeometry(30, 13.2, 0.1), new THREE.MeshBasicMaterial({ map: this.wallTexture }));
+        // wallF.position.set(0,6.6,24.95);
+        // this.add(wallF);
+        // this.physics.addStatic(wallF,PhysicsColliderFactory.box(15, 6.6 , 0.5));
 
         // small room walls 
 
@@ -191,21 +206,21 @@ export class OfficeConstruct extends Construct {
 
         const smallRoof = new THREE.Mesh(new THREE.BoxGeometry(30, 0.5, 10.5), new THREE.MeshBasicMaterial({ map: this.smallRoofTexture }));
         smallRoof.position.set(0,5.24,-20);
-        this.graphics.add(smallRoof);
+        this.add(smallRoof);
         this.physics.addStatic(smallRoof,PhysicsColliderFactory.box(15, 0.25 , 5.25));
 
         // large room roof
 
         const largeRoof = new THREE.Mesh(new THREE.BoxGeometry(30, 0.5, 50), new THREE.MeshBasicMaterial({ map: this.roofTexture }));
         largeRoof.position.set(0,13.45,0);
-        this.graphics.add(largeRoof);
+        this.add(largeRoof);
         this.physics.addStatic(largeRoof,PhysicsColliderFactory.box(15, 0.25 , 25));
 
         // upper room floor
 
         const upperFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.1, 10.5), new THREE.MeshBasicMaterial({ map: this.floorTexture }));
         upperFloor.position.set(0,5.47,-20);
-        this.graphics.add(upperFloor);
+        this.add(upperFloor);
 
         // **** BUILD MODELS **** //
 
@@ -214,13 +229,13 @@ export class OfficeConstruct extends Construct {
         this.bookShelfOffice.scale.set(2,2,2); 
         this.bookShelfOffice.position.set(14.2, 0, 20);
         this.bookShelfOffice.rotateY(-Math.PI);
-        this.graphics.add(this.bookShelfOffice);
+        this.add(this.bookShelfOffice);
 
         const secondBookShelfOffice = this.bookShelfOffice.clone();
         secondBookShelfOffice.scale.set(2,2,2); 
         secondBookShelfOffice.position.set(-14.2,0,-19);
         secondBookShelfOffice.rotateY(Math.PI);
-        this.graphics.add(secondBookShelfOffice);
+        this.add(secondBookShelfOffice);
 
         //  -- bookShelfOffice Physics --
 
@@ -239,18 +254,18 @@ export class OfficeConstruct extends Construct {
         this.woodenShelf.scale.set(3,2,3); 
         this.woodenShelf.position.set(-13.9, 0, -23);
         this.woodenShelf.rotateY(Math.PI/2);
-        this.graphics.add(this.woodenShelf);
+        this.add(this.woodenShelf);
 
         const secondShelf = this.woodenShelf.clone();
         secondShelf.position.set(13.9, 0, 0);
         secondShelf.rotateY(-Math.PI);
-        this.graphics.add(secondShelf);
+        this.add(secondShelf);
 
         const thirdShelf = this.woodenShelf.clone();
         thirdShelf.scale.set(5,2,3);
         thirdShelf.position.set(-13.9, 0, 8);
         //thirdShelf.rotateY(Math.PI);
-        this.graphics.add(thirdShelf);
+        this.add(thirdShelf);
 
         //  -- woodenShelf Physics --
 
@@ -274,11 +289,11 @@ export class OfficeConstruct extends Construct {
         this.alchemyShelf.scale.set(0.003,0.003,0.003); 
         this.alchemyShelf.position.set(14.2, 3, 7);
         this.alchemyShelf.rotateY(Math.PI);
-        this.graphics.add(this.alchemyShelf);
+        this.add(this.alchemyShelf);
 
         const alchemyShelf2 = this.alchemyShelf.clone();
         alchemyShelf2.position.set(14.2, 3, -20);
-        this.graphics.add(alchemyShelf2);
+        this.add(alchemyShelf2);
 
         //  -- alchemyShelf Physics --
 
@@ -296,7 +311,7 @@ export class OfficeConstruct extends Construct {
 
         this.firePlace.scale.set(0.01,0.01,0.01); 
         this.firePlace.position.set(0, 1.3, -23.9);
-        this.graphics.add(this.firePlace);
+        this.add(this.firePlace);
 
         //  -- firePlace Physics --
 
@@ -310,7 +325,7 @@ export class OfficeConstruct extends Construct {
         this.table.scale.set(2,2,2); 
         this.table.position.set(0, 0, 5);
         this.table.rotateY(-Math.PI/2);
-        this.graphics.add(this.table);
+        this.add(this.table);
 
         const upstairsTable = this.table.clone();
         upstairsTable.position.set(0,5.45,-20);

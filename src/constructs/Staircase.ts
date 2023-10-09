@@ -63,7 +63,10 @@ export class Staircase extends Construct {
             currentAngle += angleIncrement;
         }
 
-        this.graphics.add(staircaseGroup);
+        this.add(staircaseGroup);
+        for (let step of staircaseGroup.children) {
+            this.physics.addStatic(step, PhysicsColliderFactory.box(3.2, 0.35, 1.2));
+        }
     }
 
     update(/*time?: TimeS, delta?: TimeMS*/): void {

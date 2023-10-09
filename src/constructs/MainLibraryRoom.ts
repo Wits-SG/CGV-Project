@@ -63,6 +63,7 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.music);
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.office);
     }
 
     /*      const tempBookShelf = this.bookshelf.clone();
@@ -123,6 +124,8 @@ export class MainLibraryConstruct extends Construct {
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
         this.music.root.position.set(190, -11, 0);
         this.music.root.rotation.set(0, Math.PI / 2, 0);
+        this.office.root.position.set(-180, -11, 0);
+        this.office.root.rotation.set(0, Math.PI / 2, 0);
 
     }
 
