@@ -12,10 +12,10 @@ export class LevelTwo extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'level1');
+        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'level2');
         this.addConstruct(this.player);
 
-        this.library = new MainLibraryConstruct(this.graphics, this.physics, this.interactions, this.userInterface, 3, this.player);
+        this.library = new MainLibraryConstruct(this.graphics, this.physics, this.interactions, this.userInterface, 3, this.player, 'level2');
         this.addConstruct(this.library);
     }
 
