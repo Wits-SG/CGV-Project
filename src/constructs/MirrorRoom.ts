@@ -4,6 +4,7 @@ import { Reflector } from '../lib/CustomReflector';
 import { Construct, GraphicsContext, PhysicsColliderFactory, PhysicsContext } from "../lib";
 import { Crystal } from './Crystal';
 import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 
 export class MirrorRoom extends Construct {
@@ -13,10 +14,10 @@ export class MirrorRoom extends Construct {
     wallTexture: any;
     roofTexture: any;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
-        super(graphics, physics, interactions);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
+        super(graphics, physics, interactions, userInterface);
 
-        this.mirrorCrystal = new Crystal(graphics, physics, interactions);
+        this.mirrorCrystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.mirrorCrystal);
     }
 

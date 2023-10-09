@@ -3,6 +3,7 @@ import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } fr
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 export class StatuesConstruct extends Construct {
 
@@ -49,12 +50,12 @@ export class StatuesConstruct extends Construct {
 
     crystal!: Crystal; 
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions:InteractManager) {
-        super(graphics, physics, interactions);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
+        super(graphics, physics, interactions, userInterface);
         this.solution = [];
         this.current = [-1, -1, -1, -1, -1];
 
-        this.crystal = new Crystal(graphics, physics, interactions);
+        this.crystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.crystal);
     }
 
