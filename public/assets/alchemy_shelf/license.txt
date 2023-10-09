@@ -1,0 +1,11 @@
+Model Information:
+* title:	Alchemy Shelf
+* source:	https://sketchfab.com/3d-models/alchemy-shelf-63a7993f0cb945c991a8a569955dfc1e
+* author:	Batuhan13 (https://sketchfab.com/Batuhan13)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Alchemy Shelf" (https://sketchfab.com/3d-models/alchemy-shelf-63a7993f0cb945c991a8a569955dfc1e) by Batuhan13 (https://sketchfab.com/Batuhan13) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
