@@ -23,7 +23,17 @@ export class InterfaceContext {
 
     removeElement(element: HTMLElement) {
         this.elements = this.elements.filter(el => el != element);
-        this.root.removeChild(element);
+        try {
+            this.root.removeChild(element);
+        } catch (e: any) {
+            // DO nothing if the node cant be found
+        }
+    }
+
+    clear() {
+        for (let el of this.elements) {
+            this.removeElement(el);
+        }
     }
 
 }

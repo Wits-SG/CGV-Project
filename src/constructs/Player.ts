@@ -20,6 +20,9 @@ export class Player extends Construct {
 
     levelKey: string;
 
+    interactPrompt!: HTMLParagraphElement;
+    placePrompt!: HTMLParagraphElement;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelKey: string) {
         super(graphics, physics, interactions, userInterface);
         this.levelKey = levelKey;
@@ -60,8 +63,6 @@ export class Player extends Construct {
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
             
-            console.log(event.key);
-
             const worldPos = new THREE.Vector3();
             this.root.getWorldPosition(worldPos);
             
@@ -69,14 +70,15 @@ export class Player extends Construct {
             if (event.key == 'b' || event.key == 'B'){
                 console.log(worldPos);
             }
-            if (this.root.userData.canInteract && !this.paused) {
+            if (this.root.userData.canInteract && this.holdingObject === undefined && !this.paused) {
                 if (event.key == 'e' || event.key == 'E') {
                     this.root.userData.onInteract();
                 }
             }
-            if (this.root.userData.canPlace && !this.paused) {
+            if (this.root.userData.canPlace && this.holdingObject !== undefined && !this.paused) {
                 if (event.key == 'q' || event.key == 'Q') {
                     this.root.userData.onPlace(this.holdingObject);
+                    this.holdingObject = undefined;
                 }
             }
         });
@@ -114,6 +116,14 @@ export class Player extends Construct {
                 this.userInterface.addElement(this.pauseMenu, undefined); //undefined means no time limit on ui element
             }
         });
+
+        this.interactPrompt = document.createElement('p');
+        this.interactPrompt.innerHTML = 'Press E to interact';
+        this.interactPrompt.className = 'text-4xl p-2 absolute left-[40%] bottom-[10%] bg-stone-100 text-stone-950 rounded-md flex justify-center items-center w-1/10 border-stone-950 border-2';
+
+        this.placePrompt = document.createElement('p');
+        this.placePrompt.innerHTML = 'Press Q to place object';
+        this.placePrompt.className = 'text-4xl p-2 absolute left-[40%] bottom-[20%] bg-stone-100 text-stone-950 rounded-md flex justify-center items-center w-1/10 border-stone-950 border-2';
     }
 
     async load(): Promise<void> {
@@ -164,6 +174,18 @@ export class Player extends Construct {
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
 
         this.physics.moveCharacter(this.root, x, 0, z, this.speed);
+
+        if (this.root.userData.canInteract && this.holdingObject === undefined) {
+            this.userInterface.addElement(this.interactPrompt, undefined);
+        } else {
+            this.userInterface.removeElement(this.interactPrompt);
+        }
+
+        if (this.root.userData.canPlace && this.holdingObject !== undefined) {
+            this.userInterface.addElement(this.placePrompt, undefined);
+        } else {
+            this.userInterface.removeElement(this.placePrompt);
+        }
     }
 
     destroy(): void {

@@ -27,13 +27,14 @@ export const buildPauseMenu = (graphics: GraphicsContext, userInterface: Interfa
             graphics.renderer.domElement.requestPointerLock();
         } },
         { text: 'Restart level', callback: () => {
+            userInterface.clear();
             const event = new CustomEvent("changeScene", { detail: levelKey });
             document.dispatchEvent(event);
         } },
         { text: 'Exit to menu', callback: () => {
+            userInterface.clear();
             const event = new CustomEvent("changeScene", { detail: 'mainmenu' });
             document.dispatchEvent(event);
-            userInterface.removeElement(container);
         } }
     ]
 
