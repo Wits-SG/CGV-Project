@@ -1,5 +1,8 @@
 import * as THREE from 'three'; 
-import { Construct, GraphicsPrimitiveFactory, PhysicsColliderFactory } from "../lib";
+import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
+import { buildPauseMenu } from '../lib/PauseMenu';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
@@ -12,7 +15,20 @@ export class Player extends Construct {
 
     sensitivity: number = 0.2 * Math.PI / 180; // Angle change per unit = 1 degree
 
+    paused: boolean = false; // THis is a very hacky way of implementing pause so it should be changed
+    pauseMenu!: HTMLDivElement;
+
+    levelKey: string;
+
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelKey: string) {
+        super(graphics, physics, interactions, userInterface);
+        this.levelKey = levelKey;
+    }
+
     create(): void {
+        this.paused = false;
+        this.graphics.renderer.domElement.requestPointerLock();
+        this.pauseMenu = buildPauseMenu(this.graphics, this.userInterface, this.levelKey);
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
         this.interactions.addInteracting(this.root, (object: THREE.Mesh) => {
@@ -25,6 +41,8 @@ export class Player extends Construct {
         });
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (this.paused) { return }
+
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
@@ -32,6 +50,8 @@ export class Player extends Construct {
             if (event.key == 'Shift') { this.speed = 0.1 }
         });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
+            if (this.paused) { return }
+
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
@@ -40,26 +60,29 @@ export class Player extends Construct {
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
             
+            console.log(event.key);
+
             const worldPos = new THREE.Vector3();
             this.root.getWorldPosition(worldPos);
             
-
             if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
             if (event.key == 'b' || event.key == 'B'){
                 console.log(worldPos);
             }
-            if (this.root.userData.canInteract) {
+            if (this.root.userData.canInteract && !this.paused) {
                 if (event.key == 'e' || event.key == 'E') {
                     this.root.userData.onInteract();
                 }
             }
-            if (this.root.userData.canPlace) {
+            if (this.root.userData.canPlace && !this.paused) {
                 if (event.key == 'q' || event.key == 'Q') {
                     this.root.userData.onPlace(this.holdingObject);
                 }
             }
         });
+
         document.addEventListener('mousemove', (event: MouseEvent) => {
+            if (this.paused) { return }
 
             // character orientation and screen orientation are flipped
             const rotateAmountX = (-1 * event.movementX) * this.sensitivity;
@@ -82,9 +105,15 @@ export class Player extends Construct {
             this.face.rotation.z = totalY;
         });
 
-        document.addEventListener('click', async () => {
-            await this.graphics.renderer.domElement.requestPointerLock();
-        })
+        document.addEventListener('pointerlockchange', () => {
+            if (document.pointerLockElement == this.graphics.renderer.domElement) {
+                this.paused = false;
+                this.userInterface.removeElement(this.pauseMenu);
+            } else {
+                this.paused = true;
+                this.userInterface.addElement(this.pauseMenu, undefined); //undefined means no time limit on ui element
+            }
+        });
     }
 
     async load(): Promise<void> {

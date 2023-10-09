@@ -42,12 +42,6 @@ export class Project {
 
         document.body.appendChild(this.renderer.domElement);
 
-        this.renderer.domElement.addEventListener('click', async () => {
-
-            // await this.renderer.domElement.requestPointerLock();
-            this.play();
-        });
-
         document.addEventListener('changeScene', async (event: any) => {
             this.changeScene(event.detail !== undefined ? event.detail: '').catch((e: any) => {
                 console.error(`Failed to change scene - ${e}`);

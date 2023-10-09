@@ -29,7 +29,7 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics, this.interactions);
+        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'sandbox');
         this.addConstruct(this.player);
 
        // this.testConstruct = new TestConstruct(this.graphics, this.physics);

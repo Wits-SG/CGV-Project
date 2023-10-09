@@ -4,7 +4,7 @@ export class InterfaceContext {
 
     constructor() {
         this.root = document.createElement('div');
-        this.root.className = 'flex flex-col gap-5 justify-center items-center w-screen h-screen fixed top-0 left-0 z-10';
+        this.root.className = 'flex flex-col gap-5 justify-center items-start w-screen h-screen fixed top-0 left-0 z-10 p-10';
         this.elements = [];
         document.body.appendChild(this.root);
     }
@@ -16,17 +16,14 @@ export class InterfaceContext {
 
         if (time !== undefined) {
             setTimeout(() => {
-                this.elements = this.elements.filter(el => el != element);
-                this.root.removeChild(element);
+                this.removeElement(element);
             }, time);
         }
     }
 
-    clearUI() {
-        for (let el of this.elements) {
-            this.root.removeChild(el);
-        }
+    removeElement(element: HTMLElement) {
+        this.elements = this.elements.filter(el => el != element);
+        this.root.removeChild(element);
     }
-
 
 }
