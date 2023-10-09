@@ -7,7 +7,7 @@ import { Player } from './Player';
 import { StatuesConstruct } from './Statues';
 import { MirrorRoom } from './MirrorRoom';
 import { MusicConstruct } from './Music';
-import { Crystal } from './Crystal';
+import { OfficeConstruct } from './OfficeConstruct';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -41,6 +41,7 @@ export class MainLibraryConstruct extends Construct {
     chess: StatuesConstruct;
     mirror: MirrorRoom;
     music: MusicConstruct;
+    office: OfficeConstruct;
 
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
@@ -60,6 +61,8 @@ export class MainLibraryConstruct extends Construct {
 
         this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
         this.addConstruct(this.music);
+
+        this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
     }
 
     /*      const tempBookShelf = this.bookshelf.clone();

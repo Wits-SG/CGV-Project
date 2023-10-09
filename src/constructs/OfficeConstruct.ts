@@ -7,6 +7,8 @@ import { Staircase } from '../constructs/Staircase';
 import { Pillars } from '../constructs/Pillar';
 import { Balcony } from '../constructs/Balcony';
 import { Fence } from './Fence';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 export class OfficeConstruct extends Construct {
     floor!: THREE.Mesh;  
@@ -27,19 +29,19 @@ export class OfficeConstruct extends Construct {
     pillars!: Pillars;
     balcony!: Balcony;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext ) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
+        super(graphics, physics, interactions, userInterface);
 
-        this.pillars = new Pillars(this.graphics, this.physics);
+        this.pillars = new Pillars(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.pillars);
 
-        this.stairCase = new Staircase(this.graphics, this.physics);
+        this.stairCase = new Staircase(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.stairCase);
 
-        this.balcony = new Balcony(this.graphics, this.physics);
+        this.balcony = new Balcony(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.balcony);
 
-        this.fence = new Fence(this.graphics, this.physics);
+        this.fence = new Fence(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.fence);
 
     }

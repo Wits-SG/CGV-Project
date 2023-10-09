@@ -1,4 +1,6 @@
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import * as THREE from 'three';
 
 export class Fence extends Construct {
@@ -6,8 +8,8 @@ export class Fence extends Construct {
     private numberOfFences!: number;
     private xOffset!: number;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
+        super(graphics, physics, interactions, userInterface);
     }
 
     create(): void {

@@ -1,15 +1,13 @@
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory} from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import * as THREE from 'three';
 
 export class Balcony extends Construct {
     private texture: any;
 
-    constructor(
-        graphics: GraphicsContext,
-        physics: PhysicsContext,
-        
-    ) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
+        super(graphics, physics, interactions, userInterface);
     }
 
     create(): void {
