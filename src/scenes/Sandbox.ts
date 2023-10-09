@@ -4,10 +4,12 @@ import { Scene } from '../lib';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 //import { TimeS } from '../lib/w3ads/types/misc.type';
 //import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
-import { MusicConstruct } from '../constructs/Music';
 import { Player } from '../constructs/Player';
+import { StatuesConstruct } from '../constructs/Statues';
 
 export class SandboxScene extends Scene {
+    create(): void {}
+    async load(): Promise<void> {}
 
     lightHemisphere!: THREE.HemisphereLight;
     lightDirectional!: THREE.DirectionalLight;
@@ -15,12 +17,9 @@ export class SandboxScene extends Scene {
     floor!: THREE.Mesh;
     walls!: Array<THREE.Mesh>;
     ballKinematic!: THREE.Mesh;
-    //testConstruct: TestConstruct;
-    //k!: THREE.Mesh;
-    //mainLibrary!: MainLibraryConstruct;
-    musicRoom!: MusicConstruct;
     player!: Player;
     
+    chess!: StatuesConstruct;
     controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
@@ -29,28 +28,11 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics, this.interactions);
+        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'sandbox');
         this.addConstruct(this.player);
 
-       // this.testConstruct = new TestConstruct(this.graphics, this.physics);
-       // this.addConstruct(this.testConstruct);
-        // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
-        // this.addConstruct(this.mainLibrary);
-
-        this.musicRoom = new MusicConstruct(this.graphics, this.physics, this.interactions, this.player);
-        this.addConstruct(this.musicRoom);
-
-        
-    };
-
-
-    create(): void {
-        // this.player.create();
-    }
-
-    async load(): Promise<void> {
-        // const gltfData: any = await this.graphics.loadModel('assets/officer-k/scene.gltf');
-        // this.k = gltfData.scene;
+        this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.chess);
     }
 
     build(): void {

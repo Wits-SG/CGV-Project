@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -25,8 +26,8 @@ export class MainLibraryConstruct extends Construct {
     TableGeometry!: THREE.BufferGeometry;
     TableMaterial!: THREE.MeshNormalMaterial;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager) {
-        super(graphics, physics, interactions);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
+        super(graphics, physics, interactions, userInterface);
     }
 
     /*      const tempBookShelf = this.bookshelf.clone();

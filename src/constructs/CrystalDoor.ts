@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 export class CrystalDoor extends Construct {
 
@@ -9,8 +10,8 @@ export class CrystalDoor extends Construct {
     exitDoor!: THREE.Mesh;
     crystalPlinths!: Array<THREE.Mesh>;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, numCrystals: number) {
-        super(graphics, physics, interactions)
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number) {
+        super(graphics, physics, interactions, userInterface);
 
         this.numCrystals = numCrystals;
         this.numFoundCrystals = 0;

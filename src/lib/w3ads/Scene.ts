@@ -4,11 +4,13 @@ import { PhysicsContext } from './PhysicsContext';
 import { GraphicsContext } from './GraphicsContext';
 import { Construct } from './Construct';
 import { InteractManager } from './InteractManager';
+import { InterfaceContext } from './InterfaceContext';
 
 export abstract class Scene {
     public sceneKey: string;    
     public graphics: GraphicsContext;
     public physics: PhysicsContext;
+    public userInterface: InterfaceContext;
     public interactions: InteractManager;
 
     public constructs: Array<Construct>;
@@ -20,6 +22,7 @@ export abstract class Scene {
         this.physics= new PhysicsContext(AmmoLib, {
             gravity: { x: 0, y: -10, z:0 },
         });
+        this.userInterface = new InterfaceContext();
         this.constructs = [];
     }
 
