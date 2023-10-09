@@ -1,0 +1,11 @@
+Model Information:
+* title:	Manhasset Music Stand
+* source:	https://sketchfab.com/3d-models/manhasset-music-stand-17cff430f0354453b978bbd6d6f65e61
+* author:	JeremyMichael (https://sketchfab.com/JeremyMichael)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Manhasset Music Stand" (https://sketchfab.com/3d-models/manhasset-music-stand-17cff430f0354453b978bbd6d6f65e61) by JeremyMichael (https://sketchfab.com/JeremyMichael) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

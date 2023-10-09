@@ -4,7 +4,7 @@ import { Scene } from '../lib';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 //import { TimeS } from '../lib/w3ads/types/misc.type';
 //import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
-import { StatuesConstruct } from '../constructs/Statues';
+import { MusicConstruct } from '../constructs/Music';
 import { Player } from '../constructs/Player';
 
 export class SandboxScene extends Scene {
@@ -18,10 +18,10 @@ export class SandboxScene extends Scene {
     //testConstruct: TestConstruct;
     //k!: THREE.Mesh;
     //mainLibrary!: MainLibraryConstruct;
-    statueRoom!: StatuesConstruct;
-
+    musicRoom!: MusicConstruct;
     player!: Player;
-    controls: any;
+    
+    controls!: OrbitControls;
 
     constructor(AmmoLib: any) {
         super(
@@ -29,20 +29,23 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
+        this.player = new Player(this.graphics, this.physics, this.interactions);
+        this.addConstruct(this.player);
+
        // this.testConstruct = new TestConstruct(this.graphics, this.physics);
        // this.addConstruct(this.testConstruct);
         // this.mainLibrary = new MainLibraryConstruct(this.graphics,this.physics);
         // this.addConstruct(this.mainLibrary);
 
-        this.statueRoom = new StatuesConstruct(this.graphics, this.physics, this.interactions);
-        this.addConstruct(this.statueRoom);
+        this.musicRoom = new MusicConstruct(this.graphics, this.physics, this.interactions, this.player);
+        this.addConstruct(this.musicRoom);
 
-        this.player = new Player(this.graphics, this.physics, this.interactions);
-        this.addConstruct(this.player);
+        
     };
 
 
     create(): void {
+        // this.player.create();
     }
 
     async load(): Promise<void> {
@@ -51,14 +54,94 @@ export class SandboxScene extends Scene {
     }
 
     build(): void {
+
+        this.player.root.position.set(0,30,0);
+        // this.player.build();
+        // this.player.setPosition(0, 0, 5);
         // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        // this.graphics.mainCamera.position.set(5, 5, 5);
-        // this.graphics.mainCamera.lookAt(0, 0, 0);
+        // this.graphics.mainCamera.position.set(1, 50, 1);
+        // this.graphics.mainCamera.lookAt(0, 0,-50);
         // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
-        this.player.root.position.set(0, 30, 0);
 
-        //this.statueRoom.root.scale.set(0.2,0.2,0.2);
+        // this.k.position.set(0, -10, 0);
+        // this.k.scale.set(1, 1, 1);
 
+       /* this.floor = GraphicsPrimitiveFactory.box({
+            position: { x: 0, y: -1, z: 0 },
+            scale: { x: 1000, y: 0.1, z: 1000 },
+            rotation: { x: 0, y: 0, z: 0 },
+            colour: 0x98fb98,
+            shadows: true,
+        });*/
+
+       /* this.walls = [];
+        for (let i = 0; i < 4; ++i) {
+            this.walls.push(
+                GraphicsPrimitiveFactory.box({
+                    position: { x: 0, y: 0, z: i * 10 + 10 },
+                    scale: { x: 40, y: 2, z: 0.2 },
+                    rotation: { x: 0, y: 0, z: 0 },
+                    colour: 0x0000ff,
+                    shadows: true,
+                })
+            );
+
+            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
+            this.graphics.add(this.walls[i]);
+        }
+        for (let i = 4; i < 8; ++i) {
+            this.walls.push(
+                GraphicsPrimitiveFactory.box({
+                    position: { x: 0, y: 0, z: (i - 4) * -10 - 10 },
+                    scale: { x: 40, y: 2, z: 0.2 },
+                    rotation: { x: 0, y: 0, z: 0 },
+                    colour: 0x0000ff,
+                    shadows: true,
+                })
+            );
+
+            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
+            this.graphics.add(this.walls[i]);
+        }
+        this.walls.push(
+            GraphicsPrimitiveFactory.box({
+                position: { x: 25, y: 0, z: 0 },
+                scale: { x: 0.2, y: 2, z: 80 },
+                rotation: { x: 0, y: 0, z: 0 },
+                colour: 0x0000ff,
+                shadows: true,
+            })
+        );
+        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.graphics.add(this.walls[8]);
+
+        this.walls.push(
+            GraphicsPrimitiveFactory.box({
+                position: { x: -25, y: 0, z: 0 },
+                scale: { x: 0.2, y: 2, z: 80 },
+                rotation: { x: 0, y: 0, z: 0 },
+                colour: 0x0000ff,
+                shadows: true,
+            })
+        );
+        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
+        this.graphics.add(this.walls[9]);*/
+
+        /*this.ballKinematic = GraphicsPrimitiveFactory.sphere({
+            position: { x: 0, y: 0, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            radius: 1,
+            colour: 0xff0000,
+            shadows: true,
+        });
+        this.graphics.add(this.ballKinematic);
+        this.physics.addKinematic(this.ballKinematic, PhysicsColliderFactory.sphere(1), {
+            mass: 1,
+            linearVelocity: { x: 0, y: 0, z: 1 },
+            friction: 0,
+        });*/
+
+        
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
@@ -86,8 +169,7 @@ export class SandboxScene extends Scene {
         //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
-    //@ts-ignore
-    update(time: number, delta: number): void {
+    update(): void {
     }
 
     destroy(): void {
