@@ -1,39 +1,69 @@
 export class InterfaceContext {
     root: HTMLDivElement;
+    promptRoot: HTMLDivElement;
+    menuRoot: HTMLDivElement;
     elements: Array<HTMLElement>;
 
     constructor() {
         this.root = document.createElement('div');
-        this.root.className = 'flex flex-col gap-5 justify-center items-start w-screen h-screen fixed top-0 left-0 z-10 p-10';
+        this.root.className = 'fixed left-0 top-0 z-10 grid h-screen w-screen grid-rows-[1fr_200px]';
+
+
+        this.menuRoot = document.createElement('div');
+        this.menuRoot.className = 'row-span-1 row-start-1 flex flex-row items-start justify-start gap-5 p-5';
+        this.root.appendChild(this.menuRoot);
+
+        this.promptRoot = document.createElement('div');
+        this.promptRoot.className = 'row-span-1 row-start-2 flex flex-col items-center justify-center gap-1 p-2';
+        this.root.appendChild(this.promptRoot);
+
         this.elements = [];
         document.body.appendChild(this.root);
     }
 
-    addElement(element: HTMLElement, time: number | undefined) {
+    hideAll() {
+        this.menuRoot.replaceChildren();
+        this.promptRoot.replaceChildren();
+    }
 
-        this.elements.push(element);
-        this.root.appendChild(element);
+    addPrompt(innerHtml: string): number {
+        const promptId = this.elements.length;
+        this.elements.push( document.createElement('div') );
+        this.elements[promptId].className = 'flex h-10 items-center justify-center rounded-md border-2 border-stone-950 bg-neutral-100 p-2';
+        this.elements[promptId].innerHTML = innerHtml;
+        return promptId;
+    }
 
-        if (time !== undefined) {
-            setTimeout(() => {
-                this.removeElement(element);
-            }, time);
+    showPrompt(promptId: number) {
+        this.promptRoot.appendChild(this.elements[promptId]);
+    };
+
+    hidePrompt(promptId: number) {
+        this.promptRoot.removeChild(this.elements[promptId]);
+    }
+
+    addMenu( title: string, row: boolean ): { menu: HTMLElement, menuId: number } {
+        const menuId = this.elements.length;
+        this.elements.push( document.createElement('div') );
+        this.elements[menuId].className = `flex flex-${row ? 'row' : 'col'} items-center justify-center gap-4 rounded-md border-2 border-stone-950 bg-gradient-to-b from-sky-400 to-sky-700 p-5 text-white`;
+
+        const titleElement = document.createElement('h1');
+        this.elements[menuId].appendChild(titleElement);
+        titleElement.className = 'w-full border-b-4 border-black py-2 text-center text-3xl font-bold';
+        titleElement.textContent = title;
+
+        return {
+            menu: this.elements[menuId],
+            menuId: menuId,
         }
     }
 
-    removeElement(element: HTMLElement) {
-        this.elements = this.elements.filter(el => el != element);
-        try {
-            this.root.removeChild(element);
-        } catch (e: any) {
-            // DO nothing if the node cant be found
-        }
+    showMenu(menuId: number) {
+        this.menuRoot.appendChild(this.elements[menuId]);
     }
 
-    clear() {
-        for (let el of this.elements) {
-            this.removeElement(el);
-        }
+    hideMenu(menuId: number) {
+        this.menuRoot.removeChild(this.elements[menuId]);
     }
 
 }

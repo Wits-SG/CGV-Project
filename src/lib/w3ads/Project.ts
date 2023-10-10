@@ -37,6 +37,8 @@ export class Project {
         this.stats = null;
         if (config.stats) {
             this.stats = new Stats();
+            //@ts-expect-error .style is not really read only and this works
+            this.stats.dom.style = 'position:absolute;top:0px;right:0px;';
             document.body.appendChild( this.stats.dom );
         }
 
