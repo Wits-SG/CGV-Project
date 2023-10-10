@@ -53,17 +53,17 @@ export class Player extends Construct {
             this.face.add(object);
         });
 
-        this.pauseMenu = drawPauseMenu(this.userInterface, this.graphics, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
+        this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
+                        if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
             if (event.key == 'Shift') { this.speed = sprintSpeed }
-        });
+                    });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
@@ -72,7 +72,7 @@ export class Player extends Construct {
             if (event.key == 'Shift') { this.speed = walkSpeed }
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
-            
+                        
             const worldPos = new THREE.Vector3();
             this.root.getWorldPosition(worldPos);
             
@@ -94,21 +94,29 @@ export class Player extends Construct {
         });
 
         document.addEventListener('mousemove', (event: MouseEvent) => {
-
-
             this.mouse.x = event.movementX;
             this.mouse.y = event.movementY;
 
         });
 
+        // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
         document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement == this.graphics.renderer.domElement) {
-                this.paused = false;
-                this.userInterface.hideMenu(this.pauseMenu);
-            } else {
-                this.paused = true;
-                this.userInterface.showMenu(this.pauseMenu);
+            if (document.pointerLockElement !== this.graphics.renderer.domElement) {
+                const pauseEvent = new Event("pauseGame");
+                document.dispatchEvent(pauseEvent);
             }
+        });
+
+        document.addEventListener("pauseGame", () => {
+            this.paused = true;
+            this.userInterface.showMenu(this.pauseMenu);
+            document.exitPointerLock();
+        })
+
+        document.addEventListener("unpauseGame", () => {
+            this.paused = false;
+            this.userInterface.hideMenu(this.pauseMenu);
+            this.graphics.renderer.domElement.requestPointerLock();
         });
     }
 
@@ -148,6 +156,9 @@ export class Player extends Construct {
             jumpSpeed: jumpSpeed,
             gravity: jumpGravity,
         })
+
+        // Once finished building, ask for pointer lock to begin playing
+        this.graphics.renderer.domElement.requestPointerLock();
     }
 
     update(): void {

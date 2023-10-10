@@ -1,4 +1,3 @@
-import { GraphicsContext } from ".";
 import { InterfaceContext } from "./w3ads/InterfaceContext";
 
 export const buildButton = (text: string, onclick: Function) => {
@@ -245,7 +244,7 @@ export const drawControls = (ui: InterfaceContext): number => {
     return menuId;
 }
 
-export const drawPauseMenu = (ui: InterfaceContext, graphics: GraphicsContext, levelName: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
+export const drawPauseMenu = (ui: InterfaceContext, levelName: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
     const { menu: pauseMenu, menuId: pauseMenuId } = ui.addMenu('Paused', false);
 
     const informationSection = buildSection('');
@@ -275,7 +274,10 @@ export const drawPauseMenu = (ui: InterfaceContext, graphics: GraphicsContext, l
 
     const playSection = buildSection('');
 
-    const resume = buildButton('Resume', () => graphics.renderer.domElement.requestPointerLock());
+    const resume = buildButton('Resume', () => {
+        const unpauseEvent = new Event("unpauseGame");
+        document.dispatchEvent(unpauseEvent);
+    });
     const restart = buildButton('Restart level', () => {
         const event = new CustomEvent("changeScene", { detail: levelKey });
         document.dispatchEvent(event);

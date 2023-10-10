@@ -51,13 +51,13 @@ export class Project {
             });
         });
 
-        document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement == this.renderer.domElement) {
-                this.play();
-            } else {
-                this.pause();
-            }
+        document.addEventListener("unpauseGame", () => {
+            this.play();
         })
+
+        document.addEventListener("pauseGame", () => {
+            this.pause();
+        });
 
         window.onresize = () => {
             // I've added the ts warnings because I can't be bothered to make this
