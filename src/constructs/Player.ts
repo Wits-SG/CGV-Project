@@ -207,17 +207,19 @@ export class Player extends Construct {
 
         this.mouse = { x: 0, y: 0 }; // reset mouse input
 
-        if (this.root.userData.canInteract && this.holdingObject === undefined) {
-            this.userInterface.showPrompt(this.interactPrompt);
-        } else {
-            this.userInterface.hidePrompt(this.interactPrompt);
-        }
+        // The insertion and removal of these DOM nodes is causing performance hickups 
+        // when nearby to interactable elements - possibly consider switching to signals
+        // if (this.root.userData.canInteract && this.holdingObject === undefined) {
+        //     this.userInterface.showPrompt(this.interactPrompt);
+        // } else {
+        //     this.userInterface.hidePrompt(this.interactPrompt);
+        // }
 
-        if (this.root.userData.canPlace && this.holdingObject !== undefined) {
-            this.userInterface.showPrompt(this.placePrompt);
-        } else {
-            this.userInterface.hidePrompt(this.placePrompt);
-        }
+        // if (this.root.userData.canPlace && this.holdingObject !== undefined) {
+        //     this.userInterface.showPrompt(this.placePrompt);
+        // } else {
+        //     this.userInterface.hidePrompt(this.placePrompt);
+        // }
     }
 
     destroy(): void {
