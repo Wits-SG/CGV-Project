@@ -71,7 +71,10 @@ export const drawLevelMenu = (ui: InterfaceContext, playerTimes: Array<Array<{ n
         const buttonSection = document.createElement('section');
         buttonSection.className = 'flex w-full flex-col items-center justify-center text-lg gap-2';
 
-            const playLevel = buildButton(`Play Level ${i + 1}`, () => {});
+            const playLevel = buildButton(`Play Level ${i + 1}`, () => {
+                const event = new CustomEvent("changeScene", { detail: `level${i + 1}`});
+                document.dispatchEvent(event);
+            });
             const viewLeaderboard = buildButton('View leaderboard', () => {});
             const close = buildButton(`Close`, () => {
                 ui.hideMenu( levelId );
@@ -288,7 +291,10 @@ export const drawMainMenu = (ui: InterfaceContext, developers: any, assets: any)
     const howToMenuId = drawHowToPlay(ui);
     const controlsMenuId = drawControls(ui);
 
-    const sandboxButton = buildButton('Play Sandbox', () => {});
+    const sandboxButton = buildButton('Play Sandbox', () => {
+        const event = new CustomEvent("changeScene", { detail: `sandbox`});
+        document.dispatchEvent(event);
+    });
     const howToPlayButton = buildButton('How to play', () => ui.showMenu(howToMenuId));
     const controls = buildButton('Controls', () => ui.showMenu(controlsMenuId));
 
