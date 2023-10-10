@@ -1,17 +1,21 @@
 //@ts-ignore
 import AmmoLib from './ammo/ammo.js'; 
 import { Project, Scene } from './lib/index';
-import { TestScene } from './scenes/TestScene.js';
 import { SandboxScene } from './scenes/Sandbox.js';
 import { MainMenu } from './scenes/MainMenu.js';
+import { LevelOne } from './scenes/Level1.js';
+import { LevelTwo } from './scenes/Level2.js';
+import { LevelThree } from './scenes/Level3.js';
 
 
 
 AmmoLib().then(function (result: any) {
     const sceneMap = new Map<string, typeof Scene>([
         ['mainmenu', MainMenu],
+        ['level1', LevelOne],
+        ['level2', LevelTwo],
+        ['level3', LevelThree],
         ['sandbox', SandboxScene], 
-        ['test', TestScene],
     ]);
 
     // Ignoring unused variable

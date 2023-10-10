@@ -2,6 +2,12 @@ import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { CrystalDoor } from './CrystalDoor';
+import { Player } from './Player';
+import { StatuesConstruct } from './Statues';
+import { MirrorRoom } from './MirrorRoom';
+import { MusicConstruct } from './Music';
+import { OfficeConstruct } from './OfficeConstruct';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -26,8 +32,38 @@ export class MainLibraryConstruct extends Construct {
     TableGeometry!: THREE.BufferGeometry;
     TableMaterial!: THREE.MeshNormalMaterial;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
+    // Game loop nonsense
+    player: Player;
+    numCrystals: number;
+    exitDoor: CrystalDoor;
+
+    // Puzzles
+    chess: StatuesConstruct;
+    mirror: MirrorRoom;
+    music: MusicConstruct;
+    office: OfficeConstruct;
+
+
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player, sceneKey: string) {
         super(graphics, physics, interactions, userInterface);
+
+        this.player = player;
+        this.numCrystals = numCrystals;
+
+        this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals, sceneKey);
+        this.addConstruct(this.exitDoor);
+
+        this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.chess);
+
+        this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.mirror);
+
+        this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
+        this.addConstruct(this.music);
+
+        this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.office);
     }
 
     /*      const tempBookShelf = this.bookshelf.clone();
@@ -80,7 +116,18 @@ export class MainLibraryConstruct extends Construct {
 
 
 
-    create() {}
+    create() {
+        this.exitDoor.root.position.set(0, 0 , -113.5);
+        this.chess.root.position.set(100, -10.5, 43.3);
+        this.chess.root.rotation.set(0, Math.PI, 0);
+        this.mirror.root.position.set(110, -11, -12);
+        this.mirror.root.rotation.set(0, Math.PI / 2, 0);
+        this.music.root.position.set(190, -11, 0);
+        this.music.root.rotation.set(0, Math.PI / 2, 0);
+        this.office.root.position.set(-180, -11, 0);
+        this.office.root.rotation.set(0, Math.PI / 2, 0);
+
+    }
 
     async load(): Promise<void>{
         /*try {
@@ -138,6 +185,21 @@ export class MainLibraryConstruct extends Construct {
     }
 
     build() {
+        const distanceFromCenter = 10;
+        const angleBetween = 2 * Math.PI / this.numCrystals;
+        for (let i = 0; i < this.numCrystals; ++i) {
+            const currentPlinth = this.exitDoor.crystalPlinths[i];
+            const x = distanceFromCenter * Math.sin(i * angleBetween);
+            const z = distanceFromCenter * Math.cos(i * angleBetween) - 100;
+
+            currentPlinth.position.set(
+                x,
+                -9,
+                z
+            );
+        }
+
+        // this.music.root.position.set(140, -8, 0);
 
         const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [-22.5,0,-112.5],[22.5,0,-112.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
         const scaleArr = [[80, 20, 0.1],[ 100, 20,0.1], [100, 20,0.1], [ 100, 20,0.1], [100, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];

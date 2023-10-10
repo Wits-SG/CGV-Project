@@ -46,7 +46,6 @@ export class MusicConstruct extends Construct{
             }
             if(result){
                 //will put victory sound here and the crystal thing
-                console.log("Success!");
                 this.crystal.root.position.set(0,3,0);
                 audioLoader.load( 'sound/success.mp3', function( buffer ) {
                     sound.setBuffer( buffer );
@@ -58,8 +57,6 @@ export class MusicConstruct extends Construct{
                 
 
             } else{
-                console.log("Wrong");
-                
                userPuzzle =[];
             }
             
@@ -130,7 +127,6 @@ export class MusicConstruct extends Construct{
         //         puzzle.push(n);
         //     }
         // }
-        console.log(puzzle);
         let userPuzzle: Array<Number> = [];
         
         
@@ -151,7 +147,7 @@ export class MusicConstruct extends Construct{
         //carpet plane 
         const carpet = new THREE.MeshLambertMaterial({ map: this.carpetData, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, carpet);
-        this.floor.position.set(0,0,0);
+        this.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30)); 
 
         // Wall and roof parameters
@@ -166,6 +162,10 @@ export class MusicConstruct extends Construct{
         sideWallLeft.position.set(-29.5,10,0);
         sideWallRight.position.set(29.5,10,0);
         backWall.position.set(0,10,30);
+
+        this.add(sideWallLeft);
+        this.add(sideWallRight);
+        this.add(backWall);
 
         this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
@@ -214,7 +214,6 @@ export class MusicConstruct extends Construct{
                 }
                 if(result){
                     //will put victory sound here and the crystal thing
-                    console.log("Success!");
                     this.crystal.root.position.set(0,3,0);
                     audioLoader.load( 'sound/success.mp3', function( buffer ) {
                         sound.setBuffer( buffer );
@@ -226,13 +225,11 @@ export class MusicConstruct extends Construct{
                     
     
                 } else{
-                    console.log("Wrong");
                     
                    userPuzzle =[];
                 }
                 
             }
-            console.log(userPuzzle);
             
             
             
@@ -295,9 +292,6 @@ export class MusicConstruct extends Construct{
                 
             }
             
-            console.log(userPuzzle);
-
-                
         });
 
         //GRAMOPHONE
@@ -392,10 +386,6 @@ export class MusicConstruct extends Construct{
 
         
 
-        this.add(this.floor);
-        this.add(sideWallLeft);
-        this.add(sideWallRight);
-        this.add(backWall);
         this.add(roof);
     } //all geometry (where place objects)
 

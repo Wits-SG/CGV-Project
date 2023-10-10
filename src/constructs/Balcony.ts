@@ -1,15 +1,13 @@
 import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory} from '../lib/index';
+import { InteractManager } from '../lib/w3ads/InteractManager';
+import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import * as THREE from 'three';
 
 export class Balcony extends Construct {
     private texture: any;
 
-    constructor(
-        graphics: GraphicsContext,
-        physics: PhysicsContext,
-        
-    ) {
-        super(graphics, physics);
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
+        super(graphics, physics, interactions, userInterface);
     }
 
     create(): void {
@@ -31,7 +29,7 @@ export class Balcony extends Construct {
         const material = new THREE.MeshBasicMaterial({ map: this.texture });
         const balcony = new THREE.Mesh(geometry, material);
         balcony.position.set(0, 5.25, -11);
-        this.graphics.add(balcony);
+        this.add(balcony);
         this.physics.addStatic(balcony,PhysicsColliderFactory.box(8, 0.25 , 4.7));
     }
 

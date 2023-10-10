@@ -84,7 +84,7 @@ export class Player extends Construct {
         });
 
         document.addEventListener('mousemove', (event: MouseEvent) => {
-            if (this.paused) { return }
+            if (this.paused || !this.body) { return }
 
             // character orientation and screen orientation are flipped
             const rotateAmountX = (-1 * event.movementX) * this.sensitivity;
@@ -158,13 +158,15 @@ export class Player extends Construct {
 
         this.physics.addCharacter(this.root, PhysicsColliderFactory.box(1, 2, 1), {
             jump: true,
-            jumpHeight: 8,
-            jumpSpeed: 7,
-            gravity: 10,
+            jumpHeight: 0,
+            jumpSpeed: 6,
+            gravity: 5.5,
         })
     }
 
     update(): void {
+        if (!this.body) { return }
+
         const xLocal = this.direction.f - this.direction.b; // Character facing x
         const zLocal = this.direction.r - this.direction.l; // Character facing z
 
