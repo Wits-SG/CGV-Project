@@ -30,7 +30,8 @@ export class CrystalDoor extends Construct {
 
         this.interactions.addInteractable(this.root, 20, () => {
             if (this.numFoundCrystals == this.numCrystals) {
-                document.exitPointerLock();
+                const endLevelEvent = new Event("endLevel");
+                document.dispatchEvent(endLevelEvent);
             } else {
                 console.log("Not enough crystals have been found to open the door");
             }

@@ -1,8 +1,15 @@
 import * as THREE from 'three'; 
 import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
-import { drawPauseMenu } from '../lib/UiComponents';
+import { drawPauseMenu, drawEndLevelMenu } from '../lib/UiComponents';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+
+const walkSpeed = 0.05;
+const sprintSpeed = 0.1;
+
+const jumpHeight = 10;
+const jumpSpeed = 5;
+const jumpGravity = 10;
 
 export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
@@ -11,12 +18,14 @@ export class Player extends Construct {
     holdingObject: THREE.Mesh | undefined = undefined;
 
     direction!: { f: number, b: number, l: number, r: number }
-    speed: number = 0.05;
-
+    speed: number = walkSpeed;
+    mouse: { x: number, y: number } = { x: 0, y: 0 };
     sensitivity: number = 0.2 * Math.PI / 180; // Angle change per unit = 1 degree
 
     paused: boolean = false; // THis is a very hacky way of implementing pause so it should be changed
+
     pauseMenu!: number;
+    endLevelMenu!: number;
     interactPrompt!: number;
     placePrompt!: number;
 
@@ -27,12 +36,13 @@ export class Player extends Construct {
         numPuzzles: number,
     };
 
-
-
+    levelTime: number; // the number of seconds spent in a level - effectively this is our scoring technique
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelConfig: {key: string, name: string, difficulty: string, numPuzzles: number}) {
         super(graphics, physics, interactions, userInterface);
         this.levelConfig = levelConfig;
+
+        this.levelTime = 0;
     }
 
     create(): void {
@@ -49,30 +59,25 @@ export class Player extends Construct {
             this.face.add(object);
         });
 
-        this.pauseMenu = drawPauseMenu(this.userInterface, this.graphics, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (this.paused) { return }
-
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == 'Shift') { this.speed = 0.1 }
+            if (event.key == 'Shift') { this.speed = sprintSpeed }
         });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
-            if (this.paused) { return }
-
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
-            if (event.key == 'Shift') { this.speed = 0.05 }
+            if (event.key == 'Shift') { this.speed = walkSpeed }
         });
         document.addEventListener('keypress', (event: KeyboardEvent) => {
-            
+                        
             const worldPos = new THREE.Vector3();
             this.root.getWorldPosition(worldPos);
             
@@ -94,37 +99,43 @@ export class Player extends Construct {
         });
 
         document.addEventListener('mousemove', (event: MouseEvent) => {
-            if (this.paused || !this.body) { return }
+            if(this.paused) { return }
 
-            // character orientation and screen orientation are flipped
-            const rotateAmountX = (-1 * event.movementX) * this.sensitivity;
-            const rotateAmountY = (-1 * event.movementY) * this.sensitivity;
-
-            const maxAngle = Math.PI / 4 + Math.PI / 6;
-            const minAngle = -Math.PI / 4 - Math.PI / 6;
-
-            this.body.rotation.y = (this.body.rotation.y + rotateAmountX) % (2 * Math.PI);
-            let totalY = this.face.rotation.z + rotateAmountY % (Math.PI);
-
-            if (totalY >= maxAngle) {
-                totalY = maxAngle;
-            }
-
-            if (totalY <= minAngle) {
-                totalY = minAngle;
-            }
-
-            this.face.rotation.z = totalY;
+            this.mouse.x = event.movementX;
+            this.mouse.y = event.movementY;
         });
 
+        // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
         document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement == this.graphics.renderer.domElement) {
-                this.paused = false;
-                this.userInterface.hideMenu(this.pauseMenu);
-            } else {
-                this.paused = true;
-                this.userInterface.showMenu(this.pauseMenu);
+            if (document.pointerLockElement !== this.graphics.renderer.domElement) {
+                const pauseEvent = new Event("pauseGame");
+                document.dispatchEvent(pauseEvent);
             }
+        });
+
+        document.addEventListener("pauseGame", () => {
+            this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
+            this.paused = true;
+            this.userInterface.showMenu(this.pauseMenu);
+            document.exitPointerLock();
+        })
+
+        document.addEventListener("unpauseGame", () => {
+            this.paused = false;
+            this.userInterface.hideMenu(this.pauseMenu);
+            this.userInterface.removeElement(this.pauseMenu);
+            this.graphics.renderer.domElement.requestPointerLock();
+        });
+
+        document.addEventListener("endLevel", () => {
+            document.exitPointerLock();
+            this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
+            this.userInterface.showMenu(this.endLevelMenu);
+
+            // Performance doesnt matter here because the game is over
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 200); // even more eww -> race conditions so being safe
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 300); // even more eww -> race conditions so being safe
         });
     }
 
@@ -160,36 +171,55 @@ export class Player extends Construct {
 
         this.physics.addCharacter(this.root, PhysicsColliderFactory.box(1, 2, 1), {
             jump: true,
-            jumpHeight: 0,
-            jumpSpeed: 6,
-            gravity: 5.5,
+            jumpHeight: jumpHeight,
+            jumpSpeed: jumpSpeed,
+            gravity: jumpGravity,
         })
+
+        // Once finished building, ask for pointer lock to begin playing
+        this.graphics.renderer.domElement.requestPointerLock();
     }
 
-    update(): void {
+    //@ts-ignore ignoring the time variable
+    update(time: number, delta: number): void {
         if (!this.body) { return }
 
+        this.levelTime += delta / 1000; // convert to seconds first
+
+        // Do vector math (trig because idk how to use quaternions / matrices properly) to determine the walking direction of the character
         const xLocal = this.direction.f - this.direction.b; // Character facing x
         const zLocal = this.direction.r - this.direction.l; // Character facing z
-
-        // const yaw = Math.round(this.body.rotation.y * 180 / Math.PI);
         const yaw = this.body.rotation.y;
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
-
         this.physics.moveCharacter(this.root, x, 0, z, this.speed);
 
-        if (this.root.userData.canInteract && this.holdingObject === undefined) {
-            this.userInterface.showPrompt(this.interactPrompt);
-        } else {
-            this.userInterface.hidePrompt(this.interactPrompt);
-        }
+        // character orientation and screen orientation are flipped
+        const rotateAmountX = (-1 * this.mouse.x) * this.sensitivity;
+        const rotateAmountY = (-1 * this.mouse.y) * this.sensitivity;
+        const maxAngle = Math.PI / 4 + Math.PI / 6;
+        const minAngle = -Math.PI / 4 - Math.PI / 6;
+        this.body.rotation.y = (this.body.rotation.y + rotateAmountX) % (2 * Math.PI);
+        let totalY = this.face.rotation.z + rotateAmountY % (Math.PI);
+        if (totalY >= maxAngle) { totalY = maxAngle; }
+        if (totalY <= minAngle) { totalY = minAngle; }
+        this.face.rotation.z = totalY;
 
-        if (this.root.userData.canPlace && this.holdingObject !== undefined) {
-            this.userInterface.showPrompt(this.placePrompt);
-        } else {
-            this.userInterface.hidePrompt(this.placePrompt);
-        }
+        this.mouse = { x: 0, y: 0 }; // reset mouse input
+
+        // The insertion and removal of these DOM nodes is causing performance hickups 
+        // when nearby to interactable elements - possibly consider switching to signals
+        // if (this.root.userData.canInteract && this.holdingObject === undefined) {
+        //     this.userInterface.showPrompt(this.interactPrompt);
+        // } else {
+        //     this.userInterface.hidePrompt(this.interactPrompt);
+        // }
+
+        // if (this.root.userData.canPlace && this.holdingObject !== undefined) {
+        //     this.userInterface.showPrompt(this.placePrompt);
+        // } else {
+        //     this.userInterface.hidePrompt(this.placePrompt);
+        // }
     }
 
     destroy(): void {
