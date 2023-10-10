@@ -32,7 +32,7 @@ export class MainMenu extends Scene {
             this.numCrystals = 3;
         }
 
-        this.door = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals, 'mainmenu');
+        this.door = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.door);
 
         this.crystals = [];

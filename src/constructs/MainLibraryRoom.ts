@@ -50,7 +50,7 @@ export class MainLibraryConstruct extends Construct {
         this.player = player;
         this.numCrystals = numCrystals;
 
-        this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals, sceneKey);
+        this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.exitDoor);
 
         this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
