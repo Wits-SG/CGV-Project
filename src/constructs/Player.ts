@@ -36,9 +36,13 @@ export class Player extends Construct {
         numPuzzles: number,
     };
 
+    levelTime: number; // the number of seconds spent in a level - effectively this is our scoring technique
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelConfig: {key: string, name: string, difficulty: string, numPuzzles: number}) {
         super(graphics, physics, interactions, userInterface);
         this.levelConfig = levelConfig;
+
+        this.levelTime = 0;
     }
 
     create(): void {
@@ -55,18 +59,16 @@ export class Player extends Construct {
             this.face.add(object);
         });
 
-        this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
-        this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0)
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
-                        if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
+            if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
             if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
             if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
             if (event.key == 'Shift') { this.speed = sprintSpeed }
-                    });
+        });
         document.addEventListener('keyup', (event: KeyboardEvent) => {
             if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
             if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
@@ -97,9 +99,10 @@ export class Player extends Construct {
         });
 
         document.addEventListener('mousemove', (event: MouseEvent) => {
+            if(this.paused) { return }
+
             this.mouse.x = event.movementX;
             this.mouse.y = event.movementY;
-
         });
 
         // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
@@ -111,6 +114,7 @@ export class Player extends Construct {
         });
 
         document.addEventListener("pauseGame", () => {
+            this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
             this.paused = true;
             this.userInterface.showMenu(this.pauseMenu);
             document.exitPointerLock();
@@ -119,14 +123,19 @@ export class Player extends Construct {
         document.addEventListener("unpauseGame", () => {
             this.paused = false;
             this.userInterface.hideMenu(this.pauseMenu);
+            this.userInterface.removeElement(this.pauseMenu);
             this.graphics.renderer.domElement.requestPointerLock();
         });
 
         document.addEventListener("endLevel", () => {
             document.exitPointerLock();
+            this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
             this.userInterface.showMenu(this.endLevelMenu);
 
+            // Performance doesnt matter here because the game is over
             setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 200); // even more eww -> race conditions so being safe
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 300); // even more eww -> race conditions so being safe
         });
     }
 
@@ -171,8 +180,11 @@ export class Player extends Construct {
         this.graphics.renderer.domElement.requestPointerLock();
     }
 
-    update(): void {
+    //@ts-ignore ignoring the time variable
+    update(time: number, delta: number): void {
         if (!this.body) { return }
+
+        this.levelTime += delta / 1000; // convert to seconds first
 
         // Do vector math (trig because idk how to use quaternions / matrices properly) to determine the walking direction of the character
         const xLocal = this.direction.f - this.direction.b; // Character facing x

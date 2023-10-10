@@ -251,7 +251,7 @@ export const drawPauseMenu = (ui: InterfaceContext, levelName: string, levelKey:
         const levelP = document.createElement('p');
         levelP.innerHTML = `<b class="font-semibold">Level</b>: ${levelName}`;
         const timeP = document.createElement('p');
-        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${currentTime} s`;
+        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${Math.floor(currentTime)} s`;
         const difficultyP = document.createElement('p');
         difficultyP.innerHTML = `<b class="font-semibold">Difficulty</b>: ${difficulty}`;
         const puzzlesP = document.createElement('p');
@@ -305,7 +305,7 @@ export const drawEndLevelMenu = (ui: InterfaceContext, levelName: string, levelK
         const levelP = document.createElement('p');
         levelP.innerHTML = `<b class="font-semibold">Level</b>: ${levelName}`;
         const timeP = document.createElement('p');
-        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${currentTime} s`;
+        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${Math.floor(currentTime)} s`;
         const difficultyP = document.createElement('p');
         difficultyP.innerHTML = `<b class="font-semibold">Difficulty</b>: ${difficulty}`;
         const puzzlesP = document.createElement('p');

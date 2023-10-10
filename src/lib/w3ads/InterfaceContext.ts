@@ -29,6 +29,10 @@ export class InterfaceContext {
         document.body.removeChild(this.root);
     }
 
+    removeElement(elementId: number) {
+        this.elements.splice(elementId, 1);
+    }
+
     addPrompt(innerHtml: string): number {
         const promptId = this.elements.length;
         this.elements.push( document.createElement('div') );
