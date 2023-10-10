@@ -119,6 +119,7 @@ export class MainMenu extends Scene {
     }
 
     destroy(): void {
+        this.userInterface.hideAll();
     }
 
 }

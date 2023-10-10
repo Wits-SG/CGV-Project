@@ -1,3 +1,4 @@
+import { GraphicsContext } from ".";
 import { InterfaceContext } from "./w3ads/InterfaceContext";
 
 export const buildButton = (text: string, onclick: Function) => {
@@ -244,12 +245,12 @@ export const drawControls = (ui: InterfaceContext): number => {
     return menuId;
 }
 
-export const drawPauseMenu = (ui: InterfaceContext, level: number, difficulty: string, numPuzzles: number, currentTime: number): number => {
+export const drawPauseMenu = (ui: InterfaceContext, graphics: GraphicsContext, levelName: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
     const { menu: pauseMenu, menuId: pauseMenuId } = ui.addMenu('Paused', false);
 
-    const informationSection = buildSection('Information');
+    const informationSection = buildSection('');
         const levelP = document.createElement('p');
-        levelP.innerHTML = `<b class="font-semibold">Level</b>: ${level}`;
+        levelP.innerHTML = `<b class="font-semibold">Level</b>: ${levelName}`;
         const timeP = document.createElement('p');
         timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${currentTime} s`;
         const difficultyP = document.createElement('p');
@@ -273,6 +274,20 @@ export const drawPauseMenu = (ui: InterfaceContext, level: number, difficulty: s
     howSection.appendChild(controlsButton);
 
     const playSection = buildSection('');
+
+    const resume = buildButton('Resume', () => graphics.renderer.domElement.requestPointerLock());
+    const restart = buildButton('Restart level', () => {
+        const event = new CustomEvent("changeScene", { detail: levelKey });
+        document.dispatchEvent(event);
+    });
+    const exit = buildButton('Exit to menu', () => {
+        const event = new CustomEvent("changeScene", { detail: 'mainmenu' });
+        document.dispatchEvent(event);
+    });
+
+    playSection.appendChild(resume);
+    playSection.appendChild(restart);
+    playSection.appendChild(exit);
 
     pauseMenu.appendChild(informationSection);
     pauseMenu.appendChild(howSection);

@@ -1,6 +1,6 @@
 import * as THREE from 'three'; 
 import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
-import { buildPauseMenu } from '../lib/PauseMenu';
+import { drawPauseMenu } from '../lib/UiComponents';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
@@ -16,22 +16,29 @@ export class Player extends Construct {
     sensitivity: number = 0.2 * Math.PI / 180; // Angle change per unit = 1 degree
 
     paused: boolean = false; // THis is a very hacky way of implementing pause so it should be changed
-    pauseMenu!: HTMLDivElement;
+    pauseMenu!: number;
 
-    levelKey: string;
+    levelConfig: {
+        key: string,
+        name: string,
+        difficulty: string,
+        numPuzzles: number,
+    };
 
     interactPrompt!: HTMLParagraphElement;
     placePrompt!: HTMLParagraphElement;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelKey: string) {
+
+
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelConfig: {key: string, name: string, difficulty: string, numPuzzles: number}) {
         super(graphics, physics, interactions, userInterface);
-        this.levelKey = levelKey;
+        this.levelConfig = levelConfig;
     }
 
     create(): void {
         this.paused = false;
         this.graphics.renderer.domElement.requestPointerLock();
-        this.pauseMenu = buildPauseMenu(this.graphics, this.userInterface, this.levelKey);
+        this.pauseMenu = drawPauseMenu(this.userInterface, this.graphics, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
         this.interactions.addInteracting(this.root, (object: THREE.Mesh) => {
@@ -110,10 +117,10 @@ export class Player extends Construct {
         document.addEventListener('pointerlockchange', () => {
             if (document.pointerLockElement == this.graphics.renderer.domElement) {
                 this.paused = false;
-                this.userInterface.removeElement(this.pauseMenu);
+                this.userInterface.hideMenu(this.pauseMenu);
             } else {
                 this.paused = true;
-                this.userInterface.addElement(this.pauseMenu, undefined); //undefined means no time limit on ui element
+                this.userInterface.showMenu(this.pauseMenu);
             }
         });
 
@@ -178,15 +185,11 @@ export class Player extends Construct {
         this.physics.moveCharacter(this.root, x, 0, z, this.speed);
 
         if (this.root.userData.canInteract && this.holdingObject === undefined) {
-            this.userInterface.addElement(this.interactPrompt, undefined);
         } else {
-            this.userInterface.removeElement(this.interactPrompt);
         }
 
         if (this.root.userData.canPlace && this.holdingObject !== undefined) {
-            this.userInterface.addElement(this.placePrompt, undefined);
         } else {
-            this.userInterface.removeElement(this.placePrompt);
         }
     }
 
