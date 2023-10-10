@@ -1,11 +1,11 @@
 import * as THREE from 'three'; 
 import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
-import { drawPauseMenu } from '../lib/UiComponents';
+import { drawPauseMenu, drawEndLevelMenu } from '../lib/UiComponents';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
-const walkSpeed = 0.1;
-const sprintSpeed = 0.2;
+const walkSpeed = 0.05;
+const sprintSpeed = 0.1;
 
 const jumpHeight = 10;
 const jumpSpeed = 5;
@@ -23,7 +23,9 @@ export class Player extends Construct {
     sensitivity: number = 0.2 * Math.PI / 180; // Angle change per unit = 1 degree
 
     paused: boolean = false; // THis is a very hacky way of implementing pause so it should be changed
+
     pauseMenu!: number;
+    endLevelMenu!: number;
     interactPrompt!: number;
     placePrompt!: number;
 
@@ -54,6 +56,7 @@ export class Player extends Construct {
         });
 
         this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
+        this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0)
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
@@ -117,6 +120,13 @@ export class Player extends Construct {
             this.paused = false;
             this.userInterface.hideMenu(this.pauseMenu);
             this.graphics.renderer.domElement.requestPointerLock();
+        });
+
+        document.addEventListener("endLevel", () => {
+            document.exitPointerLock();
+            this.userInterface.showMenu(this.endLevelMenu);
+
+            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
         });
     }
 
