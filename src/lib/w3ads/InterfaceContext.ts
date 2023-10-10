@@ -8,7 +8,6 @@ export class InterfaceContext {
         this.root = document.createElement('div');
         this.root.className = 'fixed left-0 top-0 z-10 grid h-screen w-screen grid-rows-[1fr_200px]';
 
-
         this.menuRoot = document.createElement('div');
         this.menuRoot.className = 'row-span-1 row-start-1 flex flex-row items-start justify-start gap-5 p-5';
         this.root.appendChild(this.menuRoot);
@@ -24,6 +23,10 @@ export class InterfaceContext {
     hideAll() {
         this.menuRoot.replaceChildren();
         this.promptRoot.replaceChildren();
+    }
+
+    removeAll() {
+        document.body.removeChild(this.root);
     }
 
     addPrompt(innerHtml: string): number {

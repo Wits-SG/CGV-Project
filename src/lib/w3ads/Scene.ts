@@ -66,6 +66,7 @@ export abstract class Scene {
     }
 
     _destroy() {
+        this.userInterface.removeAll();
         for (let construct of this.constructs) {
             construct._destroy();
         }
