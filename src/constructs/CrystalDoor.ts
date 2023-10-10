@@ -10,7 +10,7 @@ export class CrystalDoor extends Construct {
     exitDoor!: THREE.Mesh;
     crystalPlinths!: Array<THREE.Mesh>;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, levelKey: string) {
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number) {
         super(graphics, physics, interactions, userInterface);
 
         this.numCrystals = numCrystals;
