@@ -12,7 +12,14 @@ export class LevelOne extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'level1');
+        const levelConfig = {
+            key: 'level1',
+            name: '1',
+            difficulty: 'Easy',
+            numPuzzles: 1,
+        };
+
+        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
         this.library = new MainLibraryConstruct(this.graphics, this.physics, this.interactions, this.userInterface, 1, this.player, 'level1');

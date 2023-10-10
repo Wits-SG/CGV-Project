@@ -28,7 +28,14 @@ export class SandboxScene extends Scene {
             AmmoLib
         );
 
-        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, 'sandbox');
+        const levelConfig = {
+            key: 'sandbox',
+            name: 'Sandbox',
+            difficulty: 'none',
+            numPuzzles: 0
+        }
+
+        this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
         this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
