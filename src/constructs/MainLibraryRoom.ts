@@ -44,7 +44,7 @@ export class MainLibraryConstruct extends Construct {
     office: OfficeConstruct;
 
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player, sceneKey: string) {
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
         super(graphics, physics, interactions, userInterface);
 
         this.player = player;

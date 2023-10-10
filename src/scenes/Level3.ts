@@ -22,7 +22,7 @@ export class LevelThree extends Scene {
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
-        this.library = new MainLibraryConstruct(this.graphics, this.physics, this.interactions, this.userInterface, 5, this.player, 'level3');
+        this.library = new MainLibraryConstruct(this.graphics, this.physics, this.interactions, this.userInterface, 5, this.player);
         this.addConstruct(this.library);
     }
 
