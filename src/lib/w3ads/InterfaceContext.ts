@@ -29,8 +29,14 @@ export class InterfaceContext {
     addPrompt(innerHtml: string): number {
         const promptId = this.elements.length;
         this.elements.push( document.createElement('div') );
-        this.elements[promptId].className = 'flex h-10 items-center justify-center rounded-md border-2 border-stone-950 bg-neutral-100 p-2';
-        this.elements[promptId].innerHTML = innerHtml;
+        this.elements[promptId].className = 'flex h-10 items-center justify-center rounded-md border-2 border-black bg-gradient-to-r from-sky-400 to-sky-700 p-2 text-white';
+
+        const text = document.createElement('p');
+        text.className = 'text-2xl flex justify-center items-center w-full h-full';
+        text.innerHTML = innerHtml;
+
+        this.elements[promptId].appendChild(text);
+
         return promptId;
     }
 
@@ -39,7 +45,11 @@ export class InterfaceContext {
     };
 
     hidePrompt(promptId: number) {
-        this.promptRoot.removeChild(this.elements[promptId]);
+        try {
+            this.promptRoot.removeChild(this.elements[promptId]);
+        } catch {
+            // do nothing if node not found
+        }
     }
 
     addMenu( title: string, row: boolean ): { menu: HTMLElement, menuId: number } {
@@ -63,7 +73,11 @@ export class InterfaceContext {
     }
 
     hideMenu(menuId: number) {
-        this.menuRoot.removeChild(this.elements[menuId]);
+        try {
+            this.menuRoot.removeChild(this.elements[menuId]);
+        } catch {
+            // do nothing if node not found
+        }
     }
 
 }

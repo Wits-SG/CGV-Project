@@ -17,6 +17,8 @@ export class Player extends Construct {
 
     paused: boolean = false; // THis is a very hacky way of implementing pause so it should be changed
     pauseMenu!: number;
+    interactPrompt!: number;
+    placePrompt!: number;
 
     levelConfig: {
         key: string,
@@ -25,8 +27,6 @@ export class Player extends Construct {
         numPuzzles: number,
     };
 
-    interactPrompt!: HTMLParagraphElement;
-    placePrompt!: HTMLParagraphElement;
 
 
 
@@ -38,7 +38,6 @@ export class Player extends Construct {
     create(): void {
         this.paused = false;
         this.graphics.renderer.domElement.requestPointerLock();
-        this.pauseMenu = drawPauseMenu(this.userInterface, this.graphics, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
         this.interactions.addInteracting(this.root, (object: THREE.Mesh) => {
@@ -49,6 +48,10 @@ export class Player extends Construct {
             this.holdingObject = object;
             this.face.add(object);
         });
+
+        this.pauseMenu = drawPauseMenu(this.userInterface, this.graphics, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, 0);
+        this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
+        this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (this.paused) { return }
@@ -123,14 +126,6 @@ export class Player extends Construct {
                 this.userInterface.showMenu(this.pauseMenu);
             }
         });
-
-        this.interactPrompt = document.createElement('p');
-        this.interactPrompt.innerHTML = 'Press E to interact';
-        this.interactPrompt.className = 'text-4xl p-2 absolute left-[40%] bottom-[10%] bg-stone-100 text-stone-950 rounded-md flex justify-center items-center w-1/10 border-stone-950 border-2';
-
-        this.placePrompt = document.createElement('p');
-        this.placePrompt.innerHTML = 'Press Q to place object';
-        this.placePrompt.className = 'text-4xl p-2 absolute left-[40%] bottom-[20%] bg-stone-100 text-stone-950 rounded-md flex justify-center items-center w-1/10 border-stone-950 border-2';
     }
 
     async load(): Promise<void> {
@@ -185,11 +180,15 @@ export class Player extends Construct {
         this.physics.moveCharacter(this.root, x, 0, z, this.speed);
 
         if (this.root.userData.canInteract && this.holdingObject === undefined) {
+            this.userInterface.showPrompt(this.interactPrompt);
         } else {
+            this.userInterface.hidePrompt(this.interactPrompt);
         }
 
         if (this.root.userData.canPlace && this.holdingObject !== undefined) {
+            this.userInterface.showPrompt(this.placePrompt);
         } else {
+            this.userInterface.hidePrompt(this.placePrompt);
         }
     }
 
