@@ -204,8 +204,20 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLight = new THREE.PointLight(0xffffff, 2, 100 ,0);
-        roofLight.position.set(0,19,0);
+        const roofLightCenter = new THREE.PointLight(0xffffff, 2, 100 ,0);
+        roofLightCenter.position.set(0,19,0);
+
+        const roofLightBL = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        roofLightBL.position.set(-25, 19, -25);
+
+        const roofLightBR = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        roofLightBR.position.set(25, 19, -25);
+
+        const roofLightFL = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        roofLightFL.position.set(-25, 19, 25);
+
+        const roofLightFR = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        roofLightFR.position.set(25, 19, 25);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
         const roofGeom = new THREE.PlaneGeometry(60,60);
@@ -215,7 +227,11 @@ export class StatuesConstruct extends Construct {
         roof.position.set(0,20,0);
 
         this.add(roof);
-        this.add(roofLight);
+        this.add(roofLightCenter);
+        this.add(roofLightBL);
+        this.add(roofLightBR);
+        this.add(roofLightFL);
+        this.add(roofLightFR);
         
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 0.2, 30);
@@ -382,46 +398,25 @@ export class StatuesConstruct extends Construct {
 
         //Add point lights at the corners of board
         const cornerLight1 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight1.position.set(-15, 10, -15); // Adjust the position as per your needs
+        cornerLight1.position.set(-15, 3, -22); // Adjust the position as per your needs
         this.board.add(cornerLight1);
 
         const cornerLight2 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight2.position.set(15, 10, -15); 
+        cornerLight2.position.set(15, 3, -15); 
         this.board.add(cornerLight2);
 
         const cornerLight3 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight3.position.set(-15, 10, 15); 
+        cornerLight3.position.set(-15, 3, 15); 
         this.board.add(cornerLight3);
 
         const cornerLight4 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight4.position.set(15, 10, 15); 
+        cornerLight4.position.set(15, 3, 15); 
         this.board.add(cornerLight4);
 
         const middleLight = new THREE.PointLight(0xffffff, 1, 100);
-        middleLight.position.set(0,10,0);
+        middleLight.position.set(0,3,0);
         this.board.add(middleLight);
         
-
-        // Add point lights to the back of each plinth
-        const plinthBackLight1 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight1.position.set(25, 10, -15); 
-        this.floor.add(plinthBackLight1);
-
-        const plinthBackLight2 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight2.position.set(25, 10, -10); 
-        this.floor.add(plinthBackLight2);
-
-        const plinthBackLight3 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight3.position.set(25, 10, -15); 
-        this.floor.add(plinthBackLight3);
-
-        const plinthBackLight4 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight4.position.set(25, 10, 0); 
-        this.floor.add(plinthBackLight4);
-
-        const plinthBackLight5 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight5.position.set(25, 10, 5); 
-        this.floor.add(plinthBackLight5);
 
         // Add the floor to the sceneq
         // Add chessboard to the scene
