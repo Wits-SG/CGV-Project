@@ -33,6 +33,7 @@ export class StatuesConstruct extends Construct {
     rook!: THREE.Group;
     queen!: THREE.Group;
     knight!: THREE.Group;
+    set!: THREE.Group;
 
     pawnImg!: any;
     bishopImg!: any;
@@ -204,19 +205,19 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xffffff, 2, 100 ,0);
+        const roofLightCenter = new THREE.PointLight(0xffffff, 1, 100 ,0);
         roofLightCenter.position.set(0,19,0);
 
-        const roofLightBL = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        const roofLightBL = new THREE.PointLight(0xffffff, 1, 200, 0 );
         roofLightBL.position.set(-25, 19, -25);
 
-        const roofLightBR = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        const roofLightBR = new THREE.PointLight(0xffffff, 1, 200, 0 );
         roofLightBR.position.set(25, 19, -25);
 
-        const roofLightFL = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        const roofLightFL = new THREE.PointLight(0xffffff, 1, 200, 0 );
         roofLightFL.position.set(-25, 19, 25);
 
-        const roofLightFR = new THREE.PointLight(0xffffff, 2, 100, 0 );
+        const roofLightFR = new THREE.PointLight(0xffffff, 1, 200, 0 );
         roofLightFR.position.set(25, 19, 25);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
@@ -397,30 +398,60 @@ export class StatuesConstruct extends Construct {
         this.solution = pieceColumns.filter(val => val != -1);
 
         //Add point lights at the corners of board
-        const cornerLight1 = new THREE.PointLight(0xffffff, 1, 100);
+        const cornerLight1 = new THREE.PointLight(0xffffff, 1.2, 100);
         cornerLight1.position.set(-15, 3, -22); // Adjust the position as per your needs
         this.board.add(cornerLight1);
 
-        const cornerLight2 = new THREE.PointLight(0xffffff, 1, 100);
+        const cornerLight2 = new THREE.PointLight(0xffffff, 1.2, 100);
         cornerLight2.position.set(15, 3, -15); 
         this.board.add(cornerLight2);
 
-        const cornerLight3 = new THREE.PointLight(0xffffff, 1, 100);
+        const cornerLight3 = new THREE.PointLight(0xffffff, 1.2, 100);
         cornerLight3.position.set(-15, 3, 15); 
         this.board.add(cornerLight3);
 
-        const cornerLight4 = new THREE.PointLight(0xffffff, 1, 100);
+        const cornerLight4 = new THREE.PointLight(0xffffff, 1.2, 100);
         cornerLight4.position.set(15, 3, 15); 
         this.board.add(cornerLight4);
 
-        const middleLight = new THREE.PointLight(0xffffff, 1, 100);
+        const middleLight = new THREE.PointLight(0xffffff, 1.2, 100);
         middleLight.position.set(0,3,0);
         this.board.add(middleLight);
-        
 
         // Add the floor to the sceneq
         // Add chessboard to the scene
         this.add(this.board);
+
+        // Corner Chess Pieces
+
+        const giantKnight = this.knight.clone();
+        giantKnight.position.set(22,1,-22);
+        giantKnight.rotation.set(0, -Math.PI/4, 0);
+        giantKnight.scale.set(8,8,8);
+        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3.5, 10, 3.5));
+        this.floor.add(giantKnight);
+
+        const giantQueen = this.queen.clone();
+        giantQueen.position.set(-22,1,-22);
+        giantQueen.rotation.set(0, Math.PI/4, 0);
+        giantQueen.scale.set(8,8,8);
+        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3.5, 10, 3.5));
+        this.floor.add(giantQueen);
+
+        const giantBishop = this.bishop.clone();
+        giantBishop.position.set(22,1,24);
+        //giantBishop.rotation.set(0, Math.PI/4, 0);
+        giantBishop.scale.set(8,8,8);
+        this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
+        this.floor.add(giantBishop);
+
+        const giantRook = this.rook.clone();
+        giantRook.position.set(-22,1,24);
+        giantRook.rotation.set(0, Math.PI/4, 0);
+        giantRook.scale.set(8,8,8);
+        this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
+        this.floor.add(giantRook);
+
     }
 
     
