@@ -20,6 +20,7 @@ export class StatuesConstruct extends Construct {
     whiteSquares!: Array<THREE.Mesh>;
     whiteSquaresTexture!: THREE.MeshLambertMaterial;
     blackSquaresTexture!: THREE.MeshLambertMaterial;
+    chessPainting!: any;
     whiteSquareData!: any;
     blackSquareData!: any;
 
@@ -65,6 +66,12 @@ export class StatuesConstruct extends Construct {
     async load(): Promise<void> {
         try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
+        } catch (e: any) {
+            console.error(e);
+        }
+
+        try {
+            this.chessPainting = await this.graphics.loadTexture('assets/Chess_Pieces/painting.jpg');
         } catch (e: any) {
             console.error(e);
         }
@@ -423,18 +430,17 @@ export class StatuesConstruct extends Construct {
         this.add(this.board);
 
         // Corner Chess Pieces
-
         const giantKnight = this.knight.clone();
         giantKnight.position.set(22,1,-22);
         giantKnight.rotation.set(0, -Math.PI/4, 0);
         giantKnight.scale.set(8,8,8);
-        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3.5, 10, 3.5));
+        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3, 10, 3));
         this.floor.add(giantKnight);
 
         const giantQueen = this.queen.clone();
         giantQueen.position.set(-22,1,-22);
         giantQueen.scale.set(8,8,8);
-        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3.5, 10, 3.5));
+        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3, 10, 3));
         this.floor.add(giantQueen);
 
         const giantBishop = this.bishop.clone();
@@ -448,6 +454,18 @@ export class StatuesConstruct extends Construct {
         giantRook.scale.set(8,8,8);
         this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
         this.floor.add(giantRook);
+
+        // Wall Paintings
+        const paintingGeom = new THREE.BoxGeometry(0.5,14,16);
+        const paintingMat1 = new THREE.MeshLambertMaterial({color: 0x00ff00});
+        const painting = new THREE.Mesh(paintingGeom, paintingMat1);
+        painting.position.set(-28,10,0);
+        this.add(painting);
+
+        const paintingMat2 = new THREE.MeshLambertMaterial({color: 0x0000ff});
+        const painting2 = new THREE.Mesh(paintingGeom, paintingMat2);
+        painting2.position.set(28,10,0);
+        this.add(painting2);
 
     }
 
