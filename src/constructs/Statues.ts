@@ -20,7 +20,6 @@ export class StatuesConstruct extends Construct {
     whiteSquares!: Array<THREE.Mesh>;
     whiteSquaresTexture!: THREE.MeshLambertMaterial;
     blackSquaresTexture!: THREE.MeshLambertMaterial;
-    chessPainting!: any;
     whiteSquareData!: any;
     blackSquareData!: any;
 
@@ -48,7 +47,9 @@ export class StatuesConstruct extends Construct {
 
     solution: Array<number>;
     current: Array<number>;
-    // numPiecesPlaced: number;
+    
+    chessPainting1!: any;
+    chessPainting2!: any;
 
     crystal!: Crystal; 
 
@@ -67,66 +68,72 @@ export class StatuesConstruct extends Construct {
         try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
-            this.chessPainting = await this.graphics.loadTexture('assets/Chess_Pieces/painting.jpg');
+            this.chessPainting1 = await this.graphics.loadTexture('assets/Chess_Pieces/painting.jpg');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
+        }
+
+        try {
+            this.chessPainting2 = await this.graphics.loadTexture('assets/Chess_Pieces/painting2.jpg');
+        } catch (e: any) {
+            console.log(e);
         }
 
         try {
             this.blackSquareData = await this.graphics.loadTexture('assets/Marble/black_marble.jpg');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.whiteSquareData = await this.graphics.loadTexture('assets/Marble/white_marble.jpeg');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.plinthData = await this.graphics.loadTexture('assets/Marble/plinths_marble.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
         
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Pawn/scene.gltf');
             this.pawn = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Bishop/scene.gltf');
             this.bishop = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Rook/scene.gltf');
             this.rook = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Queen/scene.gltf');
             this.queen = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Knight/scene.gltf');
             this.knight = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
@@ -146,37 +153,37 @@ export class StatuesConstruct extends Construct {
         try {
             this.pawnImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/pawn.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.bishopImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/bishop.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.knightImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/knight.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.queenImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/queen.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.rookImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/rook.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.wallTexture = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
     }
@@ -425,7 +432,6 @@ export class StatuesConstruct extends Construct {
         middleLight.position.set(0,3,0);
         this.board.add(middleLight);
 
-        // Add the floor to the sceneq
         // Add chessboard to the scene
         this.add(this.board);
 
