@@ -8,7 +8,6 @@ import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 export class StatuesConstruct extends Construct {
 
     floor!: THREE.Mesh
-    textureFloorData!: any;
 
     wallTexture!: any;
 
@@ -65,11 +64,6 @@ export class StatuesConstruct extends Construct {
     create() { }
 
     async load(): Promise<void> {
-        try {
-            this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
-        } catch (e: any) {
-            console.log(e);
-        }
 
         try {
             this.chessPainting1 = await this.graphics.loadTexture('assets/Chess_Pieces/painting.jpg');
@@ -191,7 +185,7 @@ export class StatuesConstruct extends Construct {
     build() {
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 1, 60);
-        const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
+        const floorTexture = new THREE.MeshLambertMaterial({ color: 0x566573, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, floorTexture);
         this.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
