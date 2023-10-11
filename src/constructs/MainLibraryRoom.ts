@@ -63,7 +63,7 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.music);
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        // this.addConstruct(this.office);
+        this.addConstruct(this.office);
     }
 
     /*      const tempBookShelf = this.bookshelf.clone();
@@ -327,7 +327,8 @@ export class MainLibraryConstruct extends Construct {
 
         this.graphics.add(this.lightHemisphere);
         this.graphics.add(this.lightDirectional);
-        
+
+
     }
 
     // Box collider dimensions are half the dimensions of the actual object
