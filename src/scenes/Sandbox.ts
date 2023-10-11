@@ -1,26 +1,18 @@
 import * as THREE from 'three';
-import { Scene } from '../lib';
-//@ts-expect-error
-import { OrbitControls } from 'three/addons/controls/OrbitControls';
-//import { TimeS } from '../lib/w3ads/types/misc.type';
-//import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib';
 import { Player } from '../constructs/Player';
-import { StatuesConstruct } from '../constructs/Statues';
+import { Lectern } from '../constructs/Lectern';
 
 export class SandboxScene extends Scene {
-    create(): void {}
     async load(): Promise<void> {}
 
     lightHemisphere!: THREE.HemisphereLight;
     lightDirectional!: THREE.DirectionalLight;
 
     floor!: THREE.Mesh;
-    walls!: Array<THREE.Mesh>;
-    ballKinematic!: THREE.Mesh;
     player!: Player;
-    
-    chess!: StatuesConstruct;
-    controls!: OrbitControls;
+
+    lectern!: Lectern;
 
     constructor(AmmoLib: any) {
         super(
@@ -38,98 +30,29 @@ export class SandboxScene extends Scene {
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
-        this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.chess);
+        this.lectern = new Lectern(this.graphics, this.physics, this.interactions, this.userInterface, 'Test Lectern', [
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vestibulum, ipsum nec dictum fringilla, sapien nunc tincidunt justo, sit amet fringilla arcu purus non lectus. Vestibulum at est nec urna lacinia condimentum. Phasellus nec euismod justo. Fusce ut tristique quam. Nunc nec augue vel mi sollicitudin efficitur.',
+            'Suspendisse vel tortor eget lorem ultricies cursus. Nunc venenatis, justo sit amet bibendum dictum, quam libero ultrices purus, a feugiat turpis nunc sed odio. Maecenas pellentesque facilisis euismod. Suspendisse id tincidunt mi, non facilisis nunc. Sed non varius orci.',
+            'Praesent in orci nec mi facilisis vestibulum. Aenean aliquet, lectus eget tempus vestibulum, odio velit sagittis quam, sit amet laoreet ligula justo eget risus. Suspendisse at bibendum metus. Aenean a orci id arcu malesuada scelerisque. Sed sollicitudin ex ac libero faucibus, ac viverra nulla hendrerit.',
+            'Vestibulum ac massa id justo hendrerit bibendum. Pellentesque et diam at justo tincidunt blandit. Nunc condimentum erat vitae urna ultrices, id interdum velit tincidunt. Suspendisse quis purus id augue dictum efficitur. Suspendisse potenti. Sed quis dapibus libero, at bibendum ex.'
+        ]);
+        this.addConstruct(this.lectern);
+    }
+
+    create(): void {
+        this.lectern.root.position.set(10, 0.2, 10);
     }
 
     build(): void {
-
-        this.player.root.position.set(0,30,0);
-        // this.player.build();
-        // this.player.setPosition(0, 0, 5);
-        // this.graphics.mainCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        // this.graphics.mainCamera.position.set(1, 50, 1);
-        // this.graphics.mainCamera.lookAt(0, 0,-50);
-        // this.controls = new OrbitControls(this.graphics.mainCamera, this.graphics.renderer.domElement);
-
-        // this.k.position.set(0, -10, 0);
-        // this.k.scale.set(1, 1, 1);
-
-       /* this.floor = GraphicsPrimitiveFactory.box({
-            position: { x: 0, y: -1, z: 0 },
-            scale: { x: 1000, y: 0.1, z: 1000 },
-            rotation: { x: 0, y: 0, z: 0 },
-            colour: 0x98fb98,
-            shadows: true,
-        });*/
-
-       /* this.walls = [];
-        for (let i = 0; i < 4; ++i) {
-            this.walls.push(
-                GraphicsPrimitiveFactory.box({
-                    position: { x: 0, y: 0, z: i * 10 + 10 },
-                    scale: { x: 40, y: 2, z: 0.2 },
-                    rotation: { x: 0, y: 0, z: 0 },
-                    colour: 0x0000ff,
-                    shadows: true,
-                })
-            );
-
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
-            this.graphics.add(this.walls[i]);
-        }
-        for (let i = 4; i < 8; ++i) {
-            this.walls.push(
-                GraphicsPrimitiveFactory.box({
-                    position: { x: 0, y: 0, z: (i - 4) * -10 - 10 },
-                    scale: { x: 40, y: 2, z: 0.2 },
-                    rotation: { x: 0, y: 0, z: 0 },
-                    colour: 0x0000ff,
-                    shadows: true,
-                })
-            );
-
-            this.physics.addStatic(this.walls[i], PhysicsColliderFactory.box(20, 1, 0.1));
-            this.graphics.add(this.walls[i]);
-        }
-        this.walls.push(
-            GraphicsPrimitiveFactory.box({
-                position: { x: 25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
-                rotation: { x: 0, y: 0, z: 0 },
-                colour: 0x0000ff,
-                shadows: true,
-            })
-        );
-        this.physics.addStatic(this.walls[8], PhysicsColliderFactory.box(0.1, 1, 40));
-        this.graphics.add(this.walls[8]);
-
-        this.walls.push(
-            GraphicsPrimitiveFactory.box({
-                position: { x: -25, y: 0, z: 0 },
-                scale: { x: 0.2, y: 2, z: 80 },
-                rotation: { x: 0, y: 0, z: 0 },
-                colour: 0x0000ff,
-                shadows: true,
-            })
-        );
-        this.physics.addStatic(this.walls[9], PhysicsColliderFactory.box(0.1, 1, 40));
-        this.graphics.add(this.walls[9]);*/
-
-        /*this.ballKinematic = GraphicsPrimitiveFactory.sphere({
+        this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: 0, z: 0 },
+            scale: { x: 300, y: 0.2, z: 300 },
             rotation: { x: 0, y: 0, z: 0 },
-            radius: 1,
-            colour: 0xff0000,
+            colour: 0xcccccc,
             shadows: true,
         });
-        this.graphics.add(this.ballKinematic);
-        this.physics.addKinematic(this.ballKinematic, PhysicsColliderFactory.sphere(1), {
-            mass: 1,
-            linearVelocity: { x: 0, y: 0, z: 1 },
-            friction: 0,
-        });*/
-
+        this.graphics.add(this.floor);
+        this.physics.addStatic(this.floor, PhysicsColliderFactory.box( 150, 0.1, 150 ));
         
         this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.1);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
@@ -150,12 +73,8 @@ export class SandboxScene extends Scene {
         this.lightDirectional.shadow.camera.bottom = -50;
 
 
-        //this.graphics.add(this.floor);
         this.graphics.add(this.lightHemisphere);
         this.graphics.add(this.lightDirectional);
-        // this.graphics.add(this.k);
-
-        //this.physics.addStatic(this.floor, PhysicsColliderFactory.box(500, 0.05, 500))
     }
 
     update(): void {
