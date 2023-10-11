@@ -53,6 +53,7 @@ export class MainMenu extends Scene {
         const assets = [
             // { artist: '', title: '', type: '', license: '', link: '' },
             { artist: 'Nihal Ranchod', title: 'Chess Plinths', type: 'Model', license: 'None (made for project)', link: '' },
+            { artist: 'Brendan Griffihs', title: 'Lectern', type: 'Model', license: 'None (made for project)', link: '' },
             { artist: 'flithycent', title: 'bookshelf', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/bookshelf-3c782b0787cc41f1b5974dbd7a1f8f53' },
             { artist: 'FlukierJupiter', title: 'Wooden Table', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/wooden-table-0dc1c7d6cbab4d74bef7c4f82abf2caf' },
             { artist: 'sergeilihandristov', title: 'Desk lamp', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/desk-lamp-ac5135b505694287a64b4370ea2cda8d' },
@@ -61,6 +62,7 @@ export class MainMenu extends Scene {
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Bishop', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-bishop-75681488e5fe457280813781cf3d15c1' },
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Rook', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-rook-cbd416e785f64648bff3675fd45b3594' },
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Queen', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-queen-ab958c61eb2a405aa7a7b0cec91c79b0' },
+            { artist: 'Joao Paulo', title: 'Wood 27', type: 'Material', license: 'CC0', link: 'https://3dtextures.me/2022/05/21/wood-027/' },
         ];
         drawMainMenu(this.userInterface, developers, assets);
     }
