@@ -433,21 +433,18 @@ export class StatuesConstruct extends Construct {
 
         const giantQueen = this.queen.clone();
         giantQueen.position.set(-22,1,-22);
-        giantQueen.rotation.set(0, Math.PI/4, 0);
         giantQueen.scale.set(8,8,8);
         this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3.5, 10, 3.5));
         this.floor.add(giantQueen);
 
         const giantBishop = this.bishop.clone();
         giantBishop.position.set(22,1,24);
-        //giantBishop.rotation.set(0, Math.PI/4, 0);
         giantBishop.scale.set(8,8,8);
         this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
         this.floor.add(giantBishop);
 
         const giantRook = this.rook.clone();
         giantRook.position.set(-22,1,24);
-        giantRook.rotation.set(0, Math.PI/4, 0);
         giantRook.scale.set(8,8,8);
         this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
         this.floor.add(giantRook);
