@@ -1,6 +1,7 @@
 import * as THREE from 'three'; 
 import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
-import { drawPauseMenu, drawEndLevelMenu } from '../lib/UiComponents';
+import { drawEndLevelMenu } from '../lib/UI/EndLevelMenu';
+import { drawPauseMenu } from '../lib/UI/PauseMenu';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
