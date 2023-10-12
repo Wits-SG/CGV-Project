@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Construct, GraphicsContext, PhysicsContext } from '../lib/index';
+import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
@@ -7,8 +7,8 @@ export class CrystalDoor extends Construct {
 
     numCrystals: number;
     numFoundCrystals: number;
-    exitDoor!: THREE.Mesh;
     crystalPlinths!: Array<THREE.Mesh>;
+    exitDoor!: THREE.Group;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number) {
         super(graphics, physics, interactions, userInterface);
@@ -20,13 +20,21 @@ export class CrystalDoor extends Construct {
 
     create(): void {}
 
-    async load() {}
+    async load() {
+        try {//exitdoor object
+            const gltfData: any = await this.graphics.loadModel('assets/door/scene.gltf');
+            this.exitDoor = gltfData.scene;
+        } catch (e: any) {
+            console.error(e);
+        }
+    }
 
     build(): void {
 
-        const doorMat = new THREE.MeshLambertMaterial({ color: 0x0ffff0 });
-        const doorGeom = new THREE.BoxGeometry(20, 40, 1);
-        this.exitDoor = new THREE.Mesh(doorGeom, doorMat);
+        this.exitDoor.scale.set(7,7,7);
+        this.exitDoor.rotation.set(0,0,0);
+        this.exitDoor.position.set(0,0,26);
+        this.add(this.exitDoor);
 
         this.interactions.addInteractable(this.root, 20, () => {
             if (this.numFoundCrystals == this.numCrystals) {
