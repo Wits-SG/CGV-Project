@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Construct, GraphicsContext, PhysicsColliderFactory, PhysicsContext } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
-import { drawHintMenu } from '../lib/UiComponents';
+import { drawHintMenu } from '../lib/UI/HintMenu';
 
 export class Lectern extends Construct {
 

@@ -17,6 +17,7 @@ export class LevelThree extends Scene {
             name: '3',
             difficulty: 'Hard',
             numPuzzles: 5,
+            levelId: 'b754a3e7-6f90-4ef6-97d3-9a8d7b4ea929',
         };
 
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);

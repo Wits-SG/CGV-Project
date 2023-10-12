@@ -4,7 +4,7 @@ import { CrystalDoor } from '../constructs/CrystalDoor';
 //@ts-expect-error
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import { Crystal } from '../constructs/Crystal';
-import { drawMainMenu } from '../lib/UiComponents';
+import { drawMainMenu } from '../lib/UI/MainMenu';
 
 export class MainMenu extends Scene {
 
