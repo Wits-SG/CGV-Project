@@ -4,6 +4,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { Lectern } from './Lectern';
 
 export class StatuesConstruct extends Construct {
 
@@ -48,6 +49,7 @@ export class StatuesConstruct extends Construct {
     current: Array<number>;
 
     crystal!: Crystal; 
+    lectren!: Lectern;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
@@ -56,9 +58,19 @@ export class StatuesConstruct extends Construct {
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.crystal);
+
+        const title = 'Chess Puzzle';
+        const paragraphs = ["Prompt: In the realm of the royal game, five subjects poised to rise to fame. Their order hidden in the field, a chessboard's secrets shall be revealed. Look to the ranks and files with care, and on the plinths, their order bear.","Hint: Begin your quest by seeking the lowest coordinates; the ranks and files shall be your guides. Patience, and a keen eye for position, shall unveil the puzzle's hidden mission."];
+        this.lectren = new Lectern(graphics, physics, interactions, userInterface, title, paragraphs);
+        this.addConstruct(this.lectren);
+
     }
 
-    create() { }
+    create() { 
+        this.crystal.root.position.set(0,-10,0);
+        this.lectren.root.position.set(0,1,20);
+        this.lectren.root.rotation.set(0, Math.PI,0);
+    }
 
     async load(): Promise<void> {
         try {
@@ -175,7 +187,8 @@ export class StatuesConstruct extends Construct {
         this.floor.receiveShadow = true;
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
-        this.crystal.root.position.set(0,-10,0);
+
+        
 
         // Wall and roof parameters
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
