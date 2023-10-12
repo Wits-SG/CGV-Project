@@ -17,6 +17,7 @@ export class LevelTwo extends Scene {
             name: '2',
             difficulty: 'Medium',
             numPuzzles: 3,
+            levelId: 'f39a8262-ee35-4e9a-92a4-0e43848a7d74',
         };
 
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);

@@ -242,7 +242,7 @@ export class Player extends Construct {
 
     onEndLevel() {
         document.exitPointerLock();
-        scope.endLevelMenu = drawEndLevelMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.endLevelMenu = drawEndLevelMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.levelId, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
         scope.userInterface.showMenu(scope.endLevelMenu);
 
         // Performance doesnt matter here because the game is over
