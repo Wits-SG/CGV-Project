@@ -46,9 +46,6 @@ export class StatuesConstruct extends Construct {
 
     solution: Array<number>;
     current: Array<number>;
-    
-    chessPainting1!: any;
-    chessPainting2!: any;
 
     crystal!: Crystal; 
 
@@ -64,19 +61,6 @@ export class StatuesConstruct extends Construct {
     create() { }
 
     async load(): Promise<void> {
-
-        try {
-            this.chessPainting1 = await this.graphics.loadTexture('assets/Chess_Pieces/painting.jpg');
-        } catch (e: any) {
-            console.log(e);
-        }
-
-        try {
-            this.chessPainting2 = await this.graphics.loadTexture('assets/Chess_Pieces/painting2.jpg');
-        } catch (e: any) {
-            console.log(e);
-        }
-
         try {
             this.blackSquareData = await this.graphics.loadTexture('assets/Marble/black_marble.jpg');
         } catch (e: any) {
@@ -450,32 +434,29 @@ export class StatuesConstruct extends Construct {
         spotlight4.castShadow = true;
         this.add(spotlight4);
 
-        // Wall Paintings
-        const paintingGeom = new THREE.BoxGeometry(0.5,14,16);
-        const paintingMat1 = new THREE.MeshLambertMaterial({color: 0x00ff00});
-        const painting = new THREE.Mesh(paintingGeom, paintingMat1);
-        painting.position.set(-28,10,0);
-        this.add(painting);
+        // // Wall Paintings
+        // const paintingGeom = new THREE.BoxGeometry(0.5,14,16);
+        // const paintingMat1 = new THREE.MeshLambertMaterial(this.knightImg);
+        // const painting = new THREE.Mesh(paintingGeom, paintingMat1);
+        // painting.position.set(-28,10,0);
+        // this.add(painting);
 
-        const paintingMat2 = new THREE.MeshLambertMaterial({color: 0x0000ff});
-        const painting2 = new THREE.Mesh(paintingGeom, paintingMat2);
-        painting2.position.set(28,10,0);
-        this.add(painting2);
+        // const paintingMat2 = new THREE.MeshLambertMaterial({color: 0x0000ff});
+        // const painting2 = new THREE.Mesh(paintingGeom, paintingMat2);
+        // painting2.position.set(28,10,0);
+        // this.add(painting2);
 
-        // Painting spot lights
-        const spotlight5 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
-        spotlight5.position.set(-10, 15, 0);
-        spotlight5.target = painting;
-        this.add(spotlight5);
+        // // Painting spot lights
+        // const spotlight5 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
+        // spotlight5.position.set(-10, 15, 0);
+        // spotlight5.target = painting;
+        // this.add(spotlight5);
 
-        const spotlight6 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
-        spotlight6.position.set(10, 15, 0);
-        spotlight6.target = painting2;
-        this.add(spotlight6);
-    }
-
-    
-    
+        // const spotlight6 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
+        // spotlight6.position.set(10, 15, 0);
+        // spotlight6.target = painting2;
+        // this.add(spotlight6);
+    } 
 
     update() { 
     }
