@@ -26,7 +26,9 @@ export class LevelOne extends Scene {
         this.addConstruct(this.library);
     }
 
-    create(): void {}
+    create(): void {
+        this.library.root.position.set(0,0,0);
+    }
 
     async load(): Promise<void> {}
 

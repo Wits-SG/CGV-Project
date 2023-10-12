@@ -8,6 +8,7 @@ import { StatuesConstruct } from './Statues';
 import { MirrorRoom } from './MirrorRoom';
 import { MusicConstruct } from './Music';
 import { OfficeConstruct } from './OfficeConstruct';
+import { DesksConstruct } from './DesksConstruct';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -26,22 +27,20 @@ export class MainLibraryConstruct extends Construct {
     textureCeilingData!: any;
     textureWallsData!: any;
     character!:THREE.Mesh;
-    table!: THREE.Group;
-    tables!: Array<THREE.Group>;
-    Lamp!: THREE.Group;
-    TableGeometry!: THREE.BufferGeometry;
-    TableMaterial!: THREE.MeshNormalMaterial;
+
+    //Library decoration constructs
+    desksConstruct: DesksConstruct;
 
     // Game loop nonsense
     player: Player;
     numCrystals: number;
-    exitDoor: CrystalDoor;
+   // exitDoor: CrystalDoor;
 
     // Puzzles
-    chess: StatuesConstruct;
-    mirror: MirrorRoom;
-    music: MusicConstruct;
-    office: OfficeConstruct;
+   // chess: StatuesConstruct;
+  //  mirror: MirrorRoom;
+ //   music: MusicConstruct;
+ //   office: OfficeConstruct;
 
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
@@ -50,19 +49,22 @@ export class MainLibraryConstruct extends Construct {
         this.player = player;
         this.numCrystals = numCrystals;
 
-        this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
-        this.addConstruct(this.exitDoor);
+        this.desksConstruct = new DesksConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.desksConstruct);
 
-        this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.chess);
+      //  this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
+       // this.addConstruct(this.exitDoor);
 
-        this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.mirror);
+      //  this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+      //  this.addConstruct(this.chess);
 
-        this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
-        this.addConstruct(this.music);
+      //  this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
+       // this.addConstruct(this.mirror);
 
-        this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        //this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
+       // this.addConstruct(this.music);
+
+        //this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         // this.addConstruct(this.office);
     }
 
@@ -76,56 +78,17 @@ export class MainLibraryConstruct extends Construct {
 
 
 
-
-    drawTables(TableGeometry:THREE.BufferGeometry){
-        const position = new THREE.Vector3();
-		const quaternion = new THREE.Quaternion();
-		const scale = new THREE.Vector3();
-        const matrix = new THREE.Matrix4();
-
-        matrix.compose( position, quaternion, scale );
-
-        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 40);
-        position.z = -100;
-        for ( let i = 0; i < 40; i ++ ) {
-            if(i<20){
-                position.x = -2.5;
-                position.y = -8.75;
-                position.z = position.z+20;
-                scale.x = scale.y = scale.z = 0.025;
-                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
-                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-            }
-            if(i>=20){
-                if(i==20){position.z = -100;}
-                position.x = 2.5;
-                position.y = -8.75;
-                position.z = position.z+20;
-                scale.x = scale.y = scale.z = 0.025;
-                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
-                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-            }
-        }
-        this.physics.addStatic(mesh,PhysicsColliderFactory.box(2, 2, 2));
-        this.graphics.add(mesh);
-    }
-
-
-
     create() {
-        this.exitDoor.root.position.set(0, 0 , -113.5);
-        this.chess.root.position.set(100, -10.5, 43.3);
-        this.chess.root.rotation.set(0, Math.PI, 0);
-        this.mirror.root.position.set(110, -11, -12);
-        this.mirror.root.rotation.set(0, Math.PI / 2, 0);
-        this.music.root.position.set(190, -11, 0);
-        this.music.root.rotation.set(0, Math.PI / 2, 0);
-        this.office.root.position.set(-180, -11, 0);
-        this.office.root.rotation.set(0, Math.PI / 2, 0);
+      //  this.exitDoor.root.position.set(0, 0 , -113.5);
+      //  this.chess.root.position.set(100, -10.5, 43.3);
+      //  this.chess.root.rotation.set(0, Math.PI, 0);
+      //  this.mirror.root.position.set(110, -11, -12);
+       // this.mirror.root.rotation.set(0, Math.PI / 2, 0);
+        //this.music.root.position.set(190, -11, 0);
+       // this.music.root.rotation.set(0, Math.PI / 2, 0);
+       // this.office.root.position.set(-180, -11, 0);
+        //this.office.root.rotation.set(0, Math.PI / 2, 0);
+        this.desksConstruct.root.position.set(0,-8.75,0); 
 
     }
 
@@ -135,39 +98,13 @@ export class MainLibraryConstruct extends Construct {
             this.bookshelf = gltfData.scene;
         } catch(e: any) {
             console.error(e);
-        }
-
-        try {
-            const gltfData: any = await this.graphics.loadModel('assets/Desk_Lamp/scene.gltf');
-            this.Lamp = gltfData.scene;
-        } catch(e: any) {
-            console.error(e);
-        }
-
-
-        try {
-            var glTFGeometry = new THREE.BufferGeometry();
-            var gltfMaterial = new THREE.MeshNormalMaterial();
-            const gltfData: any = await this.graphics.loadModel('assets/wooden_table/scene.gltf');
-            this.table = gltfData.scene;
-            gltfData.scene.traverse(function (child:any){
-                if( child.isMesh){
-                    //child.material.envMap = envMap;
-                    gltfMaterial = child.material
-                    glTFGeometry = child.geometry;
-                }
-            })
-            this.TableGeometry=glTFGeometry;
-            this.TableMaterial = gltfMaterial;
-        } catch(e: any) {
-                console.error(e);
         }*/
 
-        try {
+       /* try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
         } catch(e: any) {
             console.error(e);
-        }
+        }*/
         try {
             this.textureCeilingData = await this.graphics.loadTexture('assets/colorful-mexican-architecture-urban-landscape.jpg');
             this.textureCeilingData.wrapS = this.textureCeilingData.wrapT = THREE.RepeatWrapping;
@@ -187,7 +124,7 @@ export class MainLibraryConstruct extends Construct {
     build() {
         const distanceFromCenter = 10;
         const angleBetween = 2 * Math.PI / this.numCrystals;
-        for (let i = 0; i < this.numCrystals; ++i) {
+       /* for (let i = 0; i < this.numCrystals; ++i) {
             const currentPlinth = this.exitDoor.crystalPlinths[i];
             const x = distanceFromCenter * Math.sin(i * angleBetween);
             const z = distanceFromCenter * Math.cos(i * angleBetween) - 100;
@@ -197,7 +134,7 @@ export class MainLibraryConstruct extends Construct {
                 -9,
                 z
             );
-        }
+        }*/
 
         // this.music.root.position.set(140, -8, 0);
 
@@ -243,8 +180,8 @@ export class MainLibraryConstruct extends Construct {
         this.floors = [];
         for(let i = 0; i<3; i++){
             const geometry = new THREE.PlaneGeometry( 1,1,1);
-            this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
-            const floor= new THREE.Mesh(geometry,this.floorTexture);
+            this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
+            const floor= new THREE.Mesh(geometry, this.floorTexture)
             floor.position.set(floorVertices[i][0],floorVertices[i][1],floorVertices[i][2]);
             floor.rotation.set(Math.PI/2,0,0);
            //floor.scale.set(floorScale[i][0],floorScale[i][1],floorScale[i][2]);
