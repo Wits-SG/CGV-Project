@@ -1,7 +1,19 @@
 import { InterfaceContext } from "../w3ads/InterfaceContext";
 import { buildButton } from "./utility";
 
-export const drawLevelMenu = (ui: InterfaceContext, playerTimes: Array<Array<{ name: string, time: number }>>): Array<number> => {
+const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    if (minutes > 1) {
+        return `${minutes}m ${seconds}s`;
+    } else {
+
+        return `${seconds}s`;
+    }
+}
+
+export const drawLevelMenu = (ui: InterfaceContext, levelIds: Array<string>): Array<number> => {
     const result = [];
     const difficulties = ['Easy', 'Medium', 'Hard'];
     const numPuzzles = [1, 3, 5];
@@ -35,12 +47,23 @@ export const drawLevelMenu = (ui: InterfaceContext, playerTimes: Array<Array<{ n
             const itemList = document.createElement('ol');
             itemList.className = 'w-full list-inside list-decimal';
 
-            for (let j = 0; j < playerTimes[i].length; ++j) {
-                const player = document.createElement('li');
-                player.textContent = `${playerTimes[i][j].name} - ${playerTimes[i][j].time} s`;
-                itemList.appendChild(player);
-            }
-        
+            fetch(`https://tml-leaderboard.vercel.app/api/games?level_id=${levelIds[i]}&num_games=3`)
+                .then(async result => {
+                    const json = await result.json();
+
+                    for (let j = 0; j < json.length; ++j) {
+                        const player = document.createElement('li');
+                        player.textContent = `${json[j].playerName} - ${formatTime(json[j].playerTime)}`
+                        itemList.appendChild(player);
+                    }
+                })
+                .catch( error => {
+                    console.log(error);
+                    const noPlayersFound = document.createElement('li');
+                    noPlayersFound.textContent = 'No Players Found';
+                    itemList.appendChild(noPlayersFound)
+                });
+
             leaderboardSection.appendChild(leaderboard);
             leaderboardSection.appendChild(itemList);
 
@@ -54,7 +77,7 @@ export const drawLevelMenu = (ui: InterfaceContext, playerTimes: Array<Array<{ n
                 const event = new CustomEvent("changeScene", { detail: `level${i + 1}`});
                 document.dispatchEvent(event);
             });
-            const viewLeaderboard = buildButton('View leaderboard', () => {});
+            const viewLeaderboard = buildButton('View leaderboard', () => location.href = 'https://tml-leaderboard.vercel.app/');
             const close = buildButton(`Close`, () => {
                 ui.hideMenu( levelId );
             });

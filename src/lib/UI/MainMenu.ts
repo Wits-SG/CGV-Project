@@ -28,18 +28,9 @@ export const drawMainMenu = (ui: InterfaceContext, developers: any, assets: any)
     seperatorTwo.className = 'w-full border-t-2 border-black';
 
     const levelMenuIds = drawLevelMenu(ui, [
-        [{ name: 'Player 1', time: 60 },
-        { name: 'Player 2', time: 120 },
-        { name: 'Player 3', time: 180 },
-        { name: 'Player 4', time: 240 }],
-        [{ name: 'Player 1', time: 120 },
-        { name: 'Player 2', time: 180 },
-        { name: 'Player 3', time: 240 },
-        { name: 'Player 4', time: 300 }],
-        [{ name: 'Player 1', time: 180 },
-        { name: 'Player 2', time: 240 },
-        { name: 'Player 3', time: 300 },
-        { name: 'Player 4', time: 360 }],
+        '8f3f4b29-38a7-4b13-baa2-95fde6530d7f',
+        'f39a8262-ee35-4e9a-92a4-0e43848a7d74',
+        'b754a3e7-6f90-4ef6-97d3-9a8d7b4ea929'
     ]);
     const levelButtons: Array<HTMLButtonElement> = [];
 
@@ -49,7 +40,6 @@ export const drawMainMenu = (ui: InterfaceContext, developers: any, assets: any)
         });
         levelButtons.push(button);
     }
-
 
     const creditMenuId = drawCredits(ui, assets, developers);
     const creditsButton = buildButton('Credits', () => ui.showMenu(creditMenuId));
