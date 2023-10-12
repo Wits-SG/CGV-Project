@@ -20,9 +20,9 @@ export class MainLibraryConstruct extends Construct {
     bookShelfs!: Array<THREE.Group>;
     FbookShelfs!: Array<THREE.Group>;
     bookshelf!: THREE.Group;
-    floorTexture!: THREE.MeshBasicMaterial;
-    ceilingTexture!: THREE.MeshBasicMaterial;
-    wallsTexture!: THREE.MeshBasicMaterial;
+    floorTexture!: THREE.MeshLambertMaterial;
+    ceilingTexture!: THREE.MeshLambertMaterial;
+    wallsTexture!: THREE.MeshLambertMaterial;
     textureFloorData!: any;
     textureCeilingData!: any;
     textureWallsData!: any;
@@ -168,7 +168,7 @@ export class MainLibraryConstruct extends Construct {
       this.walls = [];
        for(let i = 0; i<vertices.length; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
-            this.wallsTexture = new THREE.MeshBasicMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
+            this.wallsTexture = new THREE.MeshLambertMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
             const wall = new THREE.Mesh(geometry, this.wallsTexture);
             wall.scale.set(scaleArr[i][0],scaleArr[i][1],0.01);
             wall.position.set(vertices[i][0],vertices[i][1],vertices[i][2]);
@@ -180,7 +180,7 @@ export class MainLibraryConstruct extends Construct {
         this.floors = [];
         for(let i = 0; i<3; i++){
             const geometry = new THREE.PlaneGeometry( 1,1,1);
-            this.floorTexture = new THREE.MeshBasicMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
+            this.floorTexture = new THREE.MeshLambertMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
             const floor= new THREE.Mesh(geometry, this.floorTexture)
             floor.position.set(floorVertices[i][0],floorVertices[i][1],floorVertices[i][2]);
             floor.rotation.set(Math.PI/2,0,0);
@@ -188,7 +188,8 @@ export class MainLibraryConstruct extends Construct {
             floor.scale.set(floorScale[i][0],floorScale[i][1],0.01);
             this.floors.push(floor);
             this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2,floorScale[i][1]/2, 0.01));
-            this.graphics.add( floor);
+            floor.receiveShadow = true;
+            this.add( floor);
         }
         /*this.bookShelfs = [];
         for ( let i = 0; i<1; i++){
@@ -229,7 +230,7 @@ export class MainLibraryConstruct extends Construct {
         this.ceilings = [];
         for(let i = 0; i<3; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
-            this.ceilingTexture= new THREE.MeshBasicMaterial( { map: this.textureCeilingData, side: THREE.DoubleSide } );
+            this.ceilingTexture= new THREE.MeshLambertMaterial( { map: this.textureCeilingData, side: THREE.DoubleSide } );
             const ceiling = new THREE.Mesh(geometry,this.ceilingTexture);
             ceiling.position.set(ceilingVertices[i][0],ceilingVertices[i][1],ceilingVertices[i][2]);
             ceiling.rotation.set(Math.PI/2,0,0);
@@ -244,7 +245,7 @@ export class MainLibraryConstruct extends Construct {
         //this.physics.addStatic(tempLamp,PhysicsColliderFactory.box(1, 1,1));
        // this.graphics.add(tempLamp);
 
-        this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
+        /*this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
         this.lightHemisphere.position.set(0, 100, 0);
@@ -263,7 +264,7 @@ export class MainLibraryConstruct extends Construct {
         this.lightDirectional.shadow.camera.bottom = -50;
 
         this.graphics.add(this.lightHemisphere);
-        this.graphics.add(this.lightDirectional);
+        this.graphics.add(this.lightDirectional);*/
         
     }
 

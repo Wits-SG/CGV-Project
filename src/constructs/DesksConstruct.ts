@@ -13,6 +13,9 @@ export class DesksConstruct extends Construct {
     TableMaterial!: THREE.MeshLambertMaterial;
     LampGeometry!: THREE.BufferGeometry;
     LampMaterial!: THREE.MeshLambertMaterial;
+    lights!: Array<THREE.PointLight>;
+    lightStates!: Array<boolean>;
+    
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
@@ -60,7 +63,9 @@ export class DesksConstruct extends Construct {
                 deskz = deskz + 20;
             }
         }
-        //this.add(mesh);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        this.add(mesh);
     }
 
 
@@ -81,11 +86,11 @@ export class DesksConstruct extends Construct {
                     lampz+=20;
                 }
                 position.x = -2.5;
-                position.y = 0;
+                position.y = 1;
                 position.z = lampz;
-                scale.x = scale.y = scale.z = 0.0002;
+                scale.x = scale.y = scale.z = 0.0025;
                 //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
-                quaternion.setFromEuler(new THREE.Euler( 0, 0, Math.PI/2, 'XYZ' ));
+                quaternion.setFromEuler(new THREE.Euler( -Math.PI/2, 0, 0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 lampz = lampz + 20;
@@ -96,16 +101,18 @@ export class DesksConstruct extends Construct {
                     lampz+=20;
                 }
                 position.x = 2.5;
-                position.y = 0;
+                position.y = 1;
                 position.z = lampz;
-                scale.x = scale.y = scale.z = 0.0002;
+                scale.x = scale.y = scale.z = 0.0025;
                 //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
-                quaternion.setFromEuler(new THREE.Euler( 0, 0, Math.PI/2, 'XYZ' ));
+                quaternion.setFromEuler(new THREE.Euler(-Math.PI/2, 0, 0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 lampz = lampz + 20;
             }
         }
+        mesh.receiveShadow = true;
+        mesh.castShadow = true;
         this.add(mesh);
     }
 
@@ -127,8 +134,8 @@ export class DesksConstruct extends Construct {
                     glTFGeometry = child.geometry;
                 }
             })
-            this.TableGeometry=glTFGeometry;
-            this.TableMaterial = gltfMaterial;
+            this.LampGeometry=glTFGeometry;
+            this.LampMaterial = gltfMaterial;
         } catch(e: any) {
             console.error(e);
         }
@@ -146,12 +153,12 @@ export class DesksConstruct extends Construct {
                     glTFGeometry = child.geometry;
                 }
             })
-            this.LampGeometry =glTFGeometry;
-            this.LampMaterial = gltfMaterial;
+            this.TableGeometry =glTFGeometry;
+            this.TableMaterial = gltfMaterial;
         } catch(e: any) {
                 console.error(e);
         }
-    }
+    } 
 
 
     build(): void {
@@ -172,6 +179,60 @@ export class DesksConstruct extends Construct {
                 this.root.remove(deskBox);
             }
         }
+        
+        this.lights = [];
+        this.lightStates = [];
+        let lightZ = -100;
+        for ( let i = 0; i < 20; i ++ ) {
+            if(i<10){
+                if(i==5){
+                    lightZ+=20;
+                }
+                const sphere = new THREE.SphereGeometry(0.025);
+                const light = new THREE.PointLight( 0xffecf02, 400, 10 );
+                light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                light.position.set(2.5, 1.85, lightZ);
+                //light.castShadow = true;
+                this.lights.push(light);
+                this.lightStates.push(true);
+                this.add( light );
+                this.interactions.addInteractable(light,5,()=>{ 
+                    if(this.lightStates[i]){
+                        this.lightStates[i] = false;
+                        this.lights[i].intensity = 0;
+                    }else if(!this.lightStates[i]){
+                        this.lightStates[i] = true;
+                        this.lights[i].intensity = 400;
+                    }
+                })
+                lightZ+=20;
+            }
+            if(i>=10){
+                if(i==10){lightZ = -100;}
+                if(i==15){
+                    lightZ+=20;
+                }
+                const sphere = new THREE.SphereGeometry( 0.025);
+                const light = new THREE.PointLight( 0xfecf02, 400, 10);
+                light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                light.position.set(-2.5, 1.85, lightZ);
+                //light.castShadow = true;
+                this.lights.push(light);
+                this.lightStates.push(true);
+                this.add( light );
+                this.interactions.addInteractable(light,5,()=>{ 
+                    if(this.lightStates[i]){
+                        this.lightStates[i] = false;
+                        this.lights[i].intensity = 0;
+                    }else if(!this.lightStates[i]){
+                        this.lightStates[i] = true;
+                        this.lights[i].intensity = 400;
+                    }
+                })
+                lightZ = lightZ + 20;
+            }
+        }
+
 
     }
 
