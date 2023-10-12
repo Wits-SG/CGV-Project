@@ -11,6 +11,11 @@ const jumpHeight = 10;
 const jumpSpeed = 5;
 const jumpGravity = 10;
 
+// Building the event listeners without using anonymous functions (i.e. as class methods) loses the players instance scope in
+// "this". Losing that scope means that the methods are actually using the document scope instead of the player scope
+// This variable will just recapture the player scope, and which can then be used by the event listener callbacks
+let scope: any;
+
 export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
     face!: THREE.Mesh;
@@ -43,10 +48,11 @@ export class Player extends Construct {
         this.levelConfig = levelConfig;
 
         this.levelTime = 0;
+        this.paused = true; // game starts off paused
+        scope = this;
     }
 
     create(): void {
-        this.paused = false;
         this.graphics.renderer.domElement.requestPointerLock();
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
@@ -62,81 +68,14 @@ export class Player extends Construct {
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
-        document.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
-            if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
-            if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
-            if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == 'Shift') { this.speed = sprintSpeed }
-        });
-        document.addEventListener('keyup', (event: KeyboardEvent) => {
-            if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
-            if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
-            if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
-            if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
-            if (event.key == 'Shift') { this.speed = walkSpeed }
-        });
-        document.addEventListener('keypress', (event: KeyboardEvent) => {
-                        
-            const worldPos = new THREE.Vector3();
-            this.root.getWorldPosition(worldPos);
-            
-            if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
-            if (event.key == 'b' || event.key == 'B'){
-                console.log(worldPos);
-            }
-            if (this.root.userData.canInteract && this.holdingObject === undefined && !this.paused) {
-                if (event.key == 'e' || event.key == 'E') {
-                    this.root.userData.onInteract();
-                }
-            }
-            if (this.root.userData.canPlace && this.holdingObject !== undefined && !this.paused) {
-                if (event.key == 'q' || event.key == 'Q') {
-                    this.root.userData.onPlace(this.holdingObject);
-                    this.holdingObject = undefined;
-                }
-            }
-        });
-
-        document.addEventListener('mousemove', (event: MouseEvent) => {
-            if(this.paused) { return }
-
-            this.mouse.x = event.movementX;
-            this.mouse.y = event.movementY;
-        });
-
-        // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
-        document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement !== this.graphics.renderer.domElement) {
-                const pauseEvent = new Event("pauseGame");
-                document.dispatchEvent(pauseEvent);
-            }
-        });
-
-        document.addEventListener("pauseGame", () => {
-            this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
-            this.paused = true;
-            this.userInterface.showMenu(this.pauseMenu);
-            document.exitPointerLock();
-        })
-
-        document.addEventListener("unpauseGame", () => {
-            this.paused = false;
-            this.userInterface.hideMenu(this.pauseMenu);
-            this.userInterface.removeElement(this.pauseMenu);
-            this.graphics.renderer.domElement.requestPointerLock();
-        });
-
-        document.addEventListener("endLevel", () => {
-            document.exitPointerLock();
-            this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
-            this.userInterface.showMenu(this.endLevelMenu);
-
-            // Performance doesnt matter here because the game is over
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 200); // even more eww -> race conditions so being safe
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 300); // even more eww -> race conditions so being safe
-        });
+        document.addEventListener('keydown', this.onKeyDown);
+        document.addEventListener('keyup', this.onKeyUp);
+        document.addEventListener('keypress', this.onKeyPress);
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('pointerlockchange', this.onPointerLockChange); // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
+        document.addEventListener("pauseGame", this.onPausedGame)
+        document.addEventListener("unpauseGame", this.onUnpausedGame);
+        document.addEventListener("endLevel", this.onEndLevel);
     }
 
     async load(): Promise<void> {
@@ -176,6 +115,7 @@ export class Player extends Construct {
             gravity: jumpGravity,
         })
 
+        this.paused = false;
         // Once finished building, ask for pointer lock to begin playing
         this.graphics.renderer.domElement.requestPointerLock();
     }
@@ -220,8 +160,94 @@ export class Player extends Construct {
         // } else {
         //     this.userInterface.hidePrompt(this.placePrompt);
         // }
+
     }
 
     destroy(): void {
+        document.removeEventListener('keydown', this.onKeyDown);
+        document.removeEventListener('keyup', this.onKeyUp);
+        document.removeEventListener('keypress', this.onKeyPress);
+        document.removeEventListener('mousemove', this.onMouseMove);
+        document.removeEventListener('pointerlockchange', this.onPointerLockChange); // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
+        document.removeEventListener("pauseGame", this.onPausedGame)
+        document.removeEventListener("unpauseGame", this.onUnpausedGame);
+        document.removeEventListener("endLevel", this.onEndLevel);
     }
+
+    onKeyDown(event: KeyboardEvent) {
+        if (event.key == 'w' || event.key == 'W') { scope.direction.f = 1; }
+        if (event.key == 's' || event.key == 'S') { scope.direction.b = 1; }
+        if (event.key == 'a' || event.key == 'A') { scope.direction.l = 1; }
+        if (event.key == 'd' || event.key == 'D') { scope.direction.r = 1; }
+        if (event.key == 'Shift') { scope.speed = sprintSpeed }
+    } 
+
+    onKeyUp(event: KeyboardEvent) {
+        if (event.key == 'w' || event.key == 'W') { scope.direction.f = 0; }
+        if (event.key == 's' || event.key == 'S') { scope.direction.b = 0; }
+        if (event.key == 'a' || event.key == 'A') { scope.direction.l = 0; }
+        if (event.key == 'd' || event.key == 'D') { scope.direction.r = 0; }
+        if (event.key == 'Shift') { scope.speed = walkSpeed }
+    }
+
+    onKeyPress(event: KeyboardEvent) {
+        const worldPos = new THREE.Vector3();
+        scope.root.getWorldPosition(worldPos);
+        
+        if (event.key == ' ') { scope.physics.jumpCharacter(scope.root); }
+        if (event.key == 'b' || event.key == 'B'){
+            console.log(worldPos);
+        }
+        if (scope.root.userData.canInteract && scope.holdingObject === undefined && !scope.paused) {
+            if (event.key == 'e' || event.key == 'E') {
+                scope.root.userData.onInteract();
+            }
+        }
+        if (scope.root.userData.canPlace && scope.holdingObject !== undefined && !scope.paused) {
+            if (event.key == 'q' || event.key == 'Q') {
+                scope.root.userData.onPlace(scope.holdingObject);
+                scope.holdingObject = undefined;
+            }
+        }
+    }
+
+    onMouseMove(event: MouseEvent) {
+        if(scope.paused) { return }
+
+        scope.mouse.x = event.movementX;
+        scope.mouse.y = event.movementY;
+    }
+
+    onPointerLockChange() {
+        if (document.pointerLockElement !== scope.graphics.renderer.domElement) {
+            const pauseEvent = new Event("pauseGame");
+            document.dispatchEvent(pauseEvent);
+        }
+    }
+
+    onPausedGame() {
+        scope.pauseMenu = drawPauseMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.paused = true;
+        scope.userInterface.showMenu(scope.pauseMenu);
+        document.exitPointerLock();
+    }
+
+    onUnpausedGame() {
+            scope.paused = false;
+            scope.userInterface.hideMenu(scope.pauseMenu);
+            scope.userInterface.removeElement(scope.pauseMenu);
+            scope.graphics.renderer.domElement.requestPointerLock();
+    }
+
+    onEndLevel() {
+        document.exitPointerLock();
+        scope.endLevelMenu = drawEndLevelMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.userInterface.showMenu(scope.endLevelMenu);
+
+        // Performance doesnt matter here because the game is over
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 200); // even more eww -> race conditions so being safe
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 300); // even more eww -> race conditions so being safe
+    }
+
 }
