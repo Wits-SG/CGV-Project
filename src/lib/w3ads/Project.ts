@@ -118,6 +118,13 @@ export class Project {
             this.currentScene._create();
             await this.currentScene._load();
             this.currentScene._build();
+
+            // First time render to force the full scene to load into the GPU - helps avoid lagspikes midgame by forcing
+            // that lagspike into the load time of a scene
+            this.currentScene.graphics.root.traverse(obj => obj.frustumCulled = false);
+            this.renderer.render(this.currentScene.graphics.root, this.currentScene.graphics.mainCamera);
+            this.currentScene.graphics.root.traverse(obj => obj.frustumCulled = true);
+
             this.play();
         }
     }
