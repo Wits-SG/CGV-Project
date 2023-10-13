@@ -29,12 +29,12 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 20);
-        let deskz = -100;
+        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 14);
+        let deskz = -80;
         position.z = deskz;
-        for ( let i = 0; i < 20; i ++ ) {
-            if(i<10){
-                if(i==5){
+        for ( let i = 0; i < 14; i ++ ) {
+            if(i<7){
+                if(i==4){
                     deskz+=20;
                 }
                 position.x = -4.5;
@@ -47,9 +47,9 @@ export class DesksConstruct extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 deskz = deskz + 20;
             }
-            if(i>=10){
-                if(i==10){deskz = -100;}
-                if(i==15){
+            if(i>=7){
+                if(i==7){deskz = -80;}
+                if(i==11){
                     deskz+=20;
                 }
                 position.x = 0.5;
@@ -77,12 +77,12 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 20);
-        let lampz = -100;
+        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 14);
+        let lampz = -80;
         position.z = lampz;
-        for ( let i = 0; i < 20; i ++ ) {
-            if(i<10){
-                if(i==5){
+        for ( let i = 0; i < 14; i ++ ) {
+            if(i<7){
+                if(i==4){
                     lampz+=20;
                 }
                 position.x = -2.5;
@@ -95,9 +95,9 @@ export class DesksConstruct extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 lampz = lampz + 20;
             }
-            if(i>=10){
-                if(i==10){lampz = -100;}
-                if(i==15){
+            if(i>=7){
+                if(i==7){lampz = -80;}
+                if(i==11){
                     lampz+=20;
                 }
                 position.x = 2.5;
@@ -164,10 +164,9 @@ export class DesksConstruct extends Construct {
     build(): void {
         this.drawTables(this.TableGeometry);
         this.drawLamps(this.LampGeometry);
-        let deskz = -100;
-        for ( let i = 0; i < 20; i ++ ) {
-            if(i<10){
-                if(i==5){
+        let deskz = -80;
+        for ( let i = 0; i < 7; i ++ ) {
+                if(i==4){
                     deskz+=20;
                 }
                 const geometry = new THREE.BoxGeometry(10,2,2.5);
@@ -177,15 +176,14 @@ export class DesksConstruct extends Construct {
                 this.add(deskBox);
                 this.physics.addStatic(deskBox,PhysicsColliderFactory.box(10/2,1, 1));
                 this.root.remove(deskBox);
-            }
         }
         
         this.lights = [];
         this.lightStates = [];
-        let lightZ = -100;
-        for ( let i = 0; i < 20; i ++ ) {
-            if(i<10){
-                if(i==5){
+        let lightZ = -80;
+        for ( let i = 0; i < 14; i ++ ) {
+            if(i<7){
+                if(i==4){
                     lightZ+=20;
                 }
                 const sphere = new THREE.SphereGeometry(0.025);
@@ -207,9 +205,9 @@ export class DesksConstruct extends Construct {
                 })
                 lightZ+=20;
             }
-            if(i>=10){
-                if(i==10){lightZ = -100;}
-                if(i==15){
+            if(i>=7){
+                if(i==7){lightZ = -80;}
+                if(i==11){
                     lightZ+=20;
                 }
                 const sphere = new THREE.SphereGeometry( 0.025);
