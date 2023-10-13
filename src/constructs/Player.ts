@@ -54,6 +54,9 @@ export class Player extends Construct {
     }
 
     create(): void {
+        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.5, 2000);
+        this.graphics.mainCamera = this.camera;
+
         this.graphics.renderer.domElement.requestPointerLock();
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
@@ -96,11 +99,9 @@ export class Player extends Construct {
             shadows: false 
         })
 
-        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.5, 2000);
         this.camera.rotation.set(0 , -Math.PI / 2, 0);
         this.camera.layers.enable(0);
         this.camera.layers.set(0);
-        this.graphics.mainCamera = this.camera;
 
         this.face.add(this.camera);
         this.body.add(this.face);

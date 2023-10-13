@@ -47,6 +47,9 @@ export class MainMenu extends Scene {
     }
 
     create(): void {
+        this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
+        this.graphics.mainCamera = this.camera;
+
         const developers = [
             'Lisa Godwin', 'Brendan Griffiths', 'Yonatan Oudmayer', 'Nihal Ranchod', 'Zach Schwark', 'Ashlea Smith'
         ]
@@ -71,8 +74,6 @@ export class MainMenu extends Scene {
     }
 
     build(): void {
-        this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
-        this.graphics.mainCamera = this.camera;
         this.graphics.mainCamera.position.set(5, 7, 5);
         this.graphics.mainCamera.lookAt(0, 0, 0);
 
@@ -102,6 +103,8 @@ export class MainMenu extends Scene {
                 z
             );
             this.crystals[i].root.position.set(x, 4, z);
+            const glowScale = new THREE.Vector3(0.5, 0.5, 1);
+            this.crystals[i].glowSprite.scale.multiply(glowScale); // the glow is here is not the same as in the level
         }
 
     }
