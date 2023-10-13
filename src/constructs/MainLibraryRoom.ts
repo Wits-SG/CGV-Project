@@ -9,6 +9,8 @@ import { MirrorRoom } from './MirrorRoom';
 import { MusicConstruct } from './Music';
 import { OfficeConstruct } from './OfficeConstruct';
 import { DesksConstruct } from './DesksConstruct';
+import { BookShelvesConstructLeft } from './BookShelvesConstructLeft';
+import { BookShelvesConstructRight } from './BookShelvesConstructRight';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -30,11 +32,13 @@ export class MainLibraryConstruct extends Construct {
 
     //Library decoration constructs
     desksConstruct: DesksConstruct;
+    bookShelvesConstructLeft: BookShelvesConstructLeft;
+    bookShelvesConstructRight: BookShelvesConstructRight;
 
     // Game loop nonsense
     player: Player;
     numCrystals: number;
-   // exitDoor: CrystalDoor;
+    exitDoor: CrystalDoor;
 
     // Puzzles
    // chess: StatuesConstruct;
@@ -52,8 +56,14 @@ export class MainLibraryConstruct extends Construct {
         this.desksConstruct = new DesksConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.desksConstruct);
 
-      //  this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
-       // this.addConstruct(this.exitDoor);
+        this.bookShelvesConstructLeft = new BookShelvesConstructLeft(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.bookShelvesConstructLeft);
+
+        this.bookShelvesConstructRight = new BookShelvesConstructRight(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.bookShelvesConstructRight);
+
+        this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
+        this.addConstruct(this.exitDoor);
 
       //  this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
       //  this.addConstruct(this.chess);
@@ -79,7 +89,7 @@ export class MainLibraryConstruct extends Construct {
 
 
     create() {
-      //  this.exitDoor.root.position.set(0, 0 , -113.5);
+          this.exitDoor.root.position.set(0, 0, -112.5);
       //  this.chess.root.position.set(100, -10.5, 43.3);
       //  this.chess.root.rotation.set(0, Math.PI, 0);
       //  this.mirror.root.position.set(110, -11, -12);
@@ -89,7 +99,8 @@ export class MainLibraryConstruct extends Construct {
        // this.office.root.position.set(-180, -11, 0);
         //this.office.root.rotation.set(0, Math.PI / 2, 0);
         this.desksConstruct.root.position.set(0,-8.75,0); 
-
+        this.bookShelvesConstructLeft.root.position.set(-20,-10,0);
+        this.bookShelvesConstructRight.root.position.set(20,-10,0);
     }
 
     async load(): Promise<void>{
@@ -124,7 +135,7 @@ export class MainLibraryConstruct extends Construct {
     build() {
         const distanceFromCenter = 10;
         const angleBetween = 2 * Math.PI / this.numCrystals;
-       /* for (let i = 0; i < this.numCrystals; ++i) {
+        for (let i = 0; i < this.numCrystals; ++i) {
             const currentPlinth = this.exitDoor.crystalPlinths[i];
             const x = distanceFromCenter * Math.sin(i * angleBetween);
             const z = distanceFromCenter * Math.cos(i * angleBetween) - 100;
@@ -134,7 +145,7 @@ export class MainLibraryConstruct extends Construct {
                 -9,
                 z
             );
-        }*/
+        }
 
         // this.music.root.position.set(140, -8, 0);
 
@@ -245,7 +256,7 @@ export class MainLibraryConstruct extends Construct {
         //this.physics.addStatic(tempLamp,PhysicsColliderFactory.box(1, 1,1));
        // this.graphics.add(tempLamp);
 
-        /*this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
+        this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
         this.lightHemisphere.position.set(0, 100, 0);
@@ -264,7 +275,7 @@ export class MainLibraryConstruct extends Construct {
         this.lightDirectional.shadow.camera.bottom = -50;
 
         this.graphics.add(this.lightHemisphere);
-        this.graphics.add(this.lightDirectional);*/
+        this.graphics.add(this.lightDirectional);
         
     }
 
