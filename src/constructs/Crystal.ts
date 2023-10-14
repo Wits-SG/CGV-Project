@@ -7,14 +7,16 @@ export class Crystal extends Construct {
     create(): void {
         
     }
+    
     async load() {
         
     }
 
     build(): void {
-        const mat = new THREE.MeshLambertMaterial({ color: 0xff0000 })
+        const colour = new THREE.Color;
+        colour.setHSL( Math.random(), 1, 0.3 );
+        const mat = new THREE.MeshLambertMaterial({ color: colour, emissive: colour})
         const geom = new THREE.IcosahedronGeometry(0.5, 0);
-
 
         this.crystalBody = new THREE.Mesh(geom, mat);
         this.add(this.crystalBody);
@@ -27,6 +29,7 @@ export class Crystal extends Construct {
     update(): void {
         
     }
+
     destroy(): void {
         
     }
