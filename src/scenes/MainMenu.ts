@@ -74,6 +74,8 @@ export class MainMenu extends Scene {
     }
 
     build(): void {
+
+        // Scene
         this.graphics.mainCamera.position.set(5, 7, 5);
         this.graphics.mainCamera.lookAt(0, 0, 0);
 
