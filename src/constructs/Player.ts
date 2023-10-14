@@ -35,7 +35,7 @@ let scope: any;
 export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
     face!: THREE.Mesh;
-    camera!: THREE.Camera;
+    camera!: THREE.PerspectiveCamera;
     holdingObject: THREE.Mesh | undefined = undefined;
 
     direction!: { f: number, b: number, l: number, r: number }
@@ -62,14 +62,14 @@ export class Player extends Construct {
 
     // Options
     options: {
-        video: {
+        effects: {
             pixelShader: boolean,
             fxaaShader: boolean,
             smaaShader: boolean,
             taaShader: boolean,
             taaSample: number, // from 1 to 5
         },
-        character: {
+        video: {
             fov: number,
             farRender: number,
             fog: boolean
@@ -85,14 +85,14 @@ export class Player extends Construct {
         scope = this;
 
         this.options = {
-            video: {
+            effects: {
                 pixelShader: false,
                 fxaaShader: false,
                 smaaShader: false,
                 taaShader: false,
                 taaSample: 1,
             },
-            character: {
+            video: {
                 fov: 80,
                 farRender: 400,
                 fog: false,
@@ -101,7 +101,8 @@ export class Player extends Construct {
     }
 
     create(): void {
-        this.camera = new THREE.PerspectiveCamera(this.options.character.fov, window.innerWidth / window.innerHeight, 0.5, this.options.character.farRender);
+        this.graphics.root.fog = new THREE.FogExp2(0xcccccc, 0.003);
+        this.camera = new THREE.PerspectiveCamera(this.options.video.fov, window.innerWidth / window.innerHeight, 0.5, this.options.video.farRender);
         this.graphics.mainCamera = this.camera;
 
         this.graphics.renderer.domElement.requestPointerLock();
@@ -305,11 +306,11 @@ export class Player extends Construct {
     }
 
     applyOptions() {
-        if (this.options.video.pixelShader) {
+        if (this.options.effects.pixelShader) {
             this.graphics.addPass( new RenderPixelatedPass(2, this.graphics.root, this.graphics.mainCamera ) );
         }
 
-        if (this.options.video.fxaaShader) {
+        if (this.options.effects.fxaaShader) {
 
             const fxaaPass = new ShaderPass( FXAAShader );
             const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
@@ -324,7 +325,7 @@ export class Player extends Construct {
 
         }
 
-        if (this.options.video.smaaShader) {
+        if (this.options.effects.smaaShader) {
             const smaaPass = new SMAAPass( 
                 window.innerWidth * this.graphics.renderer.getPixelRatio(),
                 window.innerHeight * this.graphics.renderer.getPixelRatio()
@@ -332,17 +333,26 @@ export class Player extends Construct {
             this.graphics.addPass( smaaPass );
         }
         
-        if (this.options.video.taaShader) {
+        if (this.options.effects.taaShader) {
             const taaPass = new TAARenderPass( this.graphics.root, this.graphics.mainCamera );
             taaPass.unbiased = false;
-            taaPass.sampleLevel = this.options.video.taaSample;
+            taaPass.sampleLevel = this.options.effects.taaSample;
 
             this.graphics.addPass( taaPass );
         }
 
-        if (this.options.character.fog) {
-            this.graphics.root.fog = new THREE.FogExp2(0xcccccc, 0.003);
+        if (this.options.video.fog) {
+            //@ts-expect-error I know what type (FogExp2) this is but I don't have the time to sort
+            // out typescript nonsense
+            this.graphics.root.fog.density = 0.003
+        } else {
+            //@ts-expect-error
+            this.graphics.root.fog.density = 0;
         }
+
+        this.camera.fov = this.options.video.fov;
+        this.camera.far = this.options.video.farRender;
+        this.camera.updateProjectionMatrix();
 
         this.graphics.compose();
     }
