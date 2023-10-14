@@ -6,7 +6,7 @@ import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import { Crystal } from './Crystal';
 
 const numInstruments = 5;
-const standOffsetAngle = Math.PI + Math.PI / 6;
+const standAngleOffset = Math.PI;
 export class MusicPuzzle extends Construct {
 
     carpet!: THREE.Mesh;
@@ -18,8 +18,10 @@ export class MusicPuzzle extends Construct {
 
     carpetTexture!: THREE.Texture;
     standModel!: THREE.Group;
+    standAngles: Array<number>;
 
     instrumentModels: Array<THREE.Group | undefined>;
+    instrumentSounds: Array<any>;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
@@ -34,9 +36,13 @@ export class MusicPuzzle extends Construct {
         this.state = [];
 
         this.instrumentModels = [];
+        this.instrumentSounds = [];
         for (let i = 0; i < numInstruments; ++i) {
             this.instrumentModels.push(undefined);
+            this.instrumentSounds.push(undefined);
         }
+
+        this.standAngles = [];
     }
 
     create(): void {
@@ -51,7 +57,6 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
-        console.log(this.solution);
     }
 
     async load(): Promise<void> {
@@ -62,6 +67,7 @@ export class MusicPuzzle extends Construct {
         try { 
             const result: any = await this.graphics.loadModel('assets/music_stand/scene.gltf');
             this.standModel = result.scene; 
+            // this.standModel.rotation.set(0, Math.PI + 2 * Math.PI / 4, 0);
         }
         catch { console.warn('Failed to find stand model'); }
 
@@ -116,13 +122,13 @@ export class MusicPuzzle extends Construct {
         this.add(stand);
         this.standModel.position.set(-5, 1, 0);
         this.standModel.scale.setScalar(2);
-        this.standModel.rotation.y = standOffsetAngle +  0 * angleBetween;
+        this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
         this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
         this.interactions.addInteractable(stand, 3, () => {
             this.state = [];
             stand.rotation.y = this.solution[0] * angleBetween;
-            this.standModel.rotation.y = standOffsetAngle + this.solution[0] * angleBetween;
+            this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
         });
         stand.removeFromParent(); // hide collision box
 
@@ -171,7 +177,7 @@ export class MusicPuzzle extends Construct {
             this.interactions.addInteractable(instrument, 5, () => {
                 this.state.push(i);
                 stand.rotation.y = this.solution[this.state.length - 1] * angleBetween;                
-                this.standModel.rotation.y = standOffsetAngle + this.solution[this.state.length - 1] * angleBetween;
+                this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length] * angleBetween;
 
                 if (this.state.length == numInstruments) {
                     let solved = true;
@@ -187,7 +193,6 @@ export class MusicPuzzle extends Construct {
                         // Reset the puzzle
                         this.state = [];
                         stand.rotation.y = this.solution[0] * angleBetween;
-                        this.standModel.rotation.y = standOffsetAngle + this.solution[0] * angleBetween;
                     }
                 }
             });
