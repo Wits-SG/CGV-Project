@@ -1,0 +1,11 @@
+Model Information:
+* title:	Saxophone
+* source:	https://sketchfab.com/3d-models/saxophone-a838f6c330594956ada7df8d75bbc297
+* author:	Flozza_Bee (https://sketchfab.com/Flozza_Bee)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Saxophone" (https://sketchfab.com/3d-models/saxophone-a838f6c330594956ada7df8d75bbc297) by Flozza_Bee (https://sketchfab.com/Flozza_Bee) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
