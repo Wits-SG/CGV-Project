@@ -57,7 +57,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
-        console.log(this.solution);
+        
     }
 
     async load(): Promise<void> {
