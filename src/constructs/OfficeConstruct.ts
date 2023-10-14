@@ -9,6 +9,7 @@ import { Balcony } from '../constructs/Balcony';
 import { Fence } from './Fence';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { Crystal } from './Crystal';
 
 export class OfficeConstruct extends Construct {
     floor!: THREE.Mesh;  
@@ -29,8 +30,23 @@ export class OfficeConstruct extends Construct {
     pillars!: Pillars;
     balcony!: Balcony;
 
+    crystal: Crystal;
+    crystalSpots: Array<{ x: number, y: number, z: number }>;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext ) {
         super(graphics, physics, interactions, userInterface);
+
+        this.crystalSpots = [
+            //{ x: 0, y: 0, z: 0 },
+            { x: 13.9, y: 1, z: -16 },
+            { x: -13.9, y: 1, z: -21 },
+            { x: 13.9, y: 6, z: -19 },
+            { x: -2, y: 6, z: -22 },
+            { x: 13.9, y: 1, z: 17.5 },
+            { x: 6.5, y: 1, z: -9.5 }
+        ];
+        this.crystal = new Crystal(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.crystal);
 
         this.pillars = new Pillars(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.pillars);
@@ -47,6 +63,8 @@ export class OfficeConstruct extends Construct {
     }
 
     create(): void {
+        const position = this.crystalSpots[Math.floor(Math.random() * this.crystalSpots.length)];
+        this.crystal.root.position.set(position.x, position.y, position.z);
     }
 
     async load(): Promise<void>{

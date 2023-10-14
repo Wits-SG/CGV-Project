@@ -1,8 +1,28 @@
 import * as THREE from 'three'; 
 import { Construct, GraphicsContext, GraphicsPrimitiveFactory, PhysicsColliderFactory, PhysicsContext } from "../lib";
-import { drawPauseMenu, drawEndLevelMenu } from '../lib/UiComponents';
+import { drawEndLevelMenu } from '../lib/UI/EndLevelMenu';
+import { drawPauseMenu } from '../lib/UI/PauseMenu';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+
+//@ts-expect-error
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer';
+//@ts-expect-error
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass';
+//@ts-expect-error
+import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelatedPass';
+//@ts-expect-error
+import { DotScreenShader } from 'three/addons/shaders/DotScreenShader';
+//@ts-expect-error
+import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader';
+//@ts-expect-error
+import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader';
+//@ts-expect-error
+import { FXAAShader } from 'three/addons/shaders/FXAAShader';
+//@ts-expect-error
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass';
+//@ts-expect-error
+import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass';
 
 const walkSpeed = 0.05;
 const sprintSpeed = 0.1;
@@ -11,10 +31,15 @@ const jumpHeight = 10;
 const jumpSpeed = 5;
 const jumpGravity = 10;
 
+// Building the event listeners without using anonymous functions (i.e. as class methods) loses the players instance scope in
+// "this". Losing that scope means that the methods are actually using the document scope instead of the player scope
+// This variable will just recapture the player scope, and which can then be used by the event listener callbacks
+let scope: any;
+
 export class Player extends Construct {
     body!: THREE.Mesh; // Graphics element
     face!: THREE.Mesh;
-    camera!: THREE.Camera;
+    camera!: THREE.PerspectiveCamera;
     holdingObject: THREE.Mesh | undefined = undefined;
 
     direction!: { f: number, b: number, l: number, r: number }
@@ -38,15 +63,60 @@ export class Player extends Construct {
 
     levelTime: number; // the number of seconds spent in a level - effectively this is our scoring technique
 
+
+    // Options
+    options: {
+        filters: {
+            pixelShader: boolean,
+            dotShader: boolean,
+            rgbShiftShader: boolean,
+        }
+        effects: {
+            fxaaShader: boolean,
+            smaaShader: boolean,
+            taaShader: boolean,
+            taaSample: number, // from 1 to 5
+        },
+        video: {
+            fov: number,
+            farRender: number,
+            fog: boolean
+        }
+    };
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelConfig: {key: string, name: string, difficulty: string, numPuzzles: number}) {
         super(graphics, physics, interactions, userInterface);
         this.levelConfig = levelConfig;
 
         this.levelTime = 0;
+        this.paused = true; // game starts off paused
+        scope = this;
+
+        this.options = {
+            filters: {
+                pixelShader: false,
+                dotShader: false,
+                rgbShiftShader: false,
+            },
+            effects: {
+                fxaaShader: false,
+                smaaShader: false,
+                taaShader: false,
+                taaSample: 2,
+            },
+            video: {
+                fov: 100,
+                farRender: 1000,
+                fog: false,
+            }
+        }
     }
 
     create(): void {
-        this.paused = false;
+        this.graphics.root.fog = new THREE.FogExp2(0xcccccc, 0.003);
+        this.camera = new THREE.PerspectiveCamera(this.options.video.fov, window.innerWidth / window.innerHeight, 0.5, this.options.video.farRender);
+        this.graphics.mainCamera = this.camera;
+
         this.graphics.renderer.domElement.requestPointerLock();
         this.direction = { f: 0, b: 0, l: 0, r: 0 };
         this.root.userData.canInteract = false;
@@ -62,87 +132,25 @@ export class Player extends Construct {
         this.interactPrompt = this.userInterface.addPrompt('Press E to interact');
         this.placePrompt = this.userInterface.addPrompt('Press Q to place');
 
-        document.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (event.key == 'w' || event.key == 'W') { this.direction.f = 1; }
-            if (event.key == 's' || event.key == 'S') { this.direction.b = 1; }
-            if (event.key == 'a' || event.key == 'A') { this.direction.l = 1; }
-            if (event.key == 'd' || event.key == 'D') { this.direction.r = 1; }
-            if (event.key == 'Shift') { this.speed = sprintSpeed }
-        });
-        document.addEventListener('keyup', (event: KeyboardEvent) => {
-            if (event.key == 'w' || event.key == 'W') { this.direction.f = 0; }
-            if (event.key == 's' || event.key == 'S') { this.direction.b = 0; }
-            if (event.key == 'a' || event.key == 'A') { this.direction.l = 0; }
-            if (event.key == 'd' || event.key == 'D') { this.direction.r = 0; }
-            if (event.key == 'Shift') { this.speed = walkSpeed }
-        });
-        document.addEventListener('keypress', (event: KeyboardEvent) => {
-                        
-            const worldPos = new THREE.Vector3();
-            this.root.getWorldPosition(worldPos);
-            
-            if (event.key == ' ') { this.physics.jumpCharacter(this.root); }
-            if (event.key == 'b' || event.key == 'B'){
-                console.log(worldPos);
-            }
-            if (this.root.userData.canInteract && this.holdingObject === undefined && !this.paused) {
-                if (event.key == 'e' || event.key == 'E') {
-                    this.root.userData.onInteract();
-                }
-            }
-            if (this.root.userData.canPlace && this.holdingObject !== undefined && !this.paused) {
-                if (event.key == 'q' || event.key == 'Q') {
-                    this.root.userData.onPlace(this.holdingObject);
-                    this.holdingObject = undefined;
-                }
-            }
-        });
-
-        document.addEventListener('mousemove', (event: MouseEvent) => {
-            if(this.paused) { return }
-
-            this.mouse.x = event.movementX;
-            this.mouse.y = event.movementY;
-        });
-
-        // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
-        document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement !== this.graphics.renderer.domElement) {
-                const pauseEvent = new Event("pauseGame");
-                document.dispatchEvent(pauseEvent);
-            }
-        });
-
-        document.addEventListener("pauseGame", () => {
-            this.pauseMenu = drawPauseMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
-            this.paused = true;
-            this.userInterface.showMenu(this.pauseMenu);
-            document.exitPointerLock();
-        })
-
-        document.addEventListener("unpauseGame", () => {
-            this.paused = false;
-            this.userInterface.hideMenu(this.pauseMenu);
-            this.userInterface.removeElement(this.pauseMenu);
-            this.graphics.renderer.domElement.requestPointerLock();
-        });
-
-        document.addEventListener("endLevel", () => {
-            document.exitPointerLock();
-            this.endLevelMenu = drawEndLevelMenu(this.userInterface, this.levelConfig.name, this.levelConfig.key, this.levelConfig.difficulty, this.levelConfig.numPuzzles, this.levelTime);
-            this.userInterface.showMenu(this.endLevelMenu);
-
-            // Performance doesnt matter here because the game is over
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 200); // even more eww -> race conditions so being safe
-            setTimeout(() => this.userInterface.hideMenu(this.pauseMenu), 300); // even more eww -> race conditions so being safe
-        });
+        document.addEventListener('keydown', this.onKeyDown);
+        document.addEventListener('keyup', this.onKeyUp);
+        document.addEventListener('keypress', this.onKeyPress);
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('pointerlockchange', this.onPointerLockChange); // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
+        document.addEventListener("pauseGame", this.onPausedGame)
+        document.addEventListener("unpauseGame", this.onUnpausedGame);
+        document.addEventListener("endLevel", this.onEndLevel);
     }
 
     async load(): Promise<void> {
     }
 
     build(): void {
+
+        // Shaders
+        this.applyOptions();
+
+        // Player Geometry
         const bodyMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
         const bodyGeometry = new THREE.CapsuleGeometry(1, 1.8, 10, 10);
         this.body = new THREE.Mesh(bodyGeometry, bodyMat);
@@ -156,11 +164,9 @@ export class Player extends Construct {
             shadows: false 
         })
 
-        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.5, 2000);
         this.camera.rotation.set(0 , -Math.PI / 2, 0);
         this.camera.layers.enable(0);
         this.camera.layers.set(0);
-        this.graphics.mainCamera = this.camera;
 
         this.face.add(this.camera);
         this.body.add(this.face);
@@ -176,6 +182,7 @@ export class Player extends Construct {
             gravity: jumpGravity,
         })
 
+        this.paused = false;
         // Once finished building, ask for pointer lock to begin playing
         this.graphics.renderer.domElement.requestPointerLock();
     }
@@ -209,19 +216,173 @@ export class Player extends Construct {
 
         // The insertion and removal of these DOM nodes is causing performance hickups 
         // when nearby to interactable elements - possibly consider switching to signals
-        // if (this.root.userData.canInteract && this.holdingObject === undefined) {
-        //     this.userInterface.showPrompt(this.interactPrompt);
-        // } else {
-        //     this.userInterface.hidePrompt(this.interactPrompt);
-        // }
+        if (this.root.userData.canInteract && this.holdingObject === undefined) {
+            this.userInterface.showPrompt(this.interactPrompt);
+        } else {
+            this.userInterface.hidePrompt(this.interactPrompt);
+        }
 
-        // if (this.root.userData.canPlace && this.holdingObject !== undefined) {
-        //     this.userInterface.showPrompt(this.placePrompt);
-        // } else {
-        //     this.userInterface.hidePrompt(this.placePrompt);
-        // }
+        if (this.root.userData.canPlace && this.holdingObject !== undefined) {
+            this.userInterface.showPrompt(this.placePrompt);
+        } else {
+            this.userInterface.hidePrompt(this.placePrompt);
+        }
+
     }
 
     destroy(): void {
+        document.removeEventListener('keydown', this.onKeyDown);
+        document.removeEventListener('keyup', this.onKeyUp);
+        document.removeEventListener('keypress', this.onKeyPress);
+        document.removeEventListener('mousemove', this.onMouseMove);
+        document.removeEventListener('pointerlockchange', this.onPointerLockChange); // This needs to exist because there is no way to capture Escape keyboard input in pointer lock mode
+        document.removeEventListener("pauseGame", this.onPausedGame)
+        document.removeEventListener("unpauseGame", this.onUnpausedGame);
+        document.removeEventListener("endLevel", this.onEndLevel);
     }
+
+    onKeyDown(event: KeyboardEvent) {
+        if (event.key == 'w' || event.key == 'W') { scope.direction.f = 1; }
+        if (event.key == 's' || event.key == 'S') { scope.direction.b = 1; }
+        if (event.key == 'a' || event.key == 'A') { scope.direction.l = 1; }
+        if (event.key == 'd' || event.key == 'D') { scope.direction.r = 1; }
+        if (event.key == 'Shift') { scope.speed = sprintSpeed }
+    } 
+
+    onKeyUp(event: KeyboardEvent) {
+        if (event.key == 'w' || event.key == 'W') { scope.direction.f = 0; }
+        if (event.key == 's' || event.key == 'S') { scope.direction.b = 0; }
+        if (event.key == 'a' || event.key == 'A') { scope.direction.l = 0; }
+        if (event.key == 'd' || event.key == 'D') { scope.direction.r = 0; }
+        if (event.key == 'Shift') { scope.speed = walkSpeed }
+    }
+
+    onKeyPress(event: KeyboardEvent) {
+        const worldPos = new THREE.Vector3();
+        scope.root.getWorldPosition(worldPos);
+        
+        if (event.key == ' ') { scope.physics.jumpCharacter(scope.root); }
+        if (event.key == 'b' || event.key == 'B'){
+            console.log(worldPos);
+        }
+        if (scope.root.userData.canInteract && scope.holdingObject === undefined && !scope.paused) {
+            if (event.key == 'e' || event.key == 'E') {
+                scope.root.userData.onInteract();
+            }
+        }
+        if (scope.root.userData.canPlace && scope.holdingObject !== undefined && !scope.paused) {
+            if (event.key == 'q' || event.key == 'Q') {
+                scope.root.userData.onPlace(scope.holdingObject);
+                scope.holdingObject = undefined;
+            }
+        }
+    }
+
+    onMouseMove(event: MouseEvent) {
+        if(scope.paused) { return }
+
+        scope.mouse.x = event.movementX;
+        scope.mouse.y = event.movementY;
+    }
+
+    onPointerLockChange() {
+        if (document.pointerLockElement !== scope.graphics.renderer.domElement) {
+            const pauseEvent = new Event("pauseGame");
+            document.dispatchEvent(pauseEvent);
+        }
+    }
+
+    onPausedGame() {
+        scope.pauseMenu = drawPauseMenu(scope.userInterface, scope, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.paused = true;
+        scope.userInterface.showMenu(scope.pauseMenu);
+        document.exitPointerLock();
+    }
+
+    onUnpausedGame() {
+            scope.paused = false;
+            scope.userInterface.hideMenu(scope.pauseMenu);
+            scope.userInterface.removeElement(scope.pauseMenu);
+            scope.graphics.renderer.domElement.requestPointerLock();
+    }
+
+    onEndLevel() {
+        document.exitPointerLock();
+        scope.endLevelMenu = drawEndLevelMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.levelId, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.userInterface.showMenu(scope.endLevelMenu);
+
+        // Performance doesnt matter here because the game is over
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 200); // even more eww -> race conditions so being safe
+        setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 300); // even more eww -> race conditions so being safe
+    }
+
+    applyOptions() {
+        this.graphics.resetPasses();
+
+        if (this.options.effects.fxaaShader) {
+
+            const fxaaPass = new ShaderPass( FXAAShader );
+            const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
+
+            const newComposer = new EffectComposer( this.graphics.renderer );
+            newComposer.addPass( this.graphics.renderPass );
+            newComposer.addPass( colourCorrectionPass );
+            this.graphics.addComposer( newComposer );
+
+            this.graphics.addPass( colourCorrectionPass );
+            this.graphics.addPass( fxaaPass );
+
+        }
+
+        if (this.options.effects.smaaShader) {
+            const smaaPass = new SMAAPass( 
+                window.innerWidth * this.graphics.renderer.getPixelRatio(),
+                window.innerHeight * this.graphics.renderer.getPixelRatio()
+            );
+            this.graphics.addPass( smaaPass );
+        }
+        
+        if (this.options.effects.taaShader) {
+            const taaPass = new TAARenderPass( this.graphics.root, this.graphics.mainCamera );
+            taaPass.unbiased = false;
+            taaPass.sampleLevel = this.options.effects.taaSample;
+
+            this.graphics.addPass( taaPass );
+        }
+
+        if (this.options.video.fog) {
+            //@ts-expect-error I know what type (FogExp2) this is but I don't have the time to sort
+            // out typescript nonsense
+            this.graphics.root.fog.density = 0.003
+        } else {
+            //@ts-expect-error
+            this.graphics.root.fog.density = 0;
+        }
+
+        if (this.options.filters.pixelShader) {
+            this.graphics.addPass( new RenderPixelatedPass(4, this.graphics.root, this.graphics.mainCamera ) );
+        }
+
+        if (this.options.filters.dotShader) {
+            const dotPass = new ShaderPass( DotScreenShader );
+            dotPass.uniforms['scale'].value = 4;
+
+            this.graphics.addPass(dotPass);
+        }
+
+        if (this.options.filters.rgbShiftShader) {
+            const shiftPass = new ShaderPass( RGBShiftShader );
+            shiftPass.uniforms['amount'].value = 0.0015;
+
+            this.graphics.addPass(shiftPass);
+        }
+
+        this.camera.fov = this.options.video.fov;
+        this.camera.far = this.options.video.farRender;
+        this.camera.updateProjectionMatrix();
+
+        this.graphics.compose();
+    }
+
 }

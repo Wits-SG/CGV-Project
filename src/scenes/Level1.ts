@@ -17,6 +17,7 @@ export class LevelOne extends Scene {
             name: '1',
             difficulty: 'Easy',
             numPuzzles: 1,
+            levelId: '8f3f4b29-38a7-4b13-baa2-95fde6530d7f',
         };
 
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);

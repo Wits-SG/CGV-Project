@@ -100,11 +100,12 @@ export class MainLibraryConstruct extends Construct {
         //this.addConstruct(this.music);
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        // this.addConstruct(this.office);
+        this.addConstruct(this.office);
     }
 
     create() {
-        this.exitDoor.root.position.set(0, 0, -82.5);
+        this.exitDoor.root.position.set(0, -12, -102);
+        this.exitDoor.root.scale.set(1.15,1.15,1.15);
         this.chess.root.position.set(100, -10.5, 43.3);
         this.chess.root.rotation.set(0, Math.PI, 0);
         this.mirror.root.position.set(110, -11, -12);
