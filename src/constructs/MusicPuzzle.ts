@@ -3,6 +3,7 @@ import { Construct, GraphicsContext, PhysicsColliderFactory, PhysicsContext } fr
 import { Lectern } from './Lectern';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { Crystal } from './Crystal';
 
 const numInstruments = 5;
 const standOffsetAngle = Math.PI + Math.PI / 6;
@@ -10,6 +11,7 @@ export class MusicPuzzle extends Construct {
 
     carpet!: THREE.Mesh;
     lectern: Lectern;
+    crystal: Crystal;
 
     solution: Array<number>; // the answer
     state: Array<number>; // the currently inputted answer
@@ -25,6 +27,8 @@ export class MusicPuzzle extends Construct {
         this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['Play them']);
         this.addConstruct(this.lectern);
 
+        this.crystal = new Crystal(graphics, physics, interactions, userInterface);
+        this.addConstruct(this.crystal);
 
         this.solution = [];
         this.state = [];
@@ -36,6 +40,8 @@ export class MusicPuzzle extends Construct {
     }
 
     create(): void {
+        this.crystal.root.position.set(0, -10, 0);
+
         this.lectern.root.position.set(-9, 0, -9);
         this.lectern.root.rotation.set(0, Math.PI / 4, 0)
         this.lectern.root.lookAt(this.root.position);
@@ -45,6 +51,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
+        console.log(this.solution);
     }
 
     async load(): Promise<void> {
@@ -174,6 +181,7 @@ export class MusicPuzzle extends Construct {
 
                     if (solved) {
                         // Puzzle is solved
+                        this.crystal.root.position.set(0, 2, 0);
 
                     } else {
                         // Reset the puzzle
