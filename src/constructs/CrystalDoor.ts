@@ -30,7 +30,7 @@ export class CrystalDoor extends Construct {
         }
 
         try {
-            const gltfData: any = await this.graphics.loadModel('assets/Chess_Plinths/chess_plinth.gltf');
+            const gltfData: any = await this.graphics.loadModel('assets/Crystal_Plinths/crystal_plinth.gltf');
             this.plinths = gltfData.scene;
         } catch (e: any) {
             console.log(e);
