@@ -1,9 +1,14 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
+
+//@ts-expect-error
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer';
+//@ts-expect-error
 import { OutputPass } from 'three/addons/postprocessing/OutputPass';
+//@ts-expect-error
 import { RenderPass } from 'three/addons/postprocessing/RenderPass';
+//@ts-expect-error
 import { Pass } from 'three/addons/postprocessing/Pass';
 
 export class GraphicsContext {
@@ -62,6 +67,10 @@ export class GraphicsContext {
 
     removePass( pass: Pass ) {
         this.passes = this.passes.filter((p) => p != pass );
+    }
+
+    resetPasses() {
+        this.passes = [];
     }
 
     async loadModel(url: string) {

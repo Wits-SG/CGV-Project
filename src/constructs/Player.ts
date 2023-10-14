@@ -306,6 +306,7 @@ export class Player extends Construct {
     }
 
     applyOptions() {
+        this.graphics.resetPasses();
         if (this.options.effects.pixelShader) {
             this.graphics.addPass( new RenderPixelatedPass(2, this.graphics.root, this.graphics.mainCamera ) );
         }
