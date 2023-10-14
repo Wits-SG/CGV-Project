@@ -3,6 +3,8 @@ import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib'
 import { Player } from '../constructs/Player';
 import { MusicPuzzle } from '../constructs/MusicPuzzle';
 
+import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
+
 export class SandboxScene extends Scene {
     async load(): Promise<void> {}
 
@@ -26,7 +28,6 @@ export class SandboxScene extends Scene {
             difficulty: 'none',
             numPuzzles: 0
         }
-
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
@@ -39,13 +40,13 @@ export class SandboxScene extends Scene {
     }
 
     build(): void {
-        this.floor = GraphicsPrimitiveFactory.box({
+       /* this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: 0, z: 0 },
             scale: { x: 1, y: 0.2, z: 1},
             rotation: { x: 0, y: 0, z: 0 },
             colour: 0xcccccc,
             shadows: true,
-        });
+        });*/
         this.graphics.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box( 150, 0.1, 150 ));
         
