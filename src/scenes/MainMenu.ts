@@ -66,6 +66,12 @@ export class MainMenu extends Scene {
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Rook', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-rook-cbd416e785f64648bff3675fd45b3594' },
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Queen', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-queen-ab958c61eb2a405aa7a7b0cec91c79b0' },
             { artist: 'Joao Paulo', title: 'Wood 27', type: 'Material', license: 'CC0', link: 'https://3dtextures.me/2022/05/21/wood-027/' },
+            { artist: 'wessel.huizenga', title: 'Piano (low poly)', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/piano-low-poly-9714bdb006484d9eb3a26df864b1004d' },
+            { artist: 'FLozza_Bee', title: 'Saxophone', type: 'Model', license: 'CC-BY-SA-4.0', link: 'https://sketchfab.com/3d-models/saxophone-a838f6c330594956ada7df8d75bbc297' },
+            { artist: 'graygabriel', title: 'Music Stand', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/music-stand-54f5ea4266824751843a69b009d28006' },
+            { artist: 'Kowalo', title: 'Lute', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/lute-42e097aebea143b69beb9276ffd1cbc2' },
+            { artist: 'Wersaus33', title: 'Classical Guitar - PS1 Low Poly', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/classical-guitar-ps1-low-poly-c0ae96b52bed4f5791cf6cea9f213694' },
+            { artist: 'MarisDani', title: 'Djembe', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/djembe-9912df2ecc494753b9f08374c21a236f' },
         ];
         drawMainMenu(this.userInterface, developers, assets);
     }

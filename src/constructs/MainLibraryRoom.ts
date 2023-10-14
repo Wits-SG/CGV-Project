@@ -6,7 +6,6 @@ import { CrystalDoor } from './CrystalDoor';
 import { Player } from './Player';
 import { StatuesConstruct } from './Statues';
 import { MirrorRoom } from './MirrorRoom';
-import { MusicConstruct } from './Music';
 import { OfficeConstruct } from './OfficeConstruct';
 
 export class MainLibraryConstruct extends Construct {
@@ -40,7 +39,6 @@ export class MainLibraryConstruct extends Construct {
     // Puzzles
     chess: StatuesConstruct;
     mirror: MirrorRoom;
-    music: MusicConstruct;
     office: OfficeConstruct;
 
 
@@ -59,8 +57,6 @@ export class MainLibraryConstruct extends Construct {
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.mirror);
 
-        this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
-        this.addConstruct(this.music);
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.office);
@@ -123,8 +119,6 @@ export class MainLibraryConstruct extends Construct {
         this.chess.root.rotation.set(0, Math.PI, 0);
         this.mirror.root.position.set(110, -11, -12);
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
-        this.music.root.position.set(190, -11, 0);
-        this.music.root.rotation.set(0, Math.PI / 2, 0);
         this.office.root.position.set(-180, -11, 0);
         this.office.root.rotation.set(0, Math.PI / 2, 0);
 
