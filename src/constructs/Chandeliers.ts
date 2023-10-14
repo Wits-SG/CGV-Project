@@ -23,10 +23,10 @@ export class Chandeliers extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 9);
-        let chandelierZ = -90;
+        const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 5);
+        let chandelierZ = -52.5;
         position.z = chandelierZ;
-        for ( let i = 0; i < 9; i ++ ) {
+        for ( let i = 0; i < 5; i ++ ) {
             position.x = 0;
             position.y = 0;
             position.z = chandelierZ;
@@ -34,7 +34,7 @@ export class Chandeliers extends Construct {
             quaternion.setFromEuler(new THREE.Euler( 0, 0, 0, 'XYZ' ));
             matrix.compose( position, quaternion, scale );
             mesh.setMatrixAt( i, matrix );
-            chandelierZ = chandelierZ + 22.5;
+            chandelierZ = chandelierZ + 32.5;
         }
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -72,13 +72,11 @@ export class Chandeliers extends Construct {
         this.drawChandeliers();
 
         this.lights = [];
-        let center = -90;
-        for ( let i = 0; i < 9; i ++ ) {
-            for(let w = 0; w< 12; w++){
+        let center = -52.5;
+        for ( let i = 0; i < 5; i ++ ) {
+            for(let w = 0; w<12; w++){
                 if(w<6){
-                    const sphere = new THREE.SphereGeometry(0.015);
-                    const light = new THREE.PointLight( 0xffecf02, 35, 600);
-                    light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                    const light = new THREE.PointLight( 0xffecf02, 200, 0);
                     const x = 2.15 * Math.sin(w * (2*Math.PI)/6);
                     const z = 2.15 * Math.cos(w * (2*Math.PI)/6);
                     light.position.set(x,0.05,center+z);
@@ -86,9 +84,7 @@ export class Chandeliers extends Construct {
                     this.add( light );
                 }
                 if(w>=6){
-                    const sphere = new THREE.SphereGeometry(0.015);
-                    const light = new THREE.PointLight( 0xffecf02, 35, 600 );
-                    light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                    const light = new THREE.PointLight( 0xffecf02, 200, 0);
                     const x = 1.2 * Math.sin(w * (2*Math.PI)/6);
                     const z = 1.2 * Math.cos(w * (2*Math.PI)/6);
                     light.position.set(x,0.65,center+z);
@@ -96,7 +92,7 @@ export class Chandeliers extends Construct {
                     this.add( light );
                 }
             }
-            center+=22.5;
+            center+=32.5;
         }
 
     }

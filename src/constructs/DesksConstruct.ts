@@ -29,12 +29,12 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 14);
-        let deskz = -80;
+        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 8);
+        let deskz = -60;
         position.z = deskz;
-        for ( let i = 0; i < 14; i ++ ) {
-            if(i<7){
-                if(i==4){
+        for ( let i = 0; i < 8; i ++ ) {
+            if(i<4){
+                if(i==3){
                     deskz+=20;
                 }
                 position.x = -4.5;
@@ -47,9 +47,9 @@ export class DesksConstruct extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 deskz = deskz + 20;
             }
-            if(i>=7){
-                if(i==7){deskz = -80;}
-                if(i==11){
+            if(i>=4){
+                if(i==4){deskz = -60;}
+                if(i==7){
                     deskz+=20;
                 }
                 position.x = 0.5;
@@ -77,34 +77,32 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 14);
-        let lampz = -80;
+        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 8);
+        let lampz = -60;
         position.z = lampz;
-        for ( let i = 0; i < 14; i ++ ) {
-            if(i<7){
-                if(i==4){
+        for ( let i = 0; i < 8; i ++ ) {
+            if(i<4){
+                if(i==3){
                     lampz+=20;
                 }
                 position.x = -2.5;
                 position.y = 1;
                 position.z = lampz;
                 scale.x = scale.y = scale.z = 0.0025;
-                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
                 quaternion.setFromEuler(new THREE.Euler( -Math.PI/2, 0, 0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 lampz = lampz + 20;
             }
-            if(i>=7){
-                if(i==7){lampz = -80;}
-                if(i==11){
+            if(i>=4){
+                if(i==4){lampz = -60;}
+                if(i==7){
                     lampz+=20;
                 }
                 position.x = 2.5;
                 position.y = 1;
                 position.z = lampz;
                 scale.x = scale.y = scale.z = 0.0025;
-                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
                 quaternion.setFromEuler(new THREE.Euler(-Math.PI/2, 0, 0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
@@ -164,9 +162,9 @@ export class DesksConstruct extends Construct {
     build(): void {
         this.drawTables(this.TableGeometry);
         this.drawLamps(this.LampGeometry);
-        let deskz = -80;
-        for ( let i = 0; i < 7; i ++ ) {
-                if(i==4){
+        let deskz = -60;
+        for ( let i = 0; i < 4; i ++ ) {
+                if(i==3){
                     deskz+=20;
                 }
                 const geometry = new THREE.BoxGeometry(10,2,2.5);
@@ -180,21 +178,19 @@ export class DesksConstruct extends Construct {
         
         this.lights = [];
         this.lightStates = [];
-        let lightZ = -80;
-        for ( let i = 0; i < 14; i ++ ) {
-            if(i<7){
-                if(i==4){
+        let lightZ = -60;
+        for ( let i = 0; i < 8; i ++ ) {
+            if(i<4){
+                if(i==3){
                     lightZ+=20;
                 }
-                const sphere = new THREE.SphereGeometry(0.025);
-                const light = new THREE.PointLight( 0xffecf02, 200, 30 );
-                light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                const light = new THREE.PointLight( 0xffecf02, 100, 0.0);
                 light.position.set(2.5, 1.85, lightZ);
                 //light.castShadow = true;
                 this.lights.push(light);
                 this.lightStates.push(true);
                 this.add( light );
-                this.interactions.addInteractable(light,5,()=>{ 
+              /*  this.interactions.addInteractable(light,5,()=>{ 
                     if(this.lightStates[i]){
                         this.lightStates[i] = false;
                         this.lights[i].intensity = 0;
@@ -202,23 +198,21 @@ export class DesksConstruct extends Construct {
                         this.lightStates[i] = true;
                         this.lights[i].intensity = 400;
                     }
-                })
+                })*/
                 lightZ+=20;
             }
-            if(i>=7){
-                if(i==7){lightZ = -80;}
-                if(i==11){
+            if(i>=4){
+                if(i==4){lightZ = -60;}
+                if(i==7){
                     lightZ+=20;
                 }
-                const sphere = new THREE.SphereGeometry( 0.025);
-                const light = new THREE.PointLight( 0xfecf02, 200, 30);
-                light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
+                const light = new THREE.PointLight( 0xfecf02, 100, 0.0);
                 light.position.set(-2.5, 1.85, lightZ);
                 //light.castShadow = true;
                 this.lights.push(light);
                 this.lightStates.push(true);
                 this.add( light );
-                this.interactions.addInteractable(light,5,()=>{ 
+               /* this.interactions.addInteractable(light,5,()=>{ 
                     if(this.lightStates[i]){
                         this.lightStates[i] = false;
                         this.lights[i].intensity = 0;
@@ -226,7 +220,7 @@ export class DesksConstruct extends Construct {
                         this.lightStates[i] = true;
                         this.lights[i].intensity = 400;
                     }
-                })
+                })*/
                 lightZ = lightZ + 20;
             }
         }

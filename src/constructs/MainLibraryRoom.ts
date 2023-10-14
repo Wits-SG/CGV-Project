@@ -59,7 +59,7 @@ export class MainLibraryConstruct extends Construct {
         this.numCrystals = numCrystals;
 
         this.desksConstruct = new DesksConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-       // this.addConstruct(this.desksConstruct);
+        this.addConstruct(this.desksConstruct);
 
         this.bookShelvesConstructLeft = new BookShelvesConstructLeft(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.bookShelvesConstructLeft);
@@ -150,15 +150,15 @@ export class MainLibraryConstruct extends Construct {
 
         // this.music.root.position.set(140, -8, 0);
 
-        const vertices = [[0,0,112.5], [-40,0,-62.5],[-40,0,62.5], [40,0,-62.5], [40,0,62.5], [-22.5,0,-112.5],[22.5,0,-112.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
-        const scaleArr = [[80, 20, 0.1],[ 100, 20,0.1], [100, 20,0.1], [ 100, 20,0.1], [100, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];
+        const vertices = [[0,0,82.5], [-40,0,-47.5],[-40,0,47.5], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
+        const scaleArr = [[80, 20, 0.1],[ 70, 20,0.1], [70, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];
         const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
 
         const floorVertices = [[0,-10,0],[100,-10,0],[-100,-10,0]];
-        const floorScale = [[80, 225,0],[120, 25,0],[120, 25,0]];
+        const floorScale = [[80, 165,0],[120, 25,0],[120, 25,0]];
     
         const ceilingVertices = [[0,10,0],[100,10,0],[-100,10,0]];
-        const ceilingScale = [[80, 225,0.1],[120, 25,0.1],[120, 25,0.1]];
+        const ceilingScale = [[80, 165,0.1],[120, 25,0.1],[120, 25,0.1]];
 
       this.walls = [];
        for(let i = 0; i<vertices.length; i++){

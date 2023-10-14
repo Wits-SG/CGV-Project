@@ -22,12 +22,12 @@ export class BookShelvesConstructRight extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.BookShelfGeometry, this.BookShelfMaterial, 48);
-        let bookshelfZ = -100;
+        const mesh = new THREE.InstancedMesh( this.BookShelfGeometry, this.BookShelfMaterial, 28);
+        let bookshelfZ = -60;
         position.z = bookshelfZ;
-        for ( let i = 0; i < 48; i ++ ) {
-            if(i<8){
-                if(i==5){
+        for ( let i = 0; i < 28; i ++ ) {
+            if(i<4){
+                if(i==3){
                     bookshelfZ+=20;
                 }
                 position.x = 3.25;
@@ -39,9 +39,9 @@ export class BookShelvesConstructRight extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 bookshelfZ = bookshelfZ + 20;
             }
-            if(i>=8 && i<16){
-                if(i==8){bookshelfZ = -100;}
-                if(i==13){
+           if(i>=4 && i<8){
+                if(i==4){bookshelfZ = -60;}
+                if(i==7){
                     bookshelfZ+=20;
                 }
                 position.x =-3.25;
@@ -53,9 +53,9 @@ export class BookShelvesConstructRight extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 bookshelfZ = bookshelfZ + 20;
             }
-            if(i>=16 && i<24){
-                if(i==16){bookshelfZ = -100;}
-                if(i==21){
+            if(i>=8 && i<12){
+                if(i==8){bookshelfZ = -60;}
+                if(i==11){
                     bookshelfZ+=20;
                 }
                 position.x = 3.25;
@@ -67,9 +67,9 @@ export class BookShelvesConstructRight extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 bookshelfZ = bookshelfZ + 20;
             }
-            if(i>=24 && i<32){
-                if(i==24){bookshelfZ = -100;}
-                if(i==29){
+            if(i>=12 && i<16){
+                if(i==12){bookshelfZ = -60;}
+                if(i==15){
                     bookshelfZ+=20;
                 }
                 position.x = -3.25;
@@ -82,13 +82,13 @@ export class BookShelvesConstructRight extends Construct {
                 bookshelfZ = bookshelfZ + 20;
             }
 
-            if(i>=32){
-                if(i==32){bookshelfZ = -92.5;}
-                if(i!=32 && i%2==0){
+            if(i>=16){
+                if(i==16){bookshelfZ = -65;}
+                if(i!=16 && i%2==0){
                     bookshelfZ += 7;
                 }
-                if(i==40){
-                    bookshelfZ+= 40;
+                if(i==22){
+                    bookshelfZ+= 30;
                 }
                 position.x = 19;
                 position.y =0;
@@ -134,9 +134,9 @@ export class BookShelvesConstructRight extends Construct {
 
     build(): void {
         this.drawBookShelves();
-        let bookshelfZ = -100;
-        for ( let i = 0; i < 8; i ++ ) {
-                if(i==5){
+        let bookshelfZ = -60;
+        for ( let i = 0; i < 4; i ++ ) {
+                if(i==3){
                     bookshelfZ+=20;
                 }
                 const geometry = new THREE.BoxGeometry(13.5,14,2.75);
@@ -147,10 +147,10 @@ export class BookShelvesConstructRight extends Construct {
                 this.physics.addStatic(bookshelfBox,PhysicsColliderFactory.box(13.5/2,14/2, 2.75/2));
                 this.root.remove(bookshelfBox);
         }
-        bookshelfZ=-89.25;
-        for ( let i = 0; i < 8; i ++ ) {
-            if(i==4){
-                bookshelfZ+=40;
+        bookshelfZ=-61.75;
+        for ( let i = 0; i < 6; i ++ ) {
+            if(i==3){
+                bookshelfZ+=30;
             }
             const geometry = new THREE.BoxGeometry(13.5,14,1.225);
             const bookshelfBox = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());

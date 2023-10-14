@@ -23,11 +23,11 @@ export class WallLights extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.WallLightsGeometry, this.WallLightsMaterial, 10);
-        let wallLightsZ = -100;
+        const mesh = new THREE.InstancedMesh( this.WallLightsGeometry, this.WallLightsMaterial, 6);
+        let wallLightsZ = -60;
         position.z = wallLightsZ;
-        for ( let i = 0; i < 10; i ++ ) {
-            if(i<5){
+        for ( let i = 0; i < 6; i ++ ) {
+            if(i<3){
                 position.x = 0;
                 position.y = 0;
                 position.z = wallLightsZ;
@@ -37,8 +37,8 @@ export class WallLights extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 wallLightsZ = wallLightsZ + 20;
             }
-            if(i>=5){
-                if(i==5){wallLightsZ+=20;}
+            if(i>=3){
+                if(i==3){wallLightsZ+=20;}
                 position.x = 0;
                 position.y = 0;
                 position.z = wallLightsZ;
@@ -85,22 +85,18 @@ export class WallLights extends Construct {
         this.drawWallLights();
 
         this.lights = [];
-        let lightZ = -100;
-        for ( let i = 0; i < 10; i ++ ) {
-            if(i<5){
-                    const sphere = new THREE.SphereGeometry(0.015);
-                    const light = new THREE.PointLight( 0xffecf02, 40, 400);
-                    light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
-                    light.position.set(1.65, 0.35, lightZ);
+        let lightZ = -60;
+        for ( let i = 0; i < 6; i ++ ) {
+            if(i<3){
+                    const light = new THREE.PointLight( 0xffecf02, 400, 0.0);
+                    light.position.set(2, 0, lightZ);
                     this.add(light);
                     lightZ+=20;
             }
-            if(i>=5){
-                if(i==5){lightZ+=20;}
-                const sphere = new THREE.SphereGeometry(0.015);
-                const light = new THREE.PointLight( 0xffecf02, 40, 400);
-                light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
-                light.position.set(1.65, 0.35, lightZ);
+            if(i>=3){
+                if(i==3){lightZ+=20;}
+                const light = new THREE.PointLight( 0xffecf02, 400, 0.0);
+                light.position.set(2, 0, lightZ);
                 this.add(light);
                 lightZ+=20;
             }
