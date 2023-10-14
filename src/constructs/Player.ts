@@ -12,6 +12,10 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass';
 //@ts-expect-error
 import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelatedPass';
 //@ts-expect-error
+import { DotScreenShader } from 'three/addons/shaders/DotScreenShader';
+//@ts-expect-error
+import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader';
+//@ts-expect-error
 import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader';
 //@ts-expect-error
 import { FXAAShader } from 'three/addons/shaders/FXAAShader';
@@ -62,8 +66,12 @@ export class Player extends Construct {
 
     // Options
     options: {
-        effects: {
+        filters: {
             pixelShader: boolean,
+            dotShader: boolean,
+            rgbShiftShader: boolean,
+        }
+        effects: {
             fxaaShader: boolean,
             smaaShader: boolean,
             taaShader: boolean,
@@ -85,17 +93,21 @@ export class Player extends Construct {
         scope = this;
 
         this.options = {
-            effects: {
+            filters: {
                 pixelShader: false,
+                dotShader: false,
+                rgbShiftShader: false,
+            },
+            effects: {
                 fxaaShader: false,
                 smaaShader: false,
-                taaShader: false,
-                taaSample: 1,
+                taaShader: true,
+                taaSample: 2,
             },
             video: {
-                fov: 80,
-                farRender: 400,
-                fog: false,
+                fov: 100,
+                farRender: 1000,
+                fog: true,
             }
         }
     }
@@ -307,9 +319,6 @@ export class Player extends Construct {
 
     applyOptions() {
         this.graphics.resetPasses();
-        if (this.options.effects.pixelShader) {
-            this.graphics.addPass( new RenderPixelatedPass(2, this.graphics.root, this.graphics.mainCamera ) );
-        }
 
         if (this.options.effects.fxaaShader) {
 
@@ -349,6 +358,24 @@ export class Player extends Construct {
         } else {
             //@ts-expect-error
             this.graphics.root.fog.density = 0;
+        }
+
+        if (this.options.filters.pixelShader) {
+            this.graphics.addPass( new RenderPixelatedPass(4, this.graphics.root, this.graphics.mainCamera ) );
+        }
+
+        if (this.options.filters.dotShader) {
+            const dotPass = new ShaderPass( DotScreenShader );
+            dotPass.uniforms['scale'].value = 4;
+
+            this.graphics.addPass(dotPass);
+        }
+
+        if (this.options.filters.rgbShiftShader) {
+            const shiftPass = new ShaderPass( RGBShiftShader );
+            shiftPass.uniforms['amount'].value = 0.0015;
+
+            this.graphics.addPass(shiftPass);
         }
 
         this.camera.fov = this.options.video.fov;

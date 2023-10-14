@@ -169,3 +169,73 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
 
     return menuId;
 }
+
+export const drawFiltersMenu = (ui: InterfaceContext, player: Player): number => {
+    const { menu, menuId } = ui.addMenu('Filters', false);   
+
+    const section = buildSection('');
+        const pixelSpan = document.createElement('span');
+        pixelSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
+            const pixelLabel = document.createElement('label');
+            pixelLabel.htmlFor = 'pixel-check';
+            pixelLabel.textContent = 'Pixelate';
+
+            const pixelCheck = document.createElement('input');
+            pixelCheck.className = 'w-5 h-5 rounded accent-rose-500';
+            pixelCheck.type = 'checkbox'; pixelCheck.id = 'pixel-check';
+            pixelCheck.checked = player.options.filters.pixelShader;
+            pixelCheck.onchange = () => {
+                player.options.filters.pixelShader = pixelCheck.checked;
+            }
+
+        pixelSpan.appendChild(pixelLabel);
+        pixelSpan.appendChild(pixelCheck);
+
+        const dotSpan = document.createElement('span');
+        dotSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
+            const dotLabel = document.createElement('label');
+            dotLabel.htmlFor = 'dot-check';
+            dotLabel.textContent = 'Dot effect';
+
+            const dotCheck = document.createElement('input');
+            dotCheck.className = 'w-5 h-5 rounded accent-rose-500';
+            dotCheck.type = 'checkbox'; dotCheck.id = 'dot-check';
+            dotCheck.checked = player.options.filters.dotShader;
+            dotCheck.onchange = () => {
+                player.options.filters.dotShader = dotCheck.checked;
+            }
+
+        dotSpan.appendChild(dotLabel);
+        dotSpan.appendChild(dotCheck);
+
+        const rgbShiftSpan = document.createElement('span');
+        rgbShiftSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
+            const rgbShiftLabel = document.createElement('label');
+            rgbShiftLabel.htmlFor = 'rgbshift-check';
+            rgbShiftLabel.textContent = 'Chromatic Shift';
+
+            const rgbShiftCheck = document.createElement('input');
+            rgbShiftCheck.className = 'w-5 h-5 rounded accent-rose-500';
+            rgbShiftCheck.type = 'checkbox'; rgbShiftCheck.id = 'rgbshift-check';
+            rgbShiftCheck.checked = player.options.filters.rgbShiftShader;
+            rgbShiftCheck.onchange = () => {
+                player.options.filters.rgbShiftShader = rgbShiftCheck.checked;
+            }
+
+        rgbShiftSpan.appendChild(rgbShiftLabel);
+        rgbShiftSpan.appendChild(rgbShiftCheck);
+
+    section.appendChild(pixelSpan);
+    section.appendChild(dotSpan);
+    section.appendChild(rgbShiftSpan);
+
+    const close = buildButton('Close', () => {
+        ui.hideMenu(menuId)
+        player.applyOptions();
+    });
+
+    menu.appendChild(section);
+    menu.appendChild(close);
+
+    return menuId;
+}

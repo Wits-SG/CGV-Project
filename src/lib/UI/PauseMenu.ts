@@ -3,7 +3,7 @@ import { drawHowToPlay } from "./HowToPlay";
 import { drawControls } from "./Controls";
 import { buildButton, buildSection } from "./utility";
 import { Player } from "../../constructs/Player";
-import { drawCharacterMenu, drawEffectsMenu } from "./Options";
+import { drawCharacterMenu, drawEffectsMenu, drawFiltersMenu } from "./Options";
 
 export const drawPauseMenu = (ui: InterfaceContext, player: Player, levelName: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
     const { menu: pauseMenu, menuId: pauseMenuId } = ui.addMenu('Paused', false);
@@ -25,13 +25,16 @@ export const drawPauseMenu = (ui: InterfaceContext, player: Player, levelName: s
 
     const effectsOptionsId = drawEffectsMenu(ui, player);
     const characterOptionsId = drawCharacterMenu(ui, player);
+    const filterOptionsId = drawFiltersMenu(ui, player);
 
     const optionsSection = buildSection('Options'); 
         const effectsButton = buildButton('Effects', () => ui.showMenu(effectsOptionsId)); 
         const characterButton = buildButton('Video', () => ui.showMenu(characterOptionsId));
+        const filtersButton = buildButton('Filters', () => ui.showMenu(filterOptionsId))
 
         optionsSection.appendChild(effectsButton);
         optionsSection.appendChild(characterButton);
+        optionsSection.appendChild(filtersButton);
 
     const howToMenuId = drawHowToPlay(ui);
     const controlsMenuId = drawControls(ui);
