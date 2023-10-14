@@ -22,15 +22,15 @@ export class BookShelvesConstructLeft extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.BookShelfGeometry, this.BookShelfMaterial, 28);
+        const mesh = new THREE.InstancedMesh( this.BookShelfGeometry, this.BookShelfMaterial, 8);
         let bookshelfZ = -60;
         position.z = bookshelfZ;
-        for ( let i = 0; i < 28; i ++ ) {
+        for ( let i = 0; i < 8; i ++ ) {
             if(i<4){
                 if(i==3){
                     bookshelfZ+=20;
                 }
-                position.x = 3.25;
+                position.x = 0;
                 position.y =0;
                 position.z = bookshelfZ;
                 scale.x = scale.y = scale.z = 0.085;
@@ -39,26 +39,12 @@ export class BookShelvesConstructLeft extends Construct {
                 mesh.setMatrixAt( i, matrix );
                 bookshelfZ = bookshelfZ + 20;
             }
-            if(i>=4 && i<8){
+            if(i>=4){
                 if(i==4){bookshelfZ = -60;}
                 if(i==7){
                     bookshelfZ+=20;
                 }
-                position.x =-3.25;
-                position.y = 0;
-                position.z = bookshelfZ;
-                scale.x = scale.y = scale.z = 0.085;
-                quaternion.setFromEuler(new THREE.Euler( Math.PI/2, Math.PI, 0, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-                bookshelfZ = bookshelfZ + 20;
-            }
-            if(i>=8 && i<12){
-                if(i==8){bookshelfZ = -60;}
-                if(i==11){
-                    bookshelfZ+=20;
-                }
-                position.x = 3.25;
+                position.x = 0;
                 position.y =0;
                 position.z = bookshelfZ+1.25;
                 scale.x = scale.y = scale.z = 0.085;
@@ -66,38 +52,6 @@ export class BookShelvesConstructLeft extends Construct {
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 bookshelfZ = bookshelfZ + 20;
-            }
-            if(i>=12 && i<16){
-                if(i==12){bookshelfZ = -60;}
-                if(i==15){
-                    bookshelfZ+=20;
-                }
-                position.x = -3.25;
-                position.y = 0;
-                position.z = bookshelfZ + 1.25;
-                scale.x = scale.y = scale.z = 0.085;
-                quaternion.setFromEuler(new THREE.Euler( Math.PI/2,Math.PI, Math.PI, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-                bookshelfZ = bookshelfZ + 20;
-            }
-
-            if(i>=16){
-                if(i==16){bookshelfZ = -65;}
-                if(i!=16 && i%2==0){
-                    bookshelfZ += 7;
-                }
-                if(i==22){
-                    bookshelfZ+= 30;
-                }
-                position.x = -19;
-                position.y =0;
-                position.z = bookshelfZ;
-                scale.x = scale.y = scale.z = 0.085;
-                quaternion.setFromEuler(new THREE.Euler( Math.PI/2, Math.PI, -Math.PI/2, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-                bookshelfZ = bookshelfZ + 6.5;
             }
         }
         mesh.castShadow = true;
@@ -139,29 +93,14 @@ export class BookShelvesConstructLeft extends Construct {
                 if(i==3){
                     bookshelfZ+=20;
                 }
-                const geometry = new THREE.BoxGeometry(13.5,14,2.75);
+                const geometry = new THREE.BoxGeometry(6.75,14,2.75);
                 const bookshelfBox = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
                 bookshelfBox.position.set(0,0,bookshelfZ+0.625);
                 bookshelfZ = bookshelfZ + 20;
                 this.add(bookshelfBox);
-                this.physics.addStatic(bookshelfBox,PhysicsColliderFactory.box(13.5/2,14/2, 2.75/2));
+                this.physics.addStatic(bookshelfBox,PhysicsColliderFactory.box(6.75/2,14/2, 2.75/2));
                 this.root.remove(bookshelfBox);
         }
-        bookshelfZ=-61.75;
-        for ( let i = 0; i < 6; i ++ ) {
-            if(i==3){
-                bookshelfZ+=30;
-            }
-            const geometry = new THREE.BoxGeometry(13.5,14,1.225);
-            const bookshelfBox = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
-            bookshelfBox.position.set(-19,0,bookshelfZ);
-            bookshelfBox.rotation.set(0,Math.PI/2,0);
-            this.add(bookshelfBox);
-            this.physics.addStatic(bookshelfBox,PhysicsColliderFactory.box(13.5/2,14/2, 1.225/2));
-            this.root.remove(bookshelfBox);
-            bookshelfZ = bookshelfZ + 20;
-    }
-
 
     }
 

@@ -23,7 +23,7 @@ export class Chandeliers extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 5);
+        const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 7);
         let chandelierZ = -52.5;
         position.z = chandelierZ;
         for ( let i = 0; i < 5; i ++ ) {
@@ -35,6 +35,17 @@ export class Chandeliers extends Construct {
             matrix.compose( position, quaternion, scale );
             mesh.setMatrixAt( i, matrix );
             chandelierZ = chandelierZ + 32.5;
+        }
+        let corridorLightX = 100;
+        for ( let i = 0; i < 2; i ++ ) {
+            position.x = corridorLightX;
+            position.y = 0;
+            position.z = 0;
+            scale.x = scale.y = scale.z = 3;
+            quaternion.setFromEuler(new THREE.Euler( 0, 0, 0, 'XYZ' ));
+            matrix.compose( position, quaternion, scale );
+            mesh.setMatrixAt( 5+i, matrix );
+            corridorLightX = -60;
         }
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -74,26 +85,21 @@ export class Chandeliers extends Construct {
         this.lights = [];
         let center = -52.5;
         for ( let i = 0; i < 5; i ++ ) {
-            for(let w = 0; w<12; w++){
-                if(w<6){
-                    const light = new THREE.PointLight( 0xffecf02, 200, 0);
-                    const x = 2.15 * Math.sin(w * (2*Math.PI)/6);
-                    const z = 2.15 * Math.cos(w * (2*Math.PI)/6);
-                    light.position.set(x,0.05,center+z);
-                    this.lights.push(light);
-                    this.add( light );
-                }
-                if(w>=6){
-                    const light = new THREE.PointLight( 0xffecf02, 200, 0);
-                    const x = 1.2 * Math.sin(w * (2*Math.PI)/6);
-                    const z = 1.2 * Math.cos(w * (2*Math.PI)/6);
-                    light.position.set(x,0.65,center+z);
-                    this.lights.push(light);
-                    this.add( light );
-                }
-            }
+                const light = new THREE.PointLight( 0xffecf02, 400, 0, 1.525);
+                light.position.set(0,0.5,center);
+                this.lights.push(light);
+                this.add( light );
             center+=32.5;
         }
+        let corridorLightX = 100;
+        for ( let i = 0; i < 2; i ++ ) {
+            const light = new THREE.PointLight( 0xffecf02, 400, 0, 1.525);
+            light.position.set(corridorLightX,0.5,0);
+            this.lights.push(light);
+            this.add( light );
+            corridorLightX=-60;
+        }
+
 
     }
 

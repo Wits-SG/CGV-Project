@@ -23,30 +23,30 @@ export class WallLights extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( this.WallLightsGeometry, this.WallLightsMaterial, 6);
-        let wallLightsZ = -60;
+        const mesh = new THREE.InstancedMesh( this.WallLightsGeometry, this.WallLightsMaterial, 4);
+        let wallLightsZ = -45.25;
         position.z = wallLightsZ;
-        for ( let i = 0; i < 6; i ++ ) {
-            if(i<3){
-                position.x = 0;
+        for ( let i = 0; i < 4; i ++ ) {
+            if(i<2){
+                position.x = -37;
                 position.y = 0;
                 position.z = wallLightsZ;
-                scale.x = scale.y = scale.z = 4;
-                quaternion.setFromEuler(new THREE.Euler( -Math.PI/2, 0, Math.PI/2, 'XYZ' ));
+                scale.x = scale.y = scale.z = 0.25;
+                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI,0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
-                wallLightsZ = wallLightsZ + 20;
+                wallLightsZ = wallLightsZ + 95;
             }
-            if(i>=3){
-                if(i==3){wallLightsZ+=20;}
-                position.x = 0;
+            if(i>=2){
+                if(i==2){wallLightsZ=-45.25;}
+                position.x = 37;
                 position.y = 0;
                 position.z = wallLightsZ;
-                scale.x = scale.y = scale.z = 4;
-                quaternion.setFromEuler(new THREE.Euler(-Math.PI/2, 0, Math.PI/2, 'XYZ' ));
+                scale.x = scale.y = scale.z = 0.25;
+                quaternion.setFromEuler(new THREE.Euler(0,0, 0, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
-                wallLightsZ = wallLightsZ + 20;
+                wallLightsZ = wallLightsZ +  95;
             }
         }
         mesh.castShadow = true;
@@ -66,7 +66,7 @@ export class WallLights extends Construct {
         try {
             var glTFGeometry = new THREE.BufferGeometry();
             var gltfMaterial = new THREE.MeshLambertMaterial();
-            const gltfData: any = await this.graphics.loadModel('assets/wall-lamp/EditedWallLamp.glb');
+            const gltfData: any = await this.graphics.loadModel('assets/WallLamp/WallLight.glb');
             gltfData.scene.traverse(function (child:any){
                 if( child.isMesh){
                     gltfMaterial = child.material
@@ -85,20 +85,20 @@ export class WallLights extends Construct {
         this.drawWallLights();
 
         this.lights = [];
-        let lightZ = -60;
-        for ( let i = 0; i < 6; i ++ ) {
-            if(i<3){
-                    const light = new THREE.PointLight( 0xffecf02, 400, 0.0);
-                    light.position.set(2, 0, lightZ);
+        let lightZ = -45.25;
+        for ( let i = 0; i < 4; i ++ ) {
+            if(i<2){
+                    const light = new THREE.PointLight( 0xffecf02, 100, 0.0, 1.65);
+                    light.position.set(37.5, -1, lightZ);
                     this.add(light);
-                    lightZ+=20;
+                    lightZ+=95;
             }
-            if(i>=3){
-                if(i==3){lightZ+=20;}
-                const light = new THREE.PointLight( 0xffecf02, 400, 0.0);
-                light.position.set(2, 0, lightZ);
+            if(i>=2){
+                if(i==2){lightZ=-45.25;}
+                const light = new THREE.PointLight( 0xffecf02, 100, 0.0,1.65);
+                light.position.set(-37.5, -1, lightZ);
                 this.add(light);
-                lightZ+=20;
+                lightZ+=95;
             }
         }
 

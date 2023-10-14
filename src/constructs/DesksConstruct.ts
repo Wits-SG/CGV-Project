@@ -29,39 +29,22 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 8);
+        const mesh = new THREE.InstancedMesh( TableGeometry, this.TableMaterial, 4);
         let deskz = -60;
         position.z = deskz;
-        for ( let i = 0; i < 8; i ++ ) {
-            if(i<4){
+        for ( let i = 0; i < 4; i ++ ) {
                 if(i==3){
                     deskz+=20;
                 }
-                position.x = -4.5;
+                position.x = -2.15;
                 position.y = 0;
                 position.z = deskz;
-                scale.x = scale.y = scale.z = 0.025;
+                scale.y = scale.x = scale.z = 0.025;
                 //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
                 quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 deskz = deskz + 20;
-            }
-            if(i>=4){
-                if(i==4){deskz = -60;}
-                if(i==7){
-                    deskz+=20;
-                }
-                position.x = 0.5;
-                position.y = 0;
-                position.z = deskz;
-                scale.x = scale.y = scale.z = 0.025;
-                //quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0),Math.PI);
-                quaternion.setFromEuler(new THREE.Euler( 0, Math.PI/2, Math.PI, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-                deskz = deskz + 20;
-            }
         }
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -77,15 +60,14 @@ export class DesksConstruct extends Construct {
 
         matrix.compose( position, quaternion, scale );
 
-        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 8);
+        const mesh = new THREE.InstancedMesh( LampGeometry, this.LampMaterial, 4);
         let lampz = -60;
         position.z = lampz;
-        for ( let i = 0; i < 8; i ++ ) {
-            if(i<4){
+        for ( let i = 0; i < 4; i ++ ) {
                 if(i==3){
                     lampz+=20;
                 }
-                position.x = -2.5;
+                position.x = 0;
                 position.y = 1;
                 position.z = lampz;
                 scale.x = scale.y = scale.z = 0.0025;
@@ -93,21 +75,6 @@ export class DesksConstruct extends Construct {
                 matrix.compose( position, quaternion, scale );
                 mesh.setMatrixAt( i, matrix );
                 lampz = lampz + 20;
-            }
-            if(i>=4){
-                if(i==4){lampz = -60;}
-                if(i==7){
-                    lampz+=20;
-                }
-                position.x = 2.5;
-                position.y = 1;
-                position.z = lampz;
-                scale.x = scale.y = scale.z = 0.0025;
-                quaternion.setFromEuler(new THREE.Euler(-Math.PI/2, 0, 0, 'XYZ' ));
-                matrix.compose( position, quaternion, scale );
-                mesh.setMatrixAt( i, matrix );
-                lampz = lampz + 20;
-            }
         }
         mesh.receiveShadow = true;
         mesh.castShadow = true;
@@ -127,7 +94,6 @@ export class DesksConstruct extends Construct {
             this.Lamp = gltfData.scene;
             gltfData.scene.traverse(function (child:any){
                 if( child.isMesh){
-                    //child.material.envMap = envMap;
                     gltfMaterial = child.material
                     glTFGeometry = child.geometry;
                 }
@@ -146,7 +112,6 @@ export class DesksConstruct extends Construct {
             this.table = gltfData.scene;
             gltfData.scene.traverse(function (child:any){
                 if( child.isMesh){
-                    //child.material.envMap = envMap;
                     gltfMaterial = child.material
                     glTFGeometry = child.geometry;
                 }
@@ -167,62 +132,29 @@ export class DesksConstruct extends Construct {
                 if(i==3){
                     deskz+=20;
                 }
-                const geometry = new THREE.BoxGeometry(10,2,2.5);
+                const geometry = new THREE.BoxGeometry(5,2,2.5);
                 const deskBox = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
                 deskBox.position.set(0,-0.25,deskz);
                 deskz = deskz + 20;
                 this.add(deskBox);
-                this.physics.addStatic(deskBox,PhysicsColliderFactory.box(10/2,1, 1));
+                this.physics.addStatic(deskBox,PhysicsColliderFactory.box(5/2,1, 1));
                 this.root.remove(deskBox);
         }
         
         this.lights = [];
         this.lightStates = [];
         let lightZ = -60;
-        for ( let i = 0; i < 8; i ++ ) {
-            if(i<4){
+        for ( let i = 0; i < 4; i ++ ) {
                 if(i==3){
                     lightZ+=20;
                 }
-                const light = new THREE.PointLight( 0xffecf02, 100, 0.0);
-                light.position.set(2.5, 1.85, lightZ);
+                const light = new THREE.PointLight( 0xffecf02, 100, 0.0,1.9);
+                light.position.set(0, 1.85, lightZ);
                 //light.castShadow = true;
                 this.lights.push(light);
                 this.lightStates.push(true);
                 this.add( light );
-              /*  this.interactions.addInteractable(light,5,()=>{ 
-                    if(this.lightStates[i]){
-                        this.lightStates[i] = false;
-                        this.lights[i].intensity = 0;
-                    }else if(!this.lightStates[i]){
-                        this.lightStates[i] = true;
-                        this.lights[i].intensity = 400;
-                    }
-                })*/
                 lightZ+=20;
-            }
-            if(i>=4){
-                if(i==4){lightZ = -60;}
-                if(i==7){
-                    lightZ+=20;
-                }
-                const light = new THREE.PointLight( 0xfecf02, 100, 0.0);
-                light.position.set(-2.5, 1.85, lightZ);
-                //light.castShadow = true;
-                this.lights.push(light);
-                this.lightStates.push(true);
-                this.add( light );
-               /* this.interactions.addInteractable(light,5,()=>{ 
-                    if(this.lightStates[i]){
-                        this.lightStates[i] = false;
-                        this.lights[i].intensity = 0;
-                    }else if(!this.lightStates[i]){
-                        this.lightStates[i] = true;
-                        this.lights[i].intensity = 400;
-                    }
-                })*/
-                lightZ = lightZ + 20;
-            }
         }
 
 

@@ -13,6 +13,7 @@ import { BookShelvesConstructLeft } from './BookShelvesConstructLeft';
 import { BookShelvesConstructRight } from './BookShelvesConstructRight';
 import { Chandeliers } from './Chandeliers';
 import { WallLights } from './WallLights';
+import { Lectern } from './Lectern';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -24,7 +25,7 @@ export class MainLibraryConstruct extends Construct {
     bookShelfs!: Array<THREE.Group>;
     FbookShelfs!: Array<THREE.Group>;
     bookshelf!: THREE.Group;
-    floorTexture!: THREE.MeshLambertMaterial;
+    floorTexture!: THREE.MeshBasicMaterial;
     ceilingTexture!: THREE.MeshLambertMaterial;
     wallsTexture!: THREE.MeshLambertMaterial;
     textureFloorData!: any;
@@ -38,7 +39,7 @@ export class MainLibraryConstruct extends Construct {
     bookShelvesConstructRight: BookShelvesConstructRight;
     chandeliersConstruct: Chandeliers;
     wallLights: WallLights;
-    wallLights2: WallLights;
+    lectern: Lectern;
 
     // Game loop nonsense
     player: Player;
@@ -46,10 +47,10 @@ export class MainLibraryConstruct extends Construct {
     exitDoor: CrystalDoor;
 
     // Puzzles
-   // chess: StatuesConstruct;
-  //  mirror: MirrorRoom;
- //   music: MusicConstruct;
- //   office: OfficeConstruct;
+    chess: StatuesConstruct;
+    mirror: MirrorRoom;
+    music: MusicConstruct;
+    office: OfficeConstruct;
 
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
@@ -57,6 +58,19 @@ export class MainLibraryConstruct extends Construct {
 
         this.player = player;
         this.numCrystals = numCrystals;
+
+        // poem for lectern from ChatGPT, thanks to Lisa :).
+        this.lectern = new Lectern(this.graphics, this.physics, this.interactions, this.userInterface, 'Welcome to the Magic Library.', [
+            "In a library where magic's gleam,",
+            "A locked door guards secrets, it seems.",
+            "To break the spell, fulfill your dream,",
+            "Solve the puzzles with all your scheme.",
+            "Gather crystals, each one a key,",
+            "Unlock the knowledge, set it free.",
+            "With rhyme and reason, you shall see,",
+            "The magic library's mystery."
+        ]);
+       this.addConstruct(this.lectern);
 
         this.desksConstruct = new DesksConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.desksConstruct);
@@ -73,52 +87,49 @@ export class MainLibraryConstruct extends Construct {
         this.wallLights = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.wallLights);
 
-        this.wallLights2 = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.wallLights2);
-
         this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.exitDoor);
 
-      //  this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-      //  this.addConstruct(this.chess);
+        this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        //this.addConstruct(this.chess);
 
-      //  this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
-       // this.addConstruct(this.mirror);
+        this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
+        //this.addConstruct(this.mirror);
 
-        //this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
-       // this.addConstruct(this.music);
+        this.music = new MusicConstruct(this.graphics, this.physics, this.interactions, this.userInterface, this.player);
+        //this.addConstruct(this.music);
 
-        //this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         // this.addConstruct(this.office);
     }
 
     create() {
-          this.exitDoor.root.position.set(0, 0, -112.5);
-      //  this.chess.root.position.set(100, -10.5, 43.3);
-      //  this.chess.root.rotation.set(0, Math.PI, 0);
-      //  this.mirror.root.position.set(110, -11, -12);
-       // this.mirror.root.rotation.set(0, Math.PI / 2, 0);
-        //this.music.root.position.set(190, -11, 0);
-       // this.music.root.rotation.set(0, Math.PI / 2, 0);
-       // this.office.root.position.set(-180, -11, 0);
-        //this.office.root.rotation.set(0, Math.PI / 2, 0);
+        this.exitDoor.root.position.set(0, 0, -82.5);
+        this.chess.root.position.set(100, -10.5, 43.3);
+        this.chess.root.rotation.set(0, Math.PI, 0);
+        this.mirror.root.position.set(110, -11, -12);
+        this.mirror.root.rotation.set(0, Math.PI / 2, 0);
+        this.music.root.position.set(190, -11, 0);
+        this.music.root.rotation.set(0, Math.PI / 2, 0);
+        this.office.root.position.set(-180, -11, 0);
+        this.office.root.rotation.set(0, Math.PI / 2, 0);
         this.desksConstruct.root.position.set(0,-8.75,0); 
         this.bookShelvesConstructLeft.root.position.set(-20,-10,0);
         this.bookShelvesConstructRight.root.position.set(20,-10,0);
         this.chandeliersConstruct.root.position.set(0,6,0);
-        this.wallLights.root.position.set(-40,0,0);
-        this.wallLights2.root.position.set(40,0,0);
-        this.wallLights2.root.rotation.set(0,Math.PI,0);
+        this.wallLights.root.position.set(0,0,0);
+        this.lectern.root.position.set(0,-9.8,-4);
+        this.lectern.root.rotation.set(0,Math.PI,0);
     }
 
     async load(): Promise<void>{
-       /* try {
-            this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
+        try {
+            this.textureFloorData = await this.graphics.loadTexture('assets/Flooring_Stone_001_COLOR.png');
         } catch(e: any) {
             console.error(e);
-        }*/
+        }
         try {
-            this.textureCeilingData = await this.graphics.loadTexture('assets/colorful-mexican-architecture-urban-landscape.jpg');
+            this.textureCeilingData = await this.graphics.loadTexture('assets/Wood_Ceiling_Coffers_001_basecolor.jpg');
             this.textureCeilingData.wrapS = this.textureCeilingData.wrapT = THREE.RepeatWrapping;
             this.textureCeilingData.repeat.set(1, 6);
         } catch(e: any) {
@@ -139,7 +150,7 @@ export class MainLibraryConstruct extends Construct {
         for (let i = 0; i < this.numCrystals; ++i) {
             const currentPlinth = this.exitDoor.crystalPlinths[i];
             const x = distanceFromCenter * Math.sin(i * angleBetween);
-            const z = distanceFromCenter * Math.cos(i * angleBetween) - 100;
+            const z = distanceFromCenter * Math.cos(i * angleBetween);
 
             currentPlinth.position.set(
                 x,
@@ -150,15 +161,15 @@ export class MainLibraryConstruct extends Construct {
 
         // this.music.root.position.set(140, -8, 0);
 
-        const vertices = [[0,0,82.5], [-40,0,-47.5],[-40,0,47.5], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[-135,0,12.5],[-135,0,-12.5],[135,0,12.5],[135,0,-12.5]];
-        const scaleArr = [[80, 20, 0.1],[ 70, 20,0.1], [70, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1]];
-        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+        const vertices = [[0,0,82.5], [-40,0,-47.5],[-40,0,47.5], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[135,0,12.5],[135,0,-12.5],[160,0,0]];
+        const scaleArr = [[80, 20, 0.1],[ 70, 20,0.1], [70, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[25,20,0.1]];
+        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,Math.PI/2,0]];
 
-        const floorVertices = [[0,-10,0],[100,-10,0],[-100,-10,0]];
-        const floorScale = [[80, 165,0],[120, 25,0],[120, 25,0]];
+        const floorVertices = [[0,-10,0],[100,-10,0],[-65,-10,0]];
+        const floorScale = [[80, 165,0],[120, 25,0],[50, 25,0]];
     
-        const ceilingVertices = [[0,10,0],[100,10,0],[-100,10,0]];
-        const ceilingScale = [[80, 165,0.1],[120, 25,0.1],[120, 25,0.1]];
+        const ceilingVertices = [[0,10,0],[100,10,0],[-65,10,0]];
+        const ceilingScale = [[80, 165,0.1],[120, 25,0.1],[50, 25,0.1]];
 
       this.walls = [];
        for(let i = 0; i<vertices.length; i++){
@@ -175,11 +186,10 @@ export class MainLibraryConstruct extends Construct {
         this.floors = [];
         for(let i = 0; i<3; i++){
             const geometry = new THREE.PlaneGeometry( 1,1,1);
-            this.floorTexture = new THREE.MeshLambertMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
+            this.floorTexture = new THREE.MeshLambertMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
             const floor= new THREE.Mesh(geometry, this.floorTexture)
             floor.position.set(floorVertices[i][0],floorVertices[i][1],floorVertices[i][2]);
             floor.rotation.set(Math.PI/2,0,0);
-           //floor.scale.set(floorScale[i][0],floorScale[i][1],floorScale[i][2]);
             floor.scale.set(floorScale[i][0],floorScale[i][1],0.01);
             this.floors.push(floor);
             this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2,floorScale[i][1]/2, 0.01));
