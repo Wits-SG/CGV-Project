@@ -57,6 +57,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
+        console.log(this.solution);
     }
 
     async load(): Promise<void> {
@@ -68,6 +69,7 @@ export class MusicPuzzle extends Construct {
             const result: any = await this.graphics.loadModel('assets/music_stand/scene.gltf');
             this.standModel = result.scene; 
             // this.standModel.rotation.set(0, Math.PI + 2 * Math.PI / 4, 0);
+            
         }
         catch { console.warn('Failed to find stand model'); }
 
@@ -75,6 +77,7 @@ export class MusicPuzzle extends Construct {
             const result: any = await this.graphics.loadModel('assets/piano_low_poly/scene.gltf');
             this.instrumentModels[2] = result.scene;
             this.instrumentModels[2]?.scale.set(0.4, 0.4, 0.4);
+            this.instrumentSounds[2] = 'sound/piano-g-6200.mp3';
         } catch { console.warn('Failed to find piano model'); }
 
         try {
@@ -82,12 +85,14 @@ export class MusicPuzzle extends Construct {
             this.instrumentModels[0] = result.scene;
             this.instrumentModels[0]?.scale.set(0.3, 0.3, 0.3);
             this.instrumentModels[0]?.rotation.set(0, Math.PI, 0);
+            this.instrumentSounds[0] = 'sound/guitar.wav';
         } catch { console.warn('Failed to find guitar model'); }
 
         try {
             const result: any = await this.graphics.loadModel('assets/djembe/scene.gltf');
             this.instrumentModels[1] = result.scene;
             this.instrumentModels[1]?.scale.setScalar(0.8);
+            this.instrumentSounds[1] = 'sound/djembe.wav'
         } catch { console.warn('Failed to find djembe model'); }
 
         try {
@@ -95,12 +100,14 @@ export class MusicPuzzle extends Construct {
             this.instrumentModels[3] = result.scene;
             this.instrumentModels[3]?.scale.setScalar(2);
             this.instrumentModels[3]?.rotation.set(0, -Math.PI / 4, 0);
+            this.instrumentSounds[3] = 'sound/lute.wav';
         } catch { console.warn('Failed to find lute model'); }
 
         try {
             const result: any = await this.graphics.loadModel('assets/saxophone/scene.gltf');
             this.instrumentModels[4] = result.scene;
             this.instrumentModels[4]?.rotation.set(0, Math.PI / 2, 0);
+            this.instrumentSounds[4] ='sound/saxophone.wav';
         } catch { console.warn('Failed to find saxophone model'); }
     }
 
@@ -218,7 +225,7 @@ export class MusicPuzzle extends Construct {
                     }
                 } else {
                     // Play instrument audio only if its not the end of the puzzle
-                    audioLoader.load( 'sound/piano-g-6200.mp3', function( buffer ) {
+                    audioLoader.load( this.instrumentSounds[i], function( buffer ) {
                         sound.setBuffer(buffer);
                         sound.setLoop(false);
                         sound.setVolume(0.5);
