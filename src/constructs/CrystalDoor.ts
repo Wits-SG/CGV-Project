@@ -64,9 +64,11 @@ export class CrystalDoor extends Construct {
             */
             //this.graphics.add(plinth);
             //this.crystalPlinths.push(plinth);
-            this.plinths.scale.set(0.2,0.15,0.2);
-            this.graphics.add(this.plinths);
-            this.crystalPlinths.push(this.plinths)
+
+            const plinth = this.plinths.clone();
+            plinth.scale.set(0.2,0.15,0.2);
+            this.graphics.add(plinth);
+            this.crystalPlinths.push(plinth);
 
             // Add the spot for crystals to be placed when picked up
             this.interactions.addPickupSpot(this.plinths, 5, (placedObject: THREE.Object3D) => {
