@@ -4,11 +4,11 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { Crystal } from './Crystal';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { Lectern } from './Lectern';
 
 export class StatuesConstruct extends Construct {
 
     floor!: THREE.Mesh
-    textureFloorData!: any;
 
     wallTexture!: any;
 
@@ -28,11 +28,12 @@ export class StatuesConstruct extends Construct {
     plinthData!: any;
 
     // chess pieces
-    pawn!: THREE.Group;
-    bishop!: THREE.Group;
-    rook!: THREE.Group;
-    queen!: THREE.Group;
-    knight!: THREE.Group;
+    pawn!: any;
+    bishop!: any;
+    rook!: any;
+    queen!: any;
+    knight!: any;
+    set!: any;
 
     pawnImg!: any;
     bishopImg!: any;
@@ -40,15 +41,15 @@ export class StatuesConstruct extends Construct {
     queenImg!: any;
     knightImg!: any;
 
-    chessPlinths!: THREE.Group;
+    chessPlinths!: any;
 
     font!: any;
 
     solution: Array<number>;
     current: Array<number>;
-    // numPiecesPlaced: number;
 
     crystal!: Crystal; 
+    lectren!: Lectern;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
@@ -57,68 +58,72 @@ export class StatuesConstruct extends Construct {
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.crystal);
+
+        const title = 'Chess Puzzle';
+        const paragraphs = ["Prompt: In the realm of the royal game, five subjects poised to rise to fame. Their order hidden in the field, a chessboard's secrets shall be revealed. Look to the ranks and files with care, and on the plinths, their order bear.","Hint: Begin your quest by seeking the lowest coordinates; the ranks and files shall be your guides. Patience, and a keen eye for position, shall unveil the puzzle's hidden mission."];
+        this.lectren = new Lectern(graphics, physics, interactions, userInterface, title, paragraphs);
+        this.addConstruct(this.lectren);
+
     }
 
-    create() { }
+    create() { 
+        this.crystal.root.position.set(0,-10,0);
+        this.lectren.root.position.set(0,1,20);
+        this.lectren.root.rotation.set(0, Math.PI,0);
+    }
 
     async load(): Promise<void> {
         try {
-            this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
-        } catch (e: any) {
-            console.error(e);
-        }
-
-        try {
             this.blackSquareData = await this.graphics.loadTexture('assets/Marble/black_marble.jpg');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.whiteSquareData = await this.graphics.loadTexture('assets/Marble/white_marble.jpeg');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.plinthData = await this.graphics.loadTexture('assets/Marble/plinths_marble.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
         
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Pawn/scene.gltf');
             this.pawn = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Bishop/scene.gltf');
             this.bishop = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Rook/scene.gltf');
             this.rook = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Queen/scene.gltf');
             this.queen = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Chess_Pieces/Knight/scene.gltf');
             this.knight = gltfData.scene;
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
@@ -138,37 +143,37 @@ export class StatuesConstruct extends Construct {
         try {
             this.pawnImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/pawn.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.bishopImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/bishop.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.knightImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/knight.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.queenImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/queen.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.rookImg = await this.graphics.loadTexture('assets/Chess_Pieces_Images/rook.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
         try {
             this.wallTexture = await this.graphics.loadTexture('assets/Material.001_baseColor.png');
         } catch (e: any) {
-            console.error(e);
+            console.log(e);
         }
 
     }
@@ -176,12 +181,11 @@ export class StatuesConstruct extends Construct {
     build() {
         // Floor plane
         const geometry = new THREE.BoxGeometry(60, 1, 60);
-        const floorTexture = new THREE.MeshLambertMaterial({ map: this.textureFloorData, side: THREE.DoubleSide });
+        const floorTexture = new THREE.MeshLambertMaterial({ color: 0x566573, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, floorTexture);
         this.add(this.floor);
+        this.floor.receiveShadow = true;
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
-
-        this.crystal.root.position.set(0,-10,0);
 
         // Wall and roof parameters
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
@@ -204,8 +208,8 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLight = new THREE.PointLight(0xffffff, 2, 100 ,0);
-        roofLight.position.set(0,19,0);
+        const roofLightCenter = new THREE.PointLight(0xAAB7B8, 8, 250 ,0);
+        roofLightCenter.position.set(0,19,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
         const roofGeom = new THREE.PlaneGeometry(60,60);
@@ -215,7 +219,8 @@ export class StatuesConstruct extends Construct {
         roof.position.set(0,20,0);
 
         this.add(roof);
-        this.add(roofLight);
+        this.add(roofLightCenter);
+
         
         // Chess board
         const board_base = new THREE.BoxGeometry(30, 0.2, 30);
@@ -275,8 +280,8 @@ export class StatuesConstruct extends Construct {
 
             const textMesh = new THREE.Mesh(geometry, [new THREE.MeshLambertMaterial({ color: 0xffffff })]);
 
-            const yOffset = startingNumberX + (i - 1) * numberSpacing;
-            textMesh.position.set(-14, 0.3, yOffset);
+            const yOffset = startingNumberX + (i - 1) * numberSpacing - 1;
+            textMesh.position.set(-14, 0.3, -yOffset);
             textMesh.rotation.set(Math.PI/2, Math.PI, Math.PI);
 
             this.board.add(textMesh);
@@ -305,14 +310,20 @@ export class StatuesConstruct extends Construct {
 
         // Plinths (using the chess_plinth model)
         const plinthSpacing = 7;
-
+        const plinths: Array<THREE.Group> = [];
         for (let i = 0; i < 5; i++) {
+
+            const listener = new THREE.AudioListener();
+            const sound = new THREE.Audio( listener );
+            const audioLoader = new THREE.AudioLoader()
+
             const additionalPlinth = this.chessPlinths.clone();
             additionalPlinth.scale.set(0.3, 0.3, 0.3);
 
             // Position the additional plinths below the current one with spacing
             additionalPlinth.position.set(-21 + (i + 1) * plinthSpacing, 0, -22 );
             additionalPlinth.castShadow = true;
+            plinths.push(additionalPlinth);
             this.floor.add(additionalPlinth);
 
             this.interactions.addPickupSpot(additionalPlinth, 5, (placeObject: THREE.Object3D) => {
@@ -328,8 +339,28 @@ export class StatuesConstruct extends Construct {
 
                 if (result) {
                     this.crystal.root.position.set(0,5,0);
+                    audioLoader.load( 'sound/Chess/success.mp3', function( buffer ) {
+                        sound.setBuffer(buffer);
+                        sound.setLoop(false);
+                        sound.setVolume(1);
+                        
+                        sound.play();
+                    });
+                } else {
+                    let allPlaced  = true;
+                    for (let k = 0; k < plinths.length; k++) {
+                        allPlaced = allPlaced && plinths[k].children.length == 5;
+                    }
+                    if (allPlaced) {
+                        audioLoader.load( 'sound/Chess/failure.mp3', function( buffer ) {
+                            sound.setBuffer(buffer);
+                            sound.setLoop(false);
+                            sound.setVolume(1);
+                            
+                            sound.play();
+                        });
+                    }
                 }
-
             });
         }
 
@@ -380,56 +411,40 @@ export class StatuesConstruct extends Construct {
 
         this.solution = pieceColumns.filter(val => val != -1);
 
-        //Add point lights at the corners of board
-        const cornerLight1 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight1.position.set(-15, 10, -15); // Adjust the position as per your needs
-        this.board.add(cornerLight1);
-
-        const cornerLight2 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight2.position.set(15, 10, -15); 
-        this.board.add(cornerLight2);
-
-        const cornerLight3 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight3.position.set(-15, 10, 15); 
-        this.board.add(cornerLight3);
-
-        const cornerLight4 = new THREE.PointLight(0xffffff, 1, 100);
-        cornerLight4.position.set(15, 10, 15); 
-        this.board.add(cornerLight4);
-
-        const middleLight = new THREE.PointLight(0xffffff, 1, 100);
-        middleLight.position.set(0,10,0);
-        this.board.add(middleLight);
-        
-
-        // Add point lights to the back of each plinth
-        const plinthBackLight1 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight1.position.set(25, 10, -15); 
-        this.floor.add(plinthBackLight1);
-
-        const plinthBackLight2 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight2.position.set(25, 10, -10); 
-        this.floor.add(plinthBackLight2);
-
-        const plinthBackLight3 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight3.position.set(25, 10, -15); 
-        this.floor.add(plinthBackLight3);
-
-        const plinthBackLight4 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight4.position.set(25, 10, 0); 
-        this.floor.add(plinthBackLight4);
-
-        const plinthBackLight5 = new THREE.PointLight(0xffffff, 1, 20); // Adjust intensity and distance
-        plinthBackLight5.position.set(25, 10, 5); 
-        this.floor.add(plinthBackLight5);
-
-        // Add the floor to the sceneq
         // Add chessboard to the scene
         this.add(this.board);
-    }
+        this.board.receiveShadow = true;
 
-    
-    
+        // Corner Chess Pieces
+        const giantKnight = this.knight.clone();
+        giantKnight.position.set(22,1,-22);
+        giantKnight.rotation.set(0, -Math.PI/4, 0);
+        giantKnight.scale.set(8,8,8);
+        giantKnight.castShadow = true;
+        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3, 10, 3));
+        this.floor.add(giantKnight);
+
+        const giantQueen = this.queen.clone();
+        giantQueen.position.set(-22,1,-22);
+        giantQueen.scale.set(8,8,8);
+        giantQueen.castShadow = true;
+        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3, 10, 3));
+        this.floor.add(giantQueen);
+
+        const giantBishop = this.bishop.clone();
+        giantBishop.position.set(22,1,24);
+        giantBishop.scale.set(8,8,8);
+        giantBishop.castShadow = true;
+        this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
+        this.floor.add(giantBishop);
+
+        const giantRook = this.rook.clone();
+        giantRook.position.set(-22,1,24);
+        giantRook.scale.set(8,8,8);
+        giantRook.castShadow = true;
+        this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
+        this.floor.add(giantRook);        
+    } 
 
     update() { 
     }
