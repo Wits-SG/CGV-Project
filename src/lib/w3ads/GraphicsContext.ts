@@ -60,6 +60,10 @@ export class GraphicsContext {
         this.passes.push( newPass );
     }
 
+    removePass( pass: Pass ) {
+        this.passes = this.passes.filter((p) => p != pass );
+    }
+
     async loadModel(url: string) {
 
         return new Promise((resolve, reject) => {

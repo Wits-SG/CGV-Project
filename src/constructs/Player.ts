@@ -5,6 +5,21 @@ import { drawPauseMenu } from '../lib/UI/PauseMenu';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
+//@ts-expect-error
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer';
+//@ts-expect-error
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass';
+//@ts-expect-error
+import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelatedPass';
+//@ts-expect-error
+import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader';
+//@ts-expect-error
+import { FXAAShader } from 'three/addons/shaders/FXAAShader';
+//@ts-expect-error
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass';
+//@ts-expect-error
+import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass';
+
 const walkSpeed = 0.05;
 const sprintSpeed = 0.1;
 
@@ -44,6 +59,23 @@ export class Player extends Construct {
 
     levelTime: number; // the number of seconds spent in a level - effectively this is our scoring technique
 
+
+    // Options
+    options: {
+        video: {
+            pixelShader: boolean,
+            fxaaShader: boolean,
+            smaaShader: boolean,
+            taaShader: boolean,
+            taaSample: number, // from 1 to 5
+        },
+        character: {
+            fov: number,
+            farRender: number,
+            fog: boolean
+        }
+    };
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, levelConfig: {key: string, name: string, difficulty: string, numPuzzles: number}) {
         super(graphics, physics, interactions, userInterface);
         this.levelConfig = levelConfig;
@@ -51,10 +83,25 @@ export class Player extends Construct {
         this.levelTime = 0;
         this.paused = true; // game starts off paused
         scope = this;
+
+        this.options = {
+            video: {
+                pixelShader: false,
+                fxaaShader: false,
+                smaaShader: false,
+                taaShader: false,
+                taaSample: 1,
+            },
+            character: {
+                fov: 80,
+                farRender: 400,
+                fog: false,
+            }
+        }
     }
 
     create(): void {
-        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.5, 2000);
+        this.camera = new THREE.PerspectiveCamera(this.options.character.fov, window.innerWidth / window.innerHeight, 0.5, this.options.character.farRender);
         this.graphics.mainCamera = this.camera;
 
         this.graphics.renderer.domElement.requestPointerLock();
@@ -86,6 +133,11 @@ export class Player extends Construct {
     }
 
     build(): void {
+
+        // Shaders
+        this.applyOptions();
+
+        // Player Geometry
         const bodyMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
         const bodyGeometry = new THREE.CapsuleGeometry(1, 1.8, 10, 10);
         this.body = new THREE.Mesh(bodyGeometry, bodyMat);
@@ -228,7 +280,7 @@ export class Player extends Construct {
     }
 
     onPausedGame() {
-        scope.pauseMenu = drawPauseMenu(scope.userInterface, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
+        scope.pauseMenu = drawPauseMenu(scope.userInterface, scope, scope.levelConfig.name, scope.levelConfig.key, scope.levelConfig.difficulty, scope.levelConfig.numPuzzles, scope.levelTime);
         scope.paused = true;
         scope.userInterface.showMenu(scope.pauseMenu);
         document.exitPointerLock();
@@ -250,6 +302,49 @@ export class Player extends Construct {
         setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 100); // eww very eww -> but has to happen because of the pointer lock weirdness where a pause is triggered when releasing the pointer
         setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 200); // even more eww -> race conditions so being safe
         setTimeout(() => scope.userInterface.hideMenu(scope.pauseMenu), 300); // even more eww -> race conditions so being safe
+    }
+
+    applyOptions() {
+        if (this.options.video.pixelShader) {
+            this.graphics.addPass( new RenderPixelatedPass(2, this.graphics.root, this.graphics.mainCamera ) );
+        }
+
+        if (this.options.video.fxaaShader) {
+
+            const fxaaPass = new ShaderPass( FXAAShader );
+            const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
+
+            const newComposer = new EffectComposer( this.graphics.renderer );
+            newComposer.addPass( this.graphics.renderPass );
+            newComposer.addPass( colourCorrectionPass );
+            this.graphics.addComposer( newComposer );
+
+            this.graphics.addPass( colourCorrectionPass );
+            this.graphics.addPass( fxaaPass );
+
+        }
+
+        if (this.options.video.smaaShader) {
+            const smaaPass = new SMAAPass( 
+                window.innerWidth * this.graphics.renderer.getPixelRatio(),
+                window.innerHeight * this.graphics.renderer.getPixelRatio()
+            );
+            this.graphics.addPass( smaaPass );
+        }
+        
+        if (this.options.video.taaShader) {
+            const taaPass = new TAARenderPass( this.graphics.root, this.graphics.mainCamera );
+            taaPass.unbiased = false;
+            taaPass.sampleLevel = this.options.video.taaSample;
+
+            this.graphics.addPass( taaPass );
+        }
+
+        if (this.options.character.fog) {
+            this.graphics.root.fog = new THREE.FogExp2(0xcccccc, 0.003);
+        }
+
+        this.graphics.compose();
     }
 
 }
