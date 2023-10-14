@@ -138,10 +138,10 @@ export class Project {
             nextScene.graphics.constructRender(); // this is a post processing interlude to correctly construct the render pass
             nextScene._load().then(() => {
                 nextScene._build();
-                nextScene.graphics.root.traverse(obj => obj.frustumCulled = false);
+                nextScene.graphics.root.traverse((obj: THREE.Object3D) => obj.frustumCulled = false);
                 nextScene.graphics.compose(); // Add the final output pass to the post processing
                 this.renderer.render(nextScene.graphics.root, this.currentScene.graphics.mainCamera);
-                nextScene.graphics.root.traverse(obj => obj.frustumCulled = true);
+                nextScene.graphics.root.traverse((obj: THREE.Object3D) => obj.frustumCulled = true);
 
                 this.currentScene._destroy(); // destroy the loading screen
                 this.currentScene = nextScene;
