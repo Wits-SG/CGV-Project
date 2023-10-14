@@ -5,6 +5,7 @@ import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 
 const numInstruments = 5;
+const standOffsetAngle = Math.PI + Math.PI / 6;
 export class MusicPuzzle extends Construct {
 
     carpet!: THREE.Mesh;
@@ -14,6 +15,9 @@ export class MusicPuzzle extends Construct {
     state: Array<number>; // the currently inputted answer
 
     carpetTexture!: THREE.Texture;
+    standModel!: THREE.Group;
+
+    instrumentModels: Array<THREE.Group | undefined>;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
@@ -24,6 +28,11 @@ export class MusicPuzzle extends Construct {
 
         this.solution = [];
         this.state = [];
+
+        this.instrumentModels = [];
+        for (let i = 0; i < numInstruments; ++i) {
+            this.instrumentModels.push(undefined);
+        }
     }
 
     create(): void {
@@ -42,10 +51,48 @@ export class MusicPuzzle extends Construct {
 
         try { this.carpetTexture = await this.graphics.loadTexture('assets/carpet.jpeg') as THREE.Texture; }
         catch { console.warn('Failed to find carpet'); }
+
+        try { 
+            const result: any = await this.graphics.loadModel('assets/music_stand/scene.gltf');
+            this.standModel = result.scene; 
+        }
+        catch { console.warn('Failed to find stand model'); }
+
+        try {
+            const result: any = await this.graphics.loadModel('assets/piano_low_poly/scene.gltf');
+            this.instrumentModels[2] = result.scene;
+            this.instrumentModels[2]?.scale.set(0.4, 0.4, 0.4);
+        } catch { console.warn('Failed to find piano model'); }
+
+        try {
+            const result: any = await this.graphics.loadModel('assets/classical_guitar/scene.gltf');
+            this.instrumentModels[0] = result.scene;
+            this.instrumentModels[0]?.scale.set(0.3, 0.3, 0.3);
+            this.instrumentModels[0]?.rotation.set(0, Math.PI, 0);
+        } catch { console.warn('Failed to find guitar model'); }
+
+        try {
+            const result: any = await this.graphics.loadModel('assets/djembe/scene.gltf');
+            this.instrumentModels[1] = result.scene;
+            this.instrumentModels[1]?.scale.setScalar(0.8);
+        } catch { console.warn('Failed to find djembe model'); }
+
+        try {
+            const result: any = await this.graphics.loadModel('assets/lute/scene.gltf');
+            this.instrumentModels[3] = result.scene;
+            this.instrumentModels[3]?.scale.setScalar(2);
+            this.instrumentModels[3]?.rotation.set(0, -Math.PI / 4, 0);
+        } catch { console.warn('Failed to find lute model'); }
+
+        try {
+            const result: any = await this.graphics.loadModel('assets/saxophone/scene.gltf');
+            this.instrumentModels[4] = result.scene;
+            this.instrumentModels[4]?.rotation.set(0, Math.PI / 2, 0);
+        } catch { console.warn('Failed to find saxophone model'); }
     }
 
     build(): void {
-        const carpetMat = new THREE.MeshPhongMaterial({ map: this.carpetTexture })
+        const carpetMat = new THREE.MeshLambertMaterial({ map: this.carpetTexture })
         const carpetGeom = new THREE.PlaneGeometry(22, 25);
         this.carpet = new THREE.Mesh(carpetGeom, carpetMat);
         this.carpet.rotation.set(-Math.PI / 2, 0, 0);
@@ -60,15 +107,41 @@ export class MusicPuzzle extends Construct {
         stand.position.set(-5, 1, 0);
         stand.rotation.y = this.solution[0] * angleBetween;
         this.add(stand);
+        this.standModel.position.set(-5, 1, 0);
+        this.standModel.scale.setScalar(2);
+        this.standModel.rotation.y = standOffsetAngle +  0 * angleBetween;
+        this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
         this.interactions.addInteractable(stand, 3, () => {
             this.state = [];
             stand.rotation.y = this.solution[0] * angleBetween;
+            this.standModel.rotation.y = standOffsetAngle + this.solution[0] * angleBetween;
         });
+        stand.removeFromParent(); // hide collision box
 
         for (let i = 0; i < numInstruments; ++i) {
+            let width = 1;
+            let height = 0;
+
+            switch (i) {
+                case 0: 
+                    height = 2;
+                    break;
+                case 1:
+                    height = 2;
+                    break;
+                case 2:
+                    width = 5;
+                    break;
+                case 3:
+                    height = 2;
+                    break;
+                case 4:
+                    break;
+            }
+
             const instrumentMat = new THREE.MeshBasicMaterial({ color: 0x009900 });
-            const instrumentGeom = new THREE.BoxGeometry(2, 4, 2);
+            const instrumentGeom = new THREE.BoxGeometry(2, 4, width);
             const instrument = new THREE.Mesh(instrumentGeom, instrumentMat);
             instrument.position.set(
                 distanceFromCenter * Math.sin(i * angleBetween),
@@ -76,10 +149,22 @@ export class MusicPuzzle extends Construct {
                 distanceFromCenter * Math.cos(i * angleBetween),
             )
             this.add(instrument);
-            this.physics.addStatic(instrument, PhysicsColliderFactory.box(1, 2, 1));
+
+            if (this.instrumentModels[i] !== undefined) {
+                this.instrumentModels[i]?.position.set(
+                    distanceFromCenter * Math.sin(i * angleBetween),
+                    height,
+                    distanceFromCenter * Math.cos(i * angleBetween),
+                );
+                //@ts-ignore
+                this.add(this.instrumentModels[i]);
+            }
+
+            this.physics.addStatic(instrument, PhysicsColliderFactory.box(1, 2, width / 2));
             this.interactions.addInteractable(instrument, 5, () => {
                 this.state.push(i);
                 stand.rotation.y = this.solution[this.state.length - 1] * angleBetween;                
+                this.standModel.rotation.y = standOffsetAngle + this.solution[this.state.length - 1] * angleBetween;
 
                 if (this.state.length == numInstruments) {
                     let solved = true;
@@ -87,9 +172,18 @@ export class MusicPuzzle extends Construct {
                         solved = solved && this.state[j] == this.solution[j];
                     }
 
-                    console.log(solved);
+                    if (solved) {
+                        // Puzzle is solved
+
+                    } else {
+                        // Reset the puzzle
+                        this.state = [];
+                        stand.rotation.y = this.solution[0] * angleBetween;
+                        this.standModel.rotation.y = standOffsetAngle + this.solution[0] * angleBetween;
+                    }
                 }
             });
+            instrument.removeFromParent();
         }
 
     }

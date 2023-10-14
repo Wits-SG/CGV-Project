@@ -35,13 +35,13 @@ export class SandboxScene extends Scene {
     }
 
     create(): void {
-        this.music.root.position.set(0, 1, 0);
+        this.music.root.position.set(0, 0.3, 0);
     }
 
     build(): void {
         this.floor = GraphicsPrimitiveFactory.box({
             position: { x: 0, y: 0, z: 0 },
-            scale: { x: 300, y: 0.2, z: 300 },
+            scale: { x: 1, y: 0.2, z: 1},
             rotation: { x: 0, y: 0, z: 0 },
             colour: 0xcccccc,
             shadows: true,

@@ -66,6 +66,8 @@ export class MainMenu extends Scene {
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Rook', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-rook-cbd416e785f64648bff3675fd45b3594' },
             { artist: 'marcelo.medeirossilva', title: 'Low Poly Chess - Queen', type: 'Model', license: 'CC-BY-NC-SA-4.0', link: 'https://sketchfab.com/3d-models/low-poly-chess-queen-ab958c61eb2a405aa7a7b0cec91c79b0' },
             { artist: 'Joao Paulo', title: 'Wood 27', type: 'Material', license: 'CC0', link: 'https://3dtextures.me/2022/05/21/wood-027/' },
+            { artist: 'IronEqual', title: 'Music stand from Poly by Google', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/music-stand-from-poly-by-google-7f37789531cc42a997f33893a4029c01' },
+            { artist: 'wessel.huizenga', title: 'Piano (low poly)', type: 'Model', license: 'CC-BY-4.0', link: 'https://sketchfab.com/3d-models/piano-low-poly-9714bdb006484d9eb3a26df864b1004d' },
         ];
         drawMainMenu(this.userInterface, developers, assets);
     }
