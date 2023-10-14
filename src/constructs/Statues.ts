@@ -187,9 +187,6 @@ export class StatuesConstruct extends Construct {
         this.floor.receiveShadow = true;
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
-
-        
-
         // Wall and roof parameters
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture});
         const backWallGeom = new THREE.BoxGeometry(60,20,1);
@@ -211,7 +208,7 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xFEC47F, 8, 130 ,0);
+        const roofLightCenter = new THREE.PointLight(0xFEC47F, 10, 120 ,0);
         roofLightCenter.position.set(0,19,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
@@ -313,14 +310,20 @@ export class StatuesConstruct extends Construct {
 
         // Plinths (using the chess_plinth model)
         const plinthSpacing = 7;
-
+        const plinths: Array<THREE.Group> = [];
         for (let i = 0; i < 5; i++) {
+
+            const listener = new THREE.AudioListener();
+            const sound = new THREE.Audio( listener );
+            const audioLoader = new THREE.AudioLoader()
+
             const additionalPlinth = this.chessPlinths.clone();
             additionalPlinth.scale.set(0.3, 0.3, 0.3);
 
             // Position the additional plinths below the current one with spacing
             additionalPlinth.position.set(-21 + (i + 1) * plinthSpacing, 0, -22 );
             additionalPlinth.castShadow = true;
+            plinths.push(additionalPlinth);
             this.floor.add(additionalPlinth);
 
             this.interactions.addPickupSpot(additionalPlinth, 5, (placeObject: THREE.Object3D) => {
@@ -336,8 +339,28 @@ export class StatuesConstruct extends Construct {
 
                 if (result) {
                     this.crystal.root.position.set(0,5,0);
+                    audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                        sound.setBuffer( buffer );
+                        sound.setLoop( false );
+                        sound.setVolume( 0.7 );
+                        
+                        sound.play();
+                    });
+                } else {
+                    let allPlaced  = true;
+                    for (let k = 0; k < plinths.length; k++) {
+                        allPlaced = allPlaced && plinths[k].children.length == 5;
+                    }
+                    if (allPlaced) {
+                        audioLoader.load( 'sound/failure.mp3', function( buffer ) {
+                            sound.setBuffer( buffer );
+                            sound.setLoop( false );
+                            sound.setVolume( 0.7 );
+                            
+                            sound.play();
+                        });
+                    }
                 }
-
             });
         }
 
@@ -423,52 +446,35 @@ export class StatuesConstruct extends Construct {
         this.floor.add(giantRook);
 
         // Create spotlights for the giant chess pieces
-        const spotlight1 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0); 
+        const spotlight1 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0); 
         spotlight1.position.set(5, 10, -5);
         spotlight1.target = giantKnight; 
         spotlight1.castShadow = true; 
         this.add(spotlight1);
 
-        const spotlight2 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
+        const spotlight2 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
         spotlight2.position.set(-5, 15, -5);
         spotlight2.target = giantQueen;
         spotlight2.castShadow = true;
         this.add(spotlight2);
 
-        const spotlight3 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
+        const spotlight3 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
         spotlight3.position.set(5, 15, 5);
         spotlight3.target = giantBishop;
         spotlight3.castShadow = true;
         this.add(spotlight3);
 
-        const spotlight4 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
+        const spotlight4 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
         spotlight4.position.set(-5, 15, 5);
         spotlight4.target = giantRook;
         spotlight4.castShadow = true;
         this.add(spotlight4);
 
-        // // Wall Paintings
-        // const paintingGeom = new THREE.BoxGeometry(0.5,14,16);
-        // const paintingMat1 = new THREE.MeshLambertMaterial(this.knightImg);
-        // const painting = new THREE.Mesh(paintingGeom, paintingMat1);
-        // painting.position.set(-28,10,0);
-        // this.add(painting);
-
-        // const paintingMat2 = new THREE.MeshLambertMaterial({color: 0x0000ff});
-        // const painting2 = new THREE.Mesh(paintingGeom, paintingMat2);
-        // painting2.position.set(28,10,0);
-        // this.add(painting2);
-
-        // // Painting spot lights
-        // const spotlight5 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
-        // spotlight5.position.set(-10, 15, 0);
-        // spotlight5.target = painting;
-        // this.add(spotlight5);
-
-        // const spotlight6 = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/8, 0.5, 0);
-        // spotlight6.position.set(10, 15, 0);
-        // spotlight6.target = painting2;
-        // this.add(spotlight6);
+        // Lights for plinths
+        const roofLightBack = new THREE.PointLight(0xFEC47F, 5, 100, 0);
+        roofLightBack.position.set(0,19,-22);
+        this.add(roofLightBack);
+        
     } 
 
     update() { 
