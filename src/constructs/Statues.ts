@@ -208,7 +208,7 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xFEC47F, 10, 120 ,0);
+        const roofLightCenter = new THREE.PointLight(0xff7251, 14, 150 ,0);
         roofLightCenter.position.set(0,19,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
@@ -446,34 +446,39 @@ export class StatuesConstruct extends Construct {
         this.floor.add(giantRook);
 
         // Create spotlights for the giant chess pieces
-        const spotlight1 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0); 
+        const spotlight1 = new THREE.SpotLight(0xEE3006, 7, 0, Math.PI/8, 0.5, 0); 
         spotlight1.position.set(5, 10, -5);
         spotlight1.target = giantKnight; 
         spotlight1.castShadow = true; 
         this.add(spotlight1);
 
-        const spotlight2 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
+        const spotlight2 = new THREE.SpotLight(0xEE3006, 7, 0, Math.PI/8, 0.5, 0);
         spotlight2.position.set(-5, 15, -5);
         spotlight2.target = giantQueen;
         spotlight2.castShadow = true;
         this.add(spotlight2);
 
-        const spotlight3 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
+        const spotlight3 = new THREE.SpotLight(0xEE3006, 7, 0, Math.PI/8, 0.5, 0);
         spotlight3.position.set(5, 15, 5);
         spotlight3.target = giantBishop;
         spotlight3.castShadow = true;
         this.add(spotlight3);
 
-        const spotlight4 = new THREE.SpotLight(0xEE3006, 4, 0, Math.PI/8, 0.5, 0);
+        const spotlight4 = new THREE.SpotLight(0xEE3006, 7, 0, Math.PI/8, 0.5, 0);
         spotlight4.position.set(-5, 15, 5);
         spotlight4.target = giantRook;
         spotlight4.castShadow = true;
         this.add(spotlight4);
 
-        // Lights for plinths
+        // Plingth Light
         const roofLightBack = new THREE.PointLight(0xFEC47F, 5, 100, 0);
         roofLightBack.position.set(0,19,-22);
         this.add(roofLightBack);
+
+        // lectern Light
+        const roofLightLectern = new THREE.PointLight(0xFEC47F, 5, 100, 0);
+        roofLightLectern.position.set(0,19,21);
+        this.add(roofLightLectern);
         
     } 
 
