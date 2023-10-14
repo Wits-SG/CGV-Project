@@ -95,7 +95,12 @@ export class Project {
 
         if (this.currentScene != null) {
             this.currentScene._update(netTime, deltaTime);
-            this.renderer.render(this.currentScene.graphics.root, this.currentScene.graphics.mainCamera);
+
+            for (let composer of this.currentScene.graphics.composers) {
+                composer.render();
+            }
+
+            this.currentScene.graphics.finalComposer.render();
         }
 
         if ( this.stats != null ) {
@@ -116,12 +121,14 @@ export class Project {
             this.currentScene = new sceneClass(this.config.physicsEngine);
             this.currentScene.setRenderer(this.renderer);
             this.currentScene._create();
+            this.currentScene.graphics.constructRender(); // this is a post processing interlude to correctly construct the render pass
             await this.currentScene._load();
             this.currentScene._build();
 
             // First time render to force the full scene to load into the GPU - helps avoid lagspikes midgame by forcing
             // that lagspike into the load time of a scene
             this.currentScene.graphics.root.traverse(obj => obj.frustumCulled = false);
+            this.currentScene.graphics.compose(); // Add the final output pass to the post processing
             this.renderer.render(this.currentScene.graphics.root, this.currentScene.graphics.mainCamera);
             this.currentScene.graphics.root.traverse(obj => obj.frustumCulled = true);
 
