@@ -46,7 +46,7 @@ export class SandboxScene extends Scene {
             rotation: { x: 0, y: 0, z: 0 },
             colour: 0xcccccc,
             shadows: true,
-        });
+        });*/
         this.graphics.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box( 150, 0.1, 150 ));
         
