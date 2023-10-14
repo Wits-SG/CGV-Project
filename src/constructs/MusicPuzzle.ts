@@ -105,6 +105,10 @@ export class MusicPuzzle extends Construct {
     }
 
     build(): void {
+        const listener = new THREE.AudioListener();
+        const sound = new THREE.Audio( listener );
+        const audioLoader = new THREE.AudioLoader()
+
         const carpetMat = new THREE.MeshLambertMaterial({ map: this.carpetTexture })
         const carpetGeom = new THREE.PlaneGeometry(22, 25);
         this.carpet = new THREE.Mesh(carpetGeom, carpetMat);
@@ -177,7 +181,8 @@ export class MusicPuzzle extends Construct {
             this.interactions.addInteractable(instrument, 5, () => {
                 this.state.push(i);
                 stand.rotation.y = this.solution[this.state.length - 1] * angleBetween;                
-                this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length] * angleBetween;
+                this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length % numInstruments] * angleBetween;
+
 
                 if (this.state.length == numInstruments) {
                     let solved = true;
@@ -189,11 +194,37 @@ export class MusicPuzzle extends Construct {
                         // Puzzle is solved
                         this.crystal.root.position.set(0, 2, 0);
 
+
+                        audioLoader.load( 'sound/Chess/success.mp3', function( buffer ) {
+                            sound.setBuffer(buffer);
+                            sound.setLoop(false);
+                            sound.setVolume(0.5);
+                            
+                            sound.play();
+                        });
+
                     } else {
                         // Reset the puzzle
                         this.state = [];
-                        stand.rotation.y = this.solution[0] * angleBetween;
+                        stand.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
+
+                        audioLoader.load( 'sound/Chess/failure.mp3', function( buffer ) {
+                            sound.setBuffer(buffer);
+                            sound.setLoop(false);
+                            sound.setVolume(0.5);
+                            
+                            sound.play();
+                        });
                     }
+                } else {
+                    // Play instrument audio only if its not the end of the puzzle
+                    audioLoader.load( 'sound/piano-g-6200.mp3', function( buffer ) {
+                        sound.setBuffer(buffer);
+                        sound.setLoop(false);
+                        sound.setVolume(0.5);
+                        
+                        sound.play();
+                    });
                 }
             });
             instrument.removeFromParent();
