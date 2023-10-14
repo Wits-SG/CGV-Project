@@ -85,13 +85,16 @@ export class MainMenu extends Scene {
         floor.castShadow = true;
         floor.receiveShadow = true;
 
-        const light = new THREE.PointLight(0xffffff, 0.8, 40, 0);
+        const light = new THREE.PointLight(0xffffff, 0.4, 40, 0);
         light.position.set(0, 20, 0);
 
         this.graphics.add(light);
         this.graphics.add(floor);
 
-        this.door.root.position.set(0, 0, -29);
+        this.door.root.position.set(0, 0, -3);
+
+        const ambientLight = new THREE.AmbientLight(0xE2DFD2, 1.2); // Adjust the color
+        this.graphics.add(ambientLight);
 
         const angleBetween = 2 * Math.PI / this.numCrystals;
         const distanceFromCenter = 7;
@@ -105,7 +108,7 @@ export class MainMenu extends Scene {
                 z
             );
             this.crystals[i].root.position.set(x, 4, z);
-            const glowScale = new THREE.Vector3(0.5, 0.5, 1);
+            const glowScale = new THREE.Vector3(0.5, 0.5, 1.2);
             this.crystals[i].glowSprite.scale.multiply(glowScale); // the glow is here is not the same as in the level
         }
 
