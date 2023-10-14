@@ -117,7 +117,7 @@ export class MainLibraryConstruct extends Construct {
 
 
     create() {
-        this.exitDoor.root.position.set(0, -12, -131.80);
+        this.exitDoor.root.position.set(0, -12, -102);
         this.exitDoor.root.scale.set(1.15,1.15,1.15);
         this.chess.root.position.set(100, -10.5, 43.3);
         this.chess.root.rotation.set(0, Math.PI, 0);

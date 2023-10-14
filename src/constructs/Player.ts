@@ -101,13 +101,13 @@ export class Player extends Construct {
             effects: {
                 fxaaShader: false,
                 smaaShader: false,
-                taaShader: true,
+                taaShader: false,
                 taaSample: 2,
             },
             video: {
                 fov: 100,
                 farRender: 1000,
-                fog: true,
+                fog: false,
             }
         }
     }

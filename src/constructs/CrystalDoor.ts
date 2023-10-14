@@ -39,9 +39,8 @@ export class CrystalDoor extends Construct {
 
     build(): void {
 
-        this.exitDoor.scale.set(7,7,7);
-        this.exitDoor.rotation.set(0,0,0);
-        this.exitDoor.position.set(0,0,26);
+        this.exitDoor.scale.set(6,6,6);
+        this.exitDoor.position.set(0,0,0);
         this.add(this.exitDoor);
 
         this.interactions.addInteractable(this.root, 20, () => {
@@ -72,7 +71,10 @@ export class CrystalDoor extends Construct {
             // Add the spot for crystals to be placed when picked up
             this.interactions.addPickupSpot(plinth, 5, (placedObject: THREE.Object3D) => {
                 plinth.add(placedObject);
-                placedObject.position.set(0, 2.5, 0);
+                placedObject.position.set(0, 12.5, 0);
+                placedObject.scale.set(4, 4, 4);
+
+
                 if (
                     placedObject.userData.isCrystal != undefined && 
                     placedObject.userData.isCrystal == true && // only crystals can be placed
