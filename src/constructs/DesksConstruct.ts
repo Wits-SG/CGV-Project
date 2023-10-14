@@ -187,7 +187,7 @@ export class DesksConstruct extends Construct {
                     lightZ+=20;
                 }
                 const sphere = new THREE.SphereGeometry(0.025);
-                const light = new THREE.PointLight( 0xffecf02, 400, 10 );
+                const light = new THREE.PointLight( 0xffecf02, 200, 30 );
                 light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
                 light.position.set(2.5, 1.85, lightZ);
                 //light.castShadow = true;
@@ -211,7 +211,7 @@ export class DesksConstruct extends Construct {
                     lightZ+=20;
                 }
                 const sphere = new THREE.SphereGeometry( 0.025);
-                const light = new THREE.PointLight( 0xfecf02, 400, 10);
+                const light = new THREE.PointLight( 0xfecf02, 200, 30);
                 light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffecf02 } ) ) );
                 light.position.set(-2.5, 1.85, lightZ);
                 //light.castShadow = true;

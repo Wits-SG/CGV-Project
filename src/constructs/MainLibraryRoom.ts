@@ -11,6 +11,8 @@ import { OfficeConstruct } from './OfficeConstruct';
 import { DesksConstruct } from './DesksConstruct';
 import { BookShelvesConstructLeft } from './BookShelvesConstructLeft';
 import { BookShelvesConstructRight } from './BookShelvesConstructRight';
+import { Chandeliers } from './Chandeliers';
+import { WallLights } from './WallLights';
 
 export class MainLibraryConstruct extends Construct {
 
@@ -34,6 +36,9 @@ export class MainLibraryConstruct extends Construct {
     desksConstruct: DesksConstruct;
     bookShelvesConstructLeft: BookShelvesConstructLeft;
     bookShelvesConstructRight: BookShelvesConstructRight;
+    chandeliersConstruct: Chandeliers;
+    wallLights: WallLights;
+    wallLights2: WallLights;
 
     // Game loop nonsense
     player: Player;
@@ -54,13 +59,22 @@ export class MainLibraryConstruct extends Construct {
         this.numCrystals = numCrystals;
 
         this.desksConstruct = new DesksConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.desksConstruct);
+       // this.addConstruct(this.desksConstruct);
 
         this.bookShelvesConstructLeft = new BookShelvesConstructLeft(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.bookShelvesConstructLeft);
 
         this.bookShelvesConstructRight = new BookShelvesConstructRight(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.bookShelvesConstructRight);
+
+        this.chandeliersConstruct = new Chandeliers(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.chandeliersConstruct);
+
+        this.wallLights = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.wallLights);
+
+        this.wallLights2 = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.addConstruct(this.wallLights2);
 
         this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.exitDoor);
@@ -78,16 +92,6 @@ export class MainLibraryConstruct extends Construct {
         // this.addConstruct(this.office);
     }
 
-    /*      const tempBookShelf = this.bookshelf.clone();
-            tempBookShelf.rotation.set(0,Math.PI/4,0);
-            tempBookShelf.scale.set(3,3,3);
-            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1],bookShelfsVertices[i][2]);
-            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(1, 1,1));
-            this.graphics.add(tempBookShelf);
-            this.bookShelfs.push(tempBookShelf);*/
-
-
-
     create() {
           this.exitDoor.root.position.set(0, 0, -112.5);
       //  this.chess.root.position.set(100, -10.5, 43.3);
@@ -101,16 +105,13 @@ export class MainLibraryConstruct extends Construct {
         this.desksConstruct.root.position.set(0,-8.75,0); 
         this.bookShelvesConstructLeft.root.position.set(-20,-10,0);
         this.bookShelvesConstructRight.root.position.set(20,-10,0);
+        this.chandeliersConstruct.root.position.set(0,6,0);
+        this.wallLights.root.position.set(-40,0,0);
+        this.wallLights2.root.position.set(40,0,0);
+        this.wallLights2.root.rotation.set(0,Math.PI,0);
     }
 
     async load(): Promise<void>{
-        /*try {
-            const gltfData: any = await this.graphics.loadModel('assets/BookShelf/scene.gltf');
-            this.bookshelf = gltfData.scene;
-        } catch(e: any) {
-            console.error(e);
-        }*/
-
        /* try {
             this.textureFloorData = await this.graphics.loadTexture('assets/Poured_Concrete/ConcretePoured001_COL_2K_METALNESS.png');
         } catch(e: any) {
@@ -159,23 +160,6 @@ export class MainLibraryConstruct extends Construct {
         const ceilingVertices = [[0,10,0],[100,10,0],[-100,10,0]];
         const ceilingScale = [[80, 225,0.1],[120, 25,0.1],[120, 25,0.1]];
 
-       // const bookShelfsVertices = [[-15,-10,100], [-25,-10,90],[-25,-10,80],[-25,-10,70],[-25,-10,60],[-25,-10,50], [-25,-10,40],[-25,-10,30],[-25,-10,20],
-       // [-18.5,-10,100], [-18.5,-10,90],[-18.5,-10,80],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,70],[-18.5,-10,60],[-18.5,-10,50], [-18.5,-10,40],[-18.5,-10,30],[-18.5,-10,20],
-       // [25,-10,100], [25,-10,90],[25,-10,80],[25,-10,70],[25,-10,60], [25,-10,50], [25,-10,40],[25,-10,30],[25,-10,20],
-       // [18.5,-10,100], [18.5,-10,90],[18.5,-10,80],[18.5,-10,70],[18.5,-10,60], [18.5,-10,50], [18.5,-10,40],[18.5,-10,30],[18.5,-10,20],
-
-     //   [-25,-10,-100], [-25,-10,-90],[-25,-10,-80],[-25,-10,-70],[-25,-10,-60],[-25,-10,-50], [-25,-10,-40],[-25,-10,-30],[-25,-10,-20],
-     //   [-18.5,-10,-100], [-18.5,-10,-90],[-18.5,-10,-80],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-70],[-18.5,-10,-60],[-18.5,-10,-50], [-18.5,-10,-40],[-18.5,-10,-30],[-18.5,-10,-20],
-     //   [25,-10,-100], [25,-10,-90],[25,-10,-80],[25,-10,-70],[25,-10,-60], [25,-10,-50], [25,-10,-40],[25,-10,-30],[25,-10,-20],
-     //   [18.5,-10,-100], [18.5,-10,-90],[18.5,-10,-80],[18.5,-10,-70],[18.5,-10,-60], [18.5,-10,-50], [18.5,-10,-40],[18.5,-10,-30],[18.5,-10,-20]
-      //  ];
-
-        // const tableVertices = [[-2,111.5,100], [-2,111.5,90],[-2,111.5,80],[-2,111.5,70],[-2,111.5,60],[-2,111.5,50], [-2,111.5,40],[-2,111.5,30],[-2,111.5,20],
-        // [2,111.5,100], [2,111.5,90],[2,111.5,80],[2,111.5,70],[2,111.5,60],[2,111.5,50], [2,111.5,40],[2,111.5,30],[2,111.5,20],
-        // [-2,111.5,-100], [-2,111.5,-90],[-2,111.5,-80],[-2,111.5,-70],[-2,111.5,-60],[-2,111.5,-50], [-2,111.5,-40],[-2,111.5,-30],[-2,111.5,-20],
-        // [2,111.5,-100], [2,111.5,-90],[2,111.5,-80],[2,111.5,-70],[2,111.5,-60],[2,111.5,-50], [2,111.5,-40],[2,111.5,-30],[2,111.5,-20],
-        // ];
-
       this.walls = [];
        for(let i = 0; i<vertices.length; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
@@ -202,41 +186,6 @@ export class MainLibraryConstruct extends Construct {
             floor.receiveShadow = true;
             this.add( floor);
         }
-        /*this.bookShelfs = [];
-        for ( let i = 0; i<1; i++){
-            const tempBookShelf = this.bookshelf.clone();
-            tempBookShelf.rotation.set(0,0,0);
-            //tempBookShelf.scale.set(0.05,0.05,0.05);
-            tempBookShelf.position.set(0,0,0);
-            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(1, 21, 6));
-            this.graphics.add(tempBookShelf);
-            this.bookShelfs.push(tempBookShelf);
-        }*/
-
-       /* this.FbookShelfs = [];
-        for ( let i = 0; i<bookShelfsVertices.length; i++){
-            const tempBookShelf = this.bookshelf.clone();
-            tempBookShelf.position.set(bookShelfsVertices[i][0],bookShelfsVertices[i][1]+475,bookShelfsVertices[i][2]+2);
-            tempBookShelf.rotation.set(0,-Math.PI/2,0);
-            tempBookShelf.scale.set(2.25,2.25,2.25);
-            this.physics.addStatic(tempBookShelf,PhysicsColliderFactory.box(2.25/2, 2.25/2, 1.1));
-            this.graphics.add(tempBookShelf);
-            this.bookShelfs.push(tempBookShelf);
-        }*/
-
-
-        //this.drawTables(this.TableGeometry);
-
-       /*this.tables = [];
-        for ( let i = 0; i < 1; i++){
-            const tempTable= this.table.clone();
-            tempTable.position.set(0, 0, 0);
-            tempTable.rotation.set(0, 0, 0);
-            tempTable.scale.set(2,2,2);
-            this.physics.addStatic(tempTable,PhysicsColliderFactory.box(1, 1, 1));
-            this.graphics.add(tempTable);
-            this.tables.push(tempTable);
-        }*/
 
         this.ceilings = [];
         for(let i = 0; i<3; i++){
@@ -250,13 +199,8 @@ export class MainLibraryConstruct extends Construct {
             this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScale[i][0]/2, ceilingScale[i][0]/2, 0.01));
             this.graphics.add( ceiling);
         }
-       // const tempLamp= this.Lamp.clone();
-        //tempLamp.position.set(-1.5,-8.25,22);
-        //tempLamp.scale.set(2,2,2);
-        //this.physics.addStatic(tempLamp,PhysicsColliderFactory.box(1, 1,1));
-       // this.graphics.add(tempLamp);
 
-        this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
+        /*this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
         this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
         this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
         this.lightHemisphere.position.set(0, 100, 0);
@@ -275,12 +219,9 @@ export class MainLibraryConstruct extends Construct {
         this.lightDirectional.shadow.camera.bottom = -50;
 
         this.graphics.add(this.lightHemisphere);
-        this.graphics.add(this.lightDirectional);
+        this.graphics.add(this.lightDirectional);*/
         
     }
-
-    // Box collider dimensions are half the dimensions of the actual object
-    // so a threejs box of { width: 20, height: 50, depth: 2} has a collider of { 10, 25, 1 }
 
     update() {}
 
