@@ -215,7 +215,7 @@ export class MusicPuzzle extends Construct {
                         this.state = [];
                         stand.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
 
-                        audioLoader.load( 'sound/Chess/failure.mp3', function( buffer ) {
+                        audioLoader.load( 'sound/wrong.mp3', function( buffer ) {
                             sound.setBuffer(buffer);
                             sound.setLoop(false);
                             sound.setVolume(0.5);
