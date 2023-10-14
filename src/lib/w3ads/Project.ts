@@ -127,6 +127,7 @@ export class Project {
             this.currentScene.graphics.constructRender(); // this is a post processing interlude to correctly construct the render pass
             await this.currentScene._load();
             this.currentScene._build();
+            this.currentScene.graphics.compose(); // Add the final output pass to the post processing
             this.play();
 
             //@ts-expect-error
@@ -134,6 +135,7 @@ export class Project {
             const nextScene = new sceneClass(this.config.physicsEngine);
             nextScene.setRenderer(this.renderer);
             nextScene._create();
+            nextScene.graphics.constructRender(); // this is a post processing interlude to correctly construct the render pass
             nextScene._load().then(() => {
                 nextScene._build();
                 nextScene.graphics.root.traverse(obj => obj.frustumCulled = false);
