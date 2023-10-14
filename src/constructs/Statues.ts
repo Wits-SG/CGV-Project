@@ -339,7 +339,7 @@ export class StatuesConstruct extends Construct {
 
                 if (result) {
                     this.crystal.root.position.set(0,5,0);
-                    audioLoader.load( 'sound/success.mp3', function( buffer ) {
+                    audioLoader.load( 'sound/Chess/success.mp3', function( buffer ) {
                         sound.setBuffer( buffer );
                         sound.setLoop( false );
                         sound.setVolume( 0.7 );
@@ -352,10 +352,10 @@ export class StatuesConstruct extends Construct {
                         allPlaced = allPlaced && plinths[k].children.length == 5;
                     }
                     if (allPlaced) {
-                        audioLoader.load( 'sound/failure.mp3', function( buffer ) {
+                        audioLoader.load( 'sound/Chess/failure.mp3', function( buffer ) {
                             sound.setBuffer( buffer );
                             sound.setLoop( false );
-                            sound.setVolume( 0.7 );
+                            sound.setVolume( 1 );
                             
                             sound.play();
                         });
