@@ -89,10 +89,10 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.exitDoor);
 
         this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        //this.addConstruct(this.chess);
+        this.addConstruct(this.chess);
 
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
-        //this.addConstruct(this.mirror);
+        this.addConstruct(this.mirror);
 
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
@@ -100,13 +100,13 @@ export class MainLibraryConstruct extends Construct {
     }
 
     create() {
-        this.exitDoor.root.position.set(0, -12, -102);
+        this.exitDoor.root.position.set(0, -12, -73);
         this.exitDoor.root.scale.set(1.15,1.15,1.15);
-        this.chess.root.position.set(100, -10.5, 43.3);
+        this.chess.root.position.set(100, -10.5, 42.5);
         this.chess.root.rotation.set(0, Math.PI, 0);
-        this.mirror.root.position.set(110, -11, -12);
+        this.mirror.root.position.set(110, -10.5, -12.3);
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
-        this.office.root.position.set(-180, -11, 0);
+        this.office.root.position.set(-115, -10, 0);
         this.office.root.rotation.set(0, Math.PI / 2, 0);
         this.desksConstruct.root.position.set(0,-8.75,0); 
         this.bookShelvesConstructLeft.root.position.set(-20,-10,0);
