@@ -17,6 +17,7 @@
     "vite": "^4.4.11"
   },
   "dependencies": {
-    "three": "^0.156.1"
+    "three": "^0.156.1",
+    "three-particle-fire": "^0.1.0"
   }
 }

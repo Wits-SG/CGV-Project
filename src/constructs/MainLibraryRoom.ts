@@ -13,6 +13,23 @@ import { BookShelvesConstructRight } from './BookShelvesConstructRight';
 import { Chandeliers } from './Chandeliers';
 import { WallLights } from './WallLights';
 import { Lectern } from './Lectern';
+import { HearthObjects } from './HearthObjects';
+import { Hearth } from './Hearth';
+
+
+const numHearths = 4;
+const hearthPositions = [
+    { x: 39, y: -9.9, z: -69 },
+    { x: 123, y: -9.9, z: 0 },
+    { x: -60, y: -9.9, z: -14 },
+    { x: 0, y: -9.9, z: 81 }
+];
+const hearthRotations = [
+    { x: 0, y: -Math.PI / 2, z: 0 },
+    { x: 0, y: -Math.PI / 2, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: Math.PI, z: 0 }
+];
 
 export class MainLibraryConstruct extends Construct {
 
@@ -49,6 +66,8 @@ export class MainLibraryConstruct extends Construct {
     chess: StatuesConstruct;
     mirror: MirrorRoom;
     office: OfficeConstruct;
+    hearthObjects: HearthObjects;
+    hearths: Array<Hearth>;
 
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
@@ -94,9 +113,18 @@ export class MainLibraryConstruct extends Construct {
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.mirror);
 
-
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
         this.addConstruct(this.office);
+
+        this.hearths = [];
+        for (let i = 0; i < numHearths; ++i) {
+            const hearth = new Hearth(graphics, physics, interactions, userInterface);
+            this.addConstruct(hearth);
+            this.hearths.push(hearth);
+        }
+
+        this.hearthObjects = new HearthObjects(graphics, physics, interactions, userInterface, this.hearths);
+        this.addConstruct(this.hearthObjects);
     }
 
     create() {
@@ -115,6 +143,22 @@ export class MainLibraryConstruct extends Construct {
         this.wallLights.root.position.set(0,0,0);
         this.lectern.root.position.set(0,-9.8,-4);
         this.lectern.root.rotation.set(0,Math.PI,0);
+
+        this.hearthObjects.root.position.set(-32, -9.9, -69);
+        this.hearthObjects.root.rotation.set(0, Math.PI, 0);
+
+        for (let i = 0; i < numHearths; ++i) {
+            this.hearths[i].root.position.set(
+                hearthPositions[i].x,
+                hearthPositions[i].y,
+                hearthPositions[i].z
+            );
+            this.hearths[i].root.rotation.set(
+                hearthRotations[i].x,
+                hearthRotations[i].y,
+                hearthRotations[i].z
+            );
+        }
     }
 
     async load(): Promise<void>{
