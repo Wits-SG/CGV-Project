@@ -208,7 +208,7 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xAAB7B8, 8, 250 ,0);
+        const roofLightCenter = new THREE.PointLight(0xFCAE70, 10, 250 ,0);
         roofLightCenter.position.set(0,19,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
