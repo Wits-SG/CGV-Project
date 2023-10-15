@@ -85,21 +85,21 @@ export class MainMenu extends Scene {
         this.graphics.mainCamera.position.set(5, 7, 5);
         this.graphics.mainCamera.lookAt(0, 0, 0);
 
-        const floorMat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
+        const floorMat = new THREE.MeshLambertMaterial({ color: 0x283747  });
         const floorGeom = new THREE.BoxGeometry(30, 1, 30);
         const floor = new THREE.Mesh(floorGeom, floorMat);
         floor.castShadow = true;
         floor.receiveShadow = true;
 
-        const light = new THREE.PointLight(0xffffff, 0.4, 40, 0);
-        light.position.set(0, 20, 0);
+        const light = new THREE.PointLight(0xffffff, 4, 60, 0);
+        light.position.set(0,3,0);
 
         this.graphics.add(light);
         this.graphics.add(floor);
 
         this.door.root.position.set(0, 0, -3);
 
-        const ambientLight = new THREE.AmbientLight(0xE2DFD2, 1.2); // Adjust the color
+        const ambientLight = new THREE.AmbientLight(0xff00ff, 0.5); // Adjust the color
         this.graphics.add(ambientLight);
 
         const angleBetween = 2 * Math.PI / this.numCrystals;
@@ -117,6 +117,38 @@ export class MainMenu extends Scene {
             const glowScale = new THREE.Vector3(0.5, 0.5, 1.2);
             this.crystals[i].glowSprite.scale.multiply(glowScale); // the glow is here is not the same as in the level
         }
+
+        // Walls
+        
+        // Left Wall
+        const wallMat = new THREE.MeshLambertMaterial({ color: 0x154360 });
+        const wallGeom = new THREE.BoxGeometry(1, 15, 30);
+        const leftWall = new THREE.Mesh(wallGeom, wallMat);
+        leftWall.position.set(-15,7.5,0);
+        this.graphics.add(leftWall);
+
+        // Right Wall
+        const rightWall = new THREE.Mesh(wallGeom, wallMat);
+        rightWall.position.set(15, 7.5, 0);
+        this.graphics.add(rightWall);
+
+        // Front Wall
+        const frontWall = new THREE.Mesh(wallGeom, wallMat);
+        frontWall.rotation.set(0, Math.PI/2, 0);
+        frontWall.position.set(0,7.5,15);
+        this.graphics.add(frontWall);
+
+        // Back Walls
+        const backWallGeom = new THREE.BoxGeometry(10, 15, 1);
+        const backWall1 = new THREE.Mesh(backWallGeom, wallMat);
+        backWall1.position.set(-12, 7.5, -15);
+        this.graphics.add(backWall1);
+
+        const backWall2 = new THREE.Mesh(backWallGeom, wallMat);
+        backWall2.position.set(12, 7.5, -15);
+        this.graphics.add(backWall2);
+
+
 
     }
 

@@ -31,7 +31,7 @@ export class Pillars extends Construct {
         const segments = 6; 
 
         const geometry = new THREE.CylinderGeometry(radius, radius, height, segments);
-        const material = new THREE.MeshBasicMaterial({ map: this.texture });
+        const material = new THREE.MeshLambertMaterial({ map: this.texture });
 
         // Define positions for the pillars
         const positions = [

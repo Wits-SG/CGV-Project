@@ -24,7 +24,7 @@ export class Chandeliers extends Construct {
         matrix.compose( position, quaternion, scale );
 
         const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 7);
-        let chandelierZ = -52.5;
+        let chandelierZ = -62.5;
         position.z = chandelierZ;
         for ( let i = 0; i < 5; i ++ ) {
             position.x = 0;
@@ -83,18 +83,18 @@ export class Chandeliers extends Construct {
         this.drawChandeliers();
 
         this.lights = [];
-        let center = -52.5;
+        let center = -62.5;
         for ( let i = 0; i < 5; i ++ ) {
-                const light = new THREE.PointLight( 0xffecf02, 400, 0, 1.525);
-                light.position.set(0,0.5,center);
+                const light = new THREE.PointLight( 0xfae5ac, 300, 0, 1.1);
+                light.position.set(0,-0.15,center);
                 this.lights.push(light);
                 this.add( light );
             center+=32.5;
         }
         let corridorLightX = 100;
         for ( let i = 0; i < 2; i ++ ) {
-            const light = new THREE.PointLight( 0xffecf02, 400, 0, 1.525);
-            light.position.set(corridorLightX,0.5,0);
+            const light = new THREE.PointLight( 0xfae5ac, 300, 0, 1.1);
+            light.position.set(corridorLightX,-0.15,0);
             this.lights.push(light);
             this.add( light );
             corridorLightX=-60;

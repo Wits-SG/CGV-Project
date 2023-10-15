@@ -88,14 +88,14 @@ export class WallLights extends Construct {
         let lightZ = -45.25;
         for ( let i = 0; i < 4; i ++ ) {
             if(i<2){
-                    const light = new THREE.PointLight( 0xffecf02, 100, 0.0, 1.65);
+                    const light = new THREE.PointLight( 0xfae5ac, 250, 0.0, 1.25);
                     light.position.set(37.5, -1, lightZ);
                     this.add(light);
                     lightZ+=95;
             }
             if(i>=2){
                 if(i==2){lightZ=-45.25;}
-                const light = new THREE.PointLight( 0xffecf02, 100, 0.0,1.65);
+                const light = new THREE.PointLight( 0xfae5ac, 250, 0.0,1.25);
                 light.position.set(-37.5, -1, lightZ);
                 this.add(light);
                 lightZ+=95;

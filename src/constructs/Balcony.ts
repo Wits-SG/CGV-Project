@@ -26,7 +26,7 @@ export class Balcony extends Construct {
 
     build(): void {
         const geometry = new THREE.BoxGeometry(15, 0.5, 8.4);
-        const material = new THREE.MeshBasicMaterial({ map: this.texture });
+        const material = new THREE.MeshLambertMaterial({ map: this.texture });
         const balcony = new THREE.Mesh(geometry, material);
         balcony.position.set(0, 5.25, -11);
         this.add(balcony);

@@ -83,16 +83,16 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.chandeliersConstruct);
 
         this.wallLights = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
-        this.addConstruct(this.wallLights);
+       this.addConstruct(this.wallLights);
 
         this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.exitDoor);
 
         this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-       this.addConstruct(this.chess);
+        this.addConstruct(this.chess);
 
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
-        //this.addConstruct(this.mirror);
+        this.addConstruct(this.mirror);
 
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
@@ -104,7 +104,7 @@ export class MainLibraryConstruct extends Construct {
         this.exitDoor.root.scale.set(1.15,1.15,1.15);
         this.chess.root.position.set(100, -10.5, 42.5);
         this.chess.root.rotation.set(0, Math.PI, 0);
-        this.mirror.root.position.set(110, -10.5, -12.3);
+        this.mirror.root.position.set(100, -10.5, -12.5);
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
         this.office.root.position.set(-115, -10, 0);
         this.office.root.rotation.set(0, Math.PI / 2, 0);
@@ -154,15 +154,16 @@ export class MainLibraryConstruct extends Construct {
             );
         }
  
-        const wallPositions = [[0,0,82.5], [-40,0,-48.75],[-40,0,48.75], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,15],[-65,0,-15],[65,0,12.5],[65,0,-12.5],[135,0,12.5],[135,0,-12.5],[160,0,0]];
-        const wallScales = [[80, 20, 0.1],[ 67.5, 20,0.1], [67.5, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[25,20,0.1]];
-        const wallRotations = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,Math.PI/2,0]];
+        const wallPositions = [[0,0,82.5], [-40,0,-48.75],[-40,0,48.75], [40,0,-47.5], [40,0,47.5], [0,0,-82.5],[-65,0,15],[-65,0,-15],[65,0,12.5],[65,0,-12.5],[135,0,12.5],[135,0,-12.5],[125,0,0]];
+        const wallScales = [[80, 20, 0.1],[ 67.5, 20,0.1], [67.5, 20,0.1], [70, 20,0.1], [70, 20,0.1],[80, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[40, 20,0],[40, 20,0.1],[25,20,0.1]];
+        const wallRotations = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,Math.PI/2
+        ,0]];
 
-        const floorPositions = [[0,-10,0],[100,-10,0],[-65,-10,0]];
-        const floorScales = [[80, 165,0],[120, 25,0],[50, 30,0]];
+        const floorPositions = [[0,-10,0],[82.5,-10,0],[-65,-10,0]];
+        const floorScales = [[80, 165,0],[85, 25,0],[50, 30,0]];
     
-        const ceilingPositions = [[0,10,0],[100,10,0],[-65,10,0]];
-        const ceilingScales = [[80, 165,0.1],[120, 25,0.1],[50, 30,0.1]];
+        const ceilingPositions = [[0,10,0],[91.25,10,0],[-65,10,0]];
+        const ceilingScales = [[80, 165,0.1],[105, 25,0.1],[50, 30,0.1]];
 
       this.walls = [];
        for(let i = 0; i<wallPositions.length; i++){
