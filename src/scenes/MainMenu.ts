@@ -5,7 +5,6 @@ import { CrystalDoor } from '../constructs/CrystalDoor';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import { Crystal } from '../constructs/Crystal';
 import { drawMainMenu } from '../lib/UI/MainMenu';
-import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader.js';
 
 export class MainMenu extends Scene {
 
