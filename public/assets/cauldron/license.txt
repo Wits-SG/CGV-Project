@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cauldron
+* source:	https://sketchfab.com/3d-models/cauldron-ef2481301c5345ea99d276cac6b66de0
+* author:	Stuart Whittaker (https://sketchfab.com/StuartWDesign)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cauldron" (https://sketchfab.com/3d-models/cauldron-ef2481301c5345ea99d276cac6b66de0) by Stuart Whittaker (https://sketchfab.com/StuartWDesign) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
