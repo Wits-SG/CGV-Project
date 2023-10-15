@@ -1,9 +1,7 @@
 import * as THREE from 'three';
-import { GraphicsPrimitiveFactory, PhysicsColliderFactory, Scene } from '../lib';
+import { PhysicsColliderFactory, Scene } from '../lib';
 import { Player } from '../constructs/Player';
 import { MusicPuzzle } from '../constructs/MusicPuzzle';
-
-import { MainLibraryConstruct } from '../constructs/MainLibraryRoom';
 
 export class SandboxScene extends Scene {
     async load(): Promise<void> {}
