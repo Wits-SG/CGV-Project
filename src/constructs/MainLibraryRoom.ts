@@ -89,7 +89,7 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.exitDoor);
 
         this.chess = new StatuesConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
-        //this.addConstruct(this.chess);
+       // this.addConstruct(this.chess);
 
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
         //this.addConstruct(this.mirror);
@@ -100,13 +100,13 @@ export class MainLibraryConstruct extends Construct {
     }
 
     create() {
-        this.exitDoor.root.position.set(0, -12, -102);
+        this.exitDoor.root.position.set(0, -12, -73);
         this.exitDoor.root.scale.set(1.15,1.15,1.15);
-        this.chess.root.position.set(100, -10.5, 43.3);
+        this.chess.root.position.set(100, -10.5, 42.5);
         this.chess.root.rotation.set(0, Math.PI, 0);
-        this.mirror.root.position.set(110, -11, -12);
+        this.mirror.root.position.set(110, -10.5, -12.3);
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
-        this.office.root.position.set(-180, -11, 0);
+        this.office.root.position.set(-115, -10, 0);
         this.office.root.rotation.set(0, Math.PI / 2, 0);
         this.desksConstruct.root.position.set(0,-8.75,0); 
         this.bookShelvesConstructLeft.root.position.set(-20,-10,0);
@@ -153,29 +153,27 @@ export class MainLibraryConstruct extends Construct {
                 z
             );
         }
+ 
+        const wallPositions = [[0,0,82.5], [-40,0,-48.75],[-40,0,48.75], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,15],[-65,0,-15],[65,0,12.5],[65,0,-12.5],[135,0,12.5],[135,0,-12.5],[160,0,0]];
+        const wallScales = [[80, 20, 0.1],[ 67.5, 20,0.1], [67.5, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[25,20,0.1]];
+        const wallRotations = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,Math.PI/2,0]];
 
-        // this.music.root.position.set(140, -8, 0);
-
-        const vertices = [[0,0,82.5], [-40,0,-47.5],[-40,0,47.5], [40,0,-47.5], [40,0,47.5], [-22.5,0,-82.5],[22.5,0,-82.5],[-65,0,12.5],[-65,0,-12.5],[65,0,12.5],[65,0,-12.5],[135,0,12.5],[135,0,-12.5],[160,0,0]];
-        const scaleArr = [[80, 20, 0.1],[ 70, 20,0.1], [70, 20,0.1], [70, 20,0.1], [70, 20,0.1],[35, 20,0.1],[35, 20,0.1],[50, 20,0.1],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[50, 20,0],[50, 20,0.1],[25,20,0.1]];
-        const rotation = [[0,0,0],[0,Math.PI /2,0],[0,Math.PI /2,0], [0,Math.PI /2,0],[0,Math.PI /2,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,Math.PI/2,0]];
-
-        const floorVertices = [[0,-10,0],[100,-10,0],[-65,-10,0]];
-        const floorScale = [[80, 165,0],[120, 25,0],[50, 25,0]];
+        const floorPositions = [[0,-10,0],[100,-10,0],[-65,-10,0]];
+        const floorScales = [[80, 165,0],[120, 25,0],[50, 30,0]];
     
-        const ceilingVertices = [[0,10,0],[100,10,0],[-65,10,0]];
-        const ceilingScale = [[80, 165,0.1],[120, 25,0.1],[50, 25,0.1]];
+        const ceilingPositions = [[0,10,0],[100,10,0],[-65,10,0]];
+        const ceilingScales = [[80, 165,0.1],[120, 25,0.1],[50, 30,0.1]];
 
       this.walls = [];
-       for(let i = 0; i<vertices.length; i++){
+       for(let i = 0; i<wallPositions.length; i++){
             const geometry = new THREE.PlaneGeometry( 1, 1);
             this.wallsTexture = new THREE.MeshLambertMaterial( { map: this.textureWallsData, side: THREE.DoubleSide } );
             const wall = new THREE.Mesh(geometry, this.wallsTexture);
-            wall.scale.set(scaleArr[i][0],scaleArr[i][1],0.01);
-            wall.position.set(vertices[i][0],vertices[i][1],vertices[i][2]);
-            wall.rotation.set(rotation[i][0],rotation[i][1],rotation[i][2]);
+            wall.scale.set(wallScales[i][0],wallScales[i][1],0.01);
+            wall.position.set(wallPositions[i][0],wallPositions[i][1],wallPositions[i][2]);
+            wall.rotation.set(wallRotations[i][0],wallRotations[i][1],wallRotations[i][2]);
             this.walls.push(wall);
-            this.physics.addStatic(wall,PhysicsColliderFactory.box(scaleArr[i][0]/2, scaleArr[i][1]/2, 0.01));
+            this.physics.addStatic(wall,PhysicsColliderFactory.box(wallScales[i][0]/2, wallScales[i][1]/2, 0.01));
             this.graphics.add(wall);
         }
         this.floors = [];
@@ -183,11 +181,11 @@ export class MainLibraryConstruct extends Construct {
             const geometry = new THREE.PlaneGeometry( 1,1,1);
             this.floorTexture = new THREE.MeshLambertMaterial( { map: this.textureFloorData, side: THREE.DoubleSide } );
             const floor= new THREE.Mesh(geometry, this.floorTexture)
-            floor.position.set(floorVertices[i][0],floorVertices[i][1],floorVertices[i][2]);
+            floor.position.set(floorPositions[i][0],floorPositions[i][1],floorPositions[i][2]);
             floor.rotation.set(Math.PI/2,0,0);
-            floor.scale.set(floorScale[i][0],floorScale[i][1],0.01);
+            floor.scale.set(floorScales[i][0],floorScales[i][1],0.01);
             this.floors.push(floor);
-            this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScale[i][0]/2,floorScale[i][1]/2, 0.01));
+            this.physics.addStatic(floor,PhysicsColliderFactory.box(floorScales[i][0]/2,floorScales[i][1]/2, 0.01));
             floor.receiveShadow = true;
             this.add( floor);
         }
@@ -197,11 +195,11 @@ export class MainLibraryConstruct extends Construct {
             const geometry = new THREE.PlaneGeometry( 1, 1);
             this.ceilingTexture= new THREE.MeshLambertMaterial( { map: this.textureCeilingData, side: THREE.DoubleSide } );
             const ceiling = new THREE.Mesh(geometry,this.ceilingTexture);
-            ceiling.position.set(ceilingVertices[i][0],ceilingVertices[i][1],ceilingVertices[i][2]);
+            ceiling.position.set(ceilingPositions[i][0],ceilingPositions[i][1],ceilingPositions[i][2]);
             ceiling.rotation.set(Math.PI/2,0,0);
-            ceiling.scale.set(ceilingScale[i][0],ceilingScale[i][1],0.01);
+            ceiling.scale.set(ceilingScales[i][0],ceilingScales[i][1],0.01);
             this.floors.push(ceiling);
-            this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScale[i][0]/2, ceilingScale[i][0]/2, 0.01));
+            this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScales[i][0]/2, ceilingScales[i][0]/2, 0.01));
             this.graphics.add( ceiling);
         }
 
