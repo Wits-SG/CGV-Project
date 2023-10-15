@@ -11,6 +11,7 @@ export class Hearth extends Construct {
 
     create(): void {
         this.colour = 0;
+        this.root.userData.amHearth = true;
     }
 
     async load(): Promise<void> {
@@ -21,8 +22,6 @@ export class Hearth extends Construct {
      }
 
     build(): void {
-
-        this.hearth.scale.set(6,6,6);
         this.hearth.position.set(0,0,0);
         this.add(this.hearth);
         this.physics.addStatic(this.hearth, PhysicsColliderFactory.box(1, 2, 0.5));
@@ -31,7 +30,7 @@ export class Hearth extends Construct {
         this.interactions.addPickupSpot(this.hearth, 5, (placedObject: THREE.Object3D) => {
             if (placedObject.userData.fireplaceColour) {
 
-                this.fire?.removeFromParent();
+                this.fire?.removeFromParent(); // if the fire already exists, remove it so the material can be changed
                 this.colour = placedObject.userData.fireplaceColour;
 
                 const fireMat = new particleFire.Material({ color: this.colour });
@@ -39,11 +38,11 @@ export class Hearth extends Construct {
                 fireMat.setPerspective(this.graphics.mainCamera.fov, window.innerHeight);
                 this.fire = new THREE.Points(fireGeom, fireMat);
                 this.fire.position.set(0, 0, 1);
-                this.add(this.fire);
+                this.add(this.fire); // the fire gets readded here
             }
 
-            placedObject.position.set(0, 3, 0.5);
-            this.hearth.add(placedObject);
+            placedObject.position.set(0, 3, 0);
+            this.add(placedObject);
 
             const litEvent = new Event('hearthLit');
             document.dispatchEvent(litEvent);
@@ -55,9 +54,14 @@ export class Hearth extends Construct {
     update(time?: number | undefined, delta?: number | undefined): void {
         if (delta && this.fire) 
             this.fire.material.update(delta / 1000);
+
     }
 
     destroy(): void { }
 
+    killFire() {
+        this.fire?.removeFromParent(); // if the fire already exists, remove it so the material can be changed
+        this.colour = 0;
+    }
 }
 
