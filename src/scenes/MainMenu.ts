@@ -85,7 +85,7 @@ export class MainMenu extends Scene {
         this.graphics.mainCamera.position.set(5, 7, 5);
         this.graphics.mainCamera.lookAt(0, 0, 0);
 
-        const floorMat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
+        const floorMat = new THREE.MeshLambertMaterial({ color: 0x1F618D });
         const floorGeom = new THREE.BoxGeometry(30, 1, 30);
         const floor = new THREE.Mesh(floorGeom, floorMat);
         floor.castShadow = true;
