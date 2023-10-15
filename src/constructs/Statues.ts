@@ -208,7 +208,7 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xAAB7B8, 8, 250 ,0);
+        const roofLightCenter = new THREE.PointLight(0xFCAE70, 10, 250 ,0);
         roofLightCenter.position.set(0,19,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
@@ -421,29 +421,33 @@ export class StatuesConstruct extends Construct {
         giantKnight.rotation.set(0, -Math.PI/4, 0);
         giantKnight.scale.set(8,8,8);
         giantKnight.castShadow = true;
-        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3, 10, 3));
         this.floor.add(giantKnight);
+        this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3, 10, 3));
+        
 
         const giantQueen = this.queen.clone();
         giantQueen.position.set(-22,1,-22);
         giantQueen.scale.set(8,8,8);
         giantQueen.castShadow = true;
-        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3, 10, 3));
         this.floor.add(giantQueen);
+        this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3, 10, 3));
+        
 
         const giantBishop = this.bishop.clone();
         giantBishop.position.set(22,1,24);
         giantBishop.scale.set(8,8,8);
         giantBishop.castShadow = true;
-        this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
         this.floor.add(giantBishop);
+        this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
+        
 
         const giantRook = this.rook.clone();
         giantRook.position.set(-22,1,24);
         giantRook.scale.set(8,8,8);
         giantRook.castShadow = true;
+        this.floor.add(giantRook);  
         this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
-        this.floor.add(giantRook);        
+              
     } 
 
     update() { 
