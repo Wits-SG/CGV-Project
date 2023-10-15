@@ -1,6 +1,18 @@
 import { InterfaceContext } from "../w3ads/InterfaceContext";
 import { buildButton, buildSection } from "./utility";
 
+const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    if (minutes > 0) {
+        return `${minutes}m ${seconds}s`;
+    } else {
+
+        return `${seconds}s`;
+    }
+}
+
 export const drawEndLevelMenu = (ui: InterfaceContext, levelName: string, levelId: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
     const { menu: menu, menuId: menuId } = ui.addMenu('You Win!', false);
 
@@ -8,7 +20,7 @@ export const drawEndLevelMenu = (ui: InterfaceContext, levelName: string, levelI
         const levelP = document.createElement('p');
         levelP.innerHTML = `<b class="font-semibold">Level</b>: ${levelName}`;
         const timeP = document.createElement('p');
-        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${Math.floor(currentTime)} s`;
+        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${formatTime(currentTime)} s`;
         const difficultyP = document.createElement('p');
         difficultyP.innerHTML = `<b class="font-semibold">Difficulty</b>: ${difficulty}`;
         const puzzlesP = document.createElement('p');
