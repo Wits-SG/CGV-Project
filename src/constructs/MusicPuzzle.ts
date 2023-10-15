@@ -124,7 +124,7 @@ export class MusicPuzzle extends Construct {
         this.carpet.rotation.set(-Math.PI / 2, 0, 0);
         this.add(this.carpet);
 
-        const angleBetween = Math.PI / (numInstruments);
+        const angleBetween = Math.PI / (numInstruments - 1); // -1 spaces it out better than just numInstruments
         const distanceFromCenter = 9.5;
 
         const standMat = new THREE.MeshBasicMaterial({ color: 0x000099 });
@@ -189,8 +189,10 @@ export class MusicPuzzle extends Construct {
                 this.add(this.instrumentModels[i]);
             }
 
-            this.physics.addStatic(instrument, PhysicsColliderFactory.box(1, 2, width / 2));
-            this.interactions.addInteractable(instrument, 5, () => {
+            //@ts-ignore
+            this.physics.addStatic(this.instrumentModels[i], PhysicsColliderFactory.box(1, 2, width / 2));
+            //@ts-ignore
+            this.interactions.addInteractable(this.instrumentModels[i], 5, () => {
                 this.state.push(i);
                 stand.rotation.y = this.solution[i] * angleBetween;                
                 this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length % numInstruments] * angleBetween;
