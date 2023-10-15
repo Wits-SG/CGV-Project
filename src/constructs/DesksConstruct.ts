@@ -148,7 +148,7 @@ export class DesksConstruct extends Construct {
                 if(i==3){
                     lightZ+=20;
                 }
-                const light = new THREE.PointLight( 0xffecf02, 100, 0.0,1.9);
+                const light = new THREE.PointLight( 0xfae5ac, 100, 0.0,1.35);
                 light.position.set(0, 1.85, lightZ);
                 //light.castShadow = true;
                 this.lights.push(light);
