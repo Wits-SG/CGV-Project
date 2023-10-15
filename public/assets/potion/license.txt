@@ -1,0 +1,11 @@
+Model Information:
+* title:	Magic glowing potion
+* source:	https://sketchfab.com/3d-models/magic-glowing-potion-30b2dfdd134c490c81035c137e26ef9a
+* author:	ariskay (https://sketchfab.com/ariskay)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Magic glowing potion" (https://sketchfab.com/3d-models/magic-glowing-potion-30b2dfdd134c490c81035c137e26ef9a) by ariskay (https://sketchfab.com/ariskay) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

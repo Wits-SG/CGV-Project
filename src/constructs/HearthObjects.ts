@@ -15,6 +15,7 @@ export class HearthObjects extends Construct {
     crystal: Crystal;
 
     hearths: Array<Hearth>;
+    objectModels: Array<THREE.Group | undefined>;
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, hearths: Array<Hearth>) {
         super(graphics, physics, interactions, userInterface);
@@ -30,6 +31,12 @@ export class HearthObjects extends Construct {
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.crystal);
+
+        this.objectModels = [];
+        /*
+        for (let i = 0; i < 3; ++i) {
+            this.objectModels.push(undefined);
+        }*/
     }
 
     create(): void {
@@ -40,7 +47,25 @@ export class HearthObjects extends Construct {
         document.addEventListener('hearthLit', this.onHearthLit);
     }
 
-    async load(): Promise<void> {}
+    async load(): Promise<void> {
+        try {//sword model
+            const result: any = await this.graphics.loadModel('assets/sword/scene.gltf');
+            this.objectModels[0] = result.scene;
+            this.objectModels[0]?.scale.setScalar(0.0005);
+        } catch { console.warn('Failed to load sword'); }
+
+        try {//potion model
+            const result: any = await this.graphics.loadModel('assets/potion/scene.gltf');
+            this.objectModels[1] = result.scene;
+            this.objectModels[1]?.scale.setScalar(0.0015);
+        } catch { console.warn('Failed to load potion'); }
+
+        try {//flower mdoel
+            const result: any = await this.graphics.loadModel('assets/flower/scene.gltf');
+            this.objectModels[2] = result.scene;
+            this.objectModels[2]?.scale.setScalar(0.15);
+        } catch { console.warn('Failed to load flower'); }
+    }
 
     build(): void {
         const objectColours = [0x009308, 0x99ccff, 0x72158f]
@@ -73,15 +98,15 @@ export class HearthObjects extends Construct {
                 table.add(placedObject);
             });
 
-            const itemMat = new THREE.MeshBasicMaterial({ color: objectColours[i] })
-            const itemGeom = new THREE.BoxGeometry(0.25, 0.25, 0.25);
             for (let j = 0; j < numFireplaces; ++j) {
-                const item = new THREE.Mesh(itemGeom, itemMat);
-                item.position.set(0, 1, 0);
-                table.add(item);
-                item.userData.fireplaceColour = objectColours[i];
-
-                this.interactions.addPickupObject(item, 5, 2, () => {});
+                const objectModel = this.objectModels[i]; // Get the object model for this iteration
+                if (objectModel) {
+                    const clonedModel = objectModel.clone(); // Clone the object model
+                    clonedModel.position.set(0, 1, 0);
+                    table.add(clonedModel);
+                    clonedModel.userData.fireplaceColour = objectColours[i];
+                    this.interactions.addPickupObject(clonedModel, 5, 2, () => {});
+                }
             }
         }
 
