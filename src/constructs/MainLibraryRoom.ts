@@ -15,6 +15,7 @@ import { WallLights } from './WallLights';
 import { Lectern } from './Lectern';
 import { HearthObjects } from './HearthObjects';
 import { Hearth } from './Hearth';
+import { MusicPuzzle } from './MusicPuzzle';
 
 
 const numHearths = 4;
@@ -68,6 +69,7 @@ export class MainLibraryConstruct extends Construct {
     office: OfficeConstruct;
     hearthObjects: HearthObjects;
     hearths: Array<Hearth>;
+    music: MusicPuzzle;
 
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, numCrystals: number, player: Player) {
@@ -125,6 +127,9 @@ export class MainLibraryConstruct extends Construct {
 
         this.hearthObjects = new HearthObjects(graphics, physics, interactions, userInterface, this.hearths);
         this.addConstruct(this.hearthObjects);
+
+        this.music = new MusicPuzzle(graphics, physics, interactions, userInterface);
+        this.addConstruct(this.music);
     }
 
     create() {
@@ -143,6 +148,9 @@ export class MainLibraryConstruct extends Construct {
         this.wallLights.root.position.set(0,0,0);
         this.lectern.root.position.set(0,-9.8,-4);
         this.lectern.root.rotation.set(0,Math.PI,0);
+
+        this.music.root.position.set(0, -9.9, 50);
+        this.music.root.rotation.y = -Math.PI / 2;
 
         this.hearthObjects.root.position.set(-32, -9.9, -69);
         this.hearthObjects.root.rotation.set(0, Math.PI, 0);
