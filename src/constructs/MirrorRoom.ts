@@ -49,8 +49,8 @@ export class MirrorRoom extends Construct {
             {x: 25, y: 9.5, z: -30}, {x: 40, y: 12, z: -30},
             {x: 40, y: 14.5, z: -15}, {x: 40, y: 17, z: 0}, {x: 25, y: 19.5, z: 0}
         ];
-        const blockGeom = new THREE.BoxGeometry(7, 0.4, 7);
-        const blockMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+        const blockGeom = new THREE.BoxGeometry(7, 0.6, 7);
+        const blockMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 
         for (let i = 0; i < blockPositions.length; ++i) {
             const block = new THREE.Mesh(blockGeom, blockMat);
@@ -61,7 +61,7 @@ export class MirrorRoom extends Construct {
             block.castShadow = true;
             block.layers.set(1);
             this.add(block);
-            this.physics.addStatic(block, PhysicsColliderFactory.box(3.5, 0.2, 3.5));
+            this.physics.addStatic(block, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
         }
 
         const floorMat = new THREE.MeshLambertMaterial({ color: 0xcccccc });
@@ -114,7 +114,7 @@ export class MirrorRoom extends Construct {
         roof.rotation.set(Math.PI/2, 0.38, 0);
         roof.position.set(25, 29, 0);
 
-        const roofLight = new THREE.PointLight(0xffffff, 2, 200, 0);
+        const roofLight = new THREE.PointLight(0xffffff, 4, 300, 0);
         roofLight.position.set(25, 25, 0);
 
 

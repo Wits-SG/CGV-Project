@@ -92,7 +92,7 @@ export class MainLibraryConstruct extends Construct {
        // this.addConstruct(this.chess);
 
         this.mirror = new MirrorRoom(this.graphics, this.physics, this.interactions, this.userInterface);
-        //this.addConstruct(this.mirror);
+        this.addConstruct(this.mirror);
 
 
         this.office = new OfficeConstruct(this.graphics, this.physics, this.interactions, this.userInterface);
