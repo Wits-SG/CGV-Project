@@ -473,21 +473,52 @@ export class OfficeConstruct extends Construct {
 
          // initial positions
 
+         const featherPositions = [
+            { x: 0.6, y: 1.7, z: 4.2 },
+            { x: 14, y: 0.2, z: 15 },
+            { x: -14, y: 0.2, z: -6 },
+         ];
+         const selectedFeatherPosition = featherPositions[Math.floor(Math.random() * 3)];
+
          this.feather.scale.set(0.02,0.02,0.02); 
-         this.feather.position.set(0.6, 1.7, 4.2);
+         this.feather.position.set(
+            selectedFeatherPosition.x,
+            selectedFeatherPosition.y,
+            selectedFeatherPosition.z
+        );
          this.feather.rotateX(Math.PI/2);
          this.add(this.feather);
          this.interactions.addPickupObject(this.feather, 4, 0.04, () => {});
 
+         const hatPositions = [
+            { x: 8, y: 6.8, z: -18 },
+            { x: -13, y: 6.8, z: -15 },
+            { x: 3, y: 6.8, z: -8 },
+         ];
+         const selectedHatPosition = hatPositions[Math.floor(Math.random() * 3)];
  
          this.wizardHat.scale.set(2.5,2.5,2.5); 
-         this.wizardHat.position.set(8, 6.8, -18);
+         this.wizardHat.position.set(
+            selectedHatPosition.x,
+            selectedHatPosition.y,
+            selectedHatPosition.z
+         );
          this.add(this.wizardHat);
          this.interactions.addPickupObject(this.wizardHat, 4, 2.5, () => {});
 
+         const cauldronPositions = [
+            { x: -13, y: 0, z: -23 },
+            { x: 2, y: 0, z: -24 },
+            { x: 13, y: 0, z: -17 },
+         ];
+         const selecteCauldronPositions = cauldronPositions[Math.floor(Math.random() * 3)];
  
          this.cauldron.scale.set(0.04,0.04,0.04); 
-         this.cauldron.position.set(-13, 0, -23);
+         this.cauldron.position.set(
+            selecteCauldronPositions.x,
+            selecteCauldronPositions.y,
+            selecteCauldronPositions.z
+         );
          this.add(this.cauldron);
          this.interactions.addPickupObject(this.cauldron, 3, 0.04, () => {});
 
