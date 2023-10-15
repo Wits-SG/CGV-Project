@@ -48,7 +48,7 @@ export class Staircase extends Construct {
 
         for (let i = 0; i < config.steps; i++) {
             const geometry = new THREE.BoxGeometry(stepLength, stepHeight, stepWidth);
-            const material = new THREE.MeshBasicMaterial({ map: this.texture });
+            const material = new THREE.MeshLambertMaterial({ map: this.texture });
             const step = new THREE.Mesh(geometry, material);
 
             const x = config.radius * Math.cos(currentAngle) + config.xOffset;
