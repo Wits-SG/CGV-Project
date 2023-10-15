@@ -54,6 +54,9 @@ export class MirrorRoom extends Construct {
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Square_Plinths/square_plinths.gltf');
             this.block = gltfData.scene;
+            this.block.traverse((object: THREE.Object3D ) => {
+                object.layers.set(1);
+            });
         } catch (e: any) {
             console.log(e);
         }
@@ -72,18 +75,18 @@ export class MirrorRoom extends Construct {
         // const blockGeom = new THREE.BoxGeometry(7, 0.6, 7);
         // const blockMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 
+        this.block.layers.set(1);
         for (let i = 0; i < blockPositions.length; ++i) {
             const block = this.block.clone();
             block.scale.set(0.4,0.4,0.4);
             block.position.set(
                 blockPositions[i].x, blockPositions[i].y, blockPositions[i].z
             )
-            block.layers.set(1);
             block.castShadow = true;
-            block.layers.set(1);
             this.add(block);
             this.physics.addStatic(block, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
         }
+
 
         const floorMat = new THREE.MeshLambertMaterial({ color: 0xcccccc });
         const floorGeom = new THREE.BoxGeometry(50, 1, 100);
