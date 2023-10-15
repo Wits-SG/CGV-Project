@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Construct, GraphicsContext, PhysicsContext, PhysicsColliderFactory } from '../lib/index';
+import { Construct, GraphicsContext, PhysicsContext } from '../lib/index';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 

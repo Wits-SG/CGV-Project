@@ -83,11 +83,13 @@ export class Project {
     }
 
     pause() {
+        this.clock.stop();
         cancelAnimationFrame(this.animFrameID);
     }
 
     play() {
         if (!this.currentScene.graphics.mainCamera || !this.currentScene.graphics.root) { return; }
+        this.clock.start();
         requestAnimationFrame(this.update.bind(this));
     }
 
