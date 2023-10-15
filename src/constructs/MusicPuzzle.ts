@@ -57,7 +57,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
-        
+        console.log(this.solution);
     }
 
     async load(): Promise<void> {
@@ -66,9 +66,8 @@ export class MusicPuzzle extends Construct {
         catch { console.warn('Failed to find carpet'); }
 
         try { 
-            const result: any = await this.graphics.loadModel('assets/music_stand/scene.gltf');
+            const result: any = await this.graphics.loadModel('assets/music/manhasset_music_stand/scene.gltf');
             this.standModel = result.scene; 
-            // this.standModel.rotation.set(0, Math.PI + 2 * Math.PI / 4, 0);
             
         }
         catch { console.warn('Failed to find stand model'); }
@@ -91,7 +90,7 @@ export class MusicPuzzle extends Construct {
         try {
             const result: any = await this.graphics.loadModel('assets/djembe/scene.gltf');
             this.instrumentModels[1] = result.scene;
-            this.instrumentModels[1]?.scale.setScalar(0.8);
+            this.instrumentModels[1]?.scale.setScalar(0.5);
             this.instrumentSounds[1] = 'sound/djembe.wav'
         } catch { console.warn('Failed to find djembe model'); }
 
@@ -122,7 +121,7 @@ export class MusicPuzzle extends Construct {
         this.carpet.rotation.set(-Math.PI / 2, 0, 0);
         this.add(this.carpet);
 
-        const angleBetween = Math.PI / (numInstruments - 1);
+        const angleBetween = Math.PI / (numInstruments-1);
         const distanceFromCenter = 9.5;
 
         const standMat = new THREE.MeshBasicMaterial({ color: 0x000099 });
@@ -132,7 +131,7 @@ export class MusicPuzzle extends Construct {
         stand.rotation.y = this.solution[0] * angleBetween;
         this.add(stand);
         this.standModel.position.set(-5, 1, 0);
-        this.standModel.scale.setScalar(2);
+        this.standModel.scale.setScalar(0.08);
         this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
         this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
@@ -169,7 +168,7 @@ export class MusicPuzzle extends Construct {
             const instrument = new THREE.Mesh(instrumentGeom, instrumentMat);
             instrument.position.set(
                 distanceFromCenter * Math.sin(i * angleBetween),
-                2,
+                5,
                 distanceFromCenter * Math.cos(i * angleBetween),
             )
             this.add(instrument);
