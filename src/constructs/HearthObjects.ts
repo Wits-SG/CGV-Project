@@ -3,26 +3,41 @@ import { Construct, GraphicsContext, PhysicsColliderFactory, PhysicsContext } fr
 import { InteractManager } from "../lib/w3ads/InteractManager";
 import { InterfaceContext } from "../lib/w3ads/InterfaceContext";
 import { Lectern } from './Lectern';
+import { Crystal } from './Crystal';
+import { Hearth } from './Hearth';
 
+let scope: any; // see Player.ts comment on scope
 const numColours = 3;
 const numFireplaces = 4;
-export class FuelDepot extends Construct {
+export class HearthObjects extends Construct {
 
     lectern: Lectern;
+    crystal: Crystal;
 
-    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
+    hearths: Array<Hearth>;
+
+    constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext, hearths: Array<Hearth>) {
         super(graphics, physics, interactions, userInterface);
+
+        scope = this;
+        this.hearths = hearths;
 
         this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Hearth and Home', [
             'In a place with colors three, a crystal key you seek to free.',
             'Match the objects to their hearths of hue, to unlock the door, it\'s up to you.'
         ]);
         this.addConstruct(this.lectern);
+
+        this.crystal = new Crystal(graphics, physics, interactions, userInterface);
+        this.addConstruct(this.crystal);
     }
 
     create(): void {
         this.lectern.root.position.set(-2.8, 0, -9);
         this.lectern.root.rotation.set(0, Math.PI, 0);
+        this.crystal.root.position.set(0, -100, 0);
+
+        document.addEventListener('hearthLit', this.onHearthLit);
     }
 
     async load(): Promise<void> {}
@@ -72,8 +87,26 @@ export class FuelDepot extends Construct {
 
     }
 
-    update(time?: number | undefined, delta?: number | undefined): void {}
+    update(): void {}
 
-    destroy(): void {}
+    destroy(): void {
+        document.removeEventListener('hearthLit', this.onHearthLit)
+    }
+
+    onHearthLit() {
+        console.log(scope.hearths);
+
+        if (scope.hearths.length == 1) {
+            scope.crystal.root.position.set(0, 5, 0);
+        }
+
+        for (let i = 1; i < scope.hearths.length; ++i) {
+            if (scope.hearths[i].colour != scope.hearths[i - 1].colour) {
+                return;
+            }
+        }
+
+        scope.crystal.root.position.set(0, 5, 0);
+    }
 
 }

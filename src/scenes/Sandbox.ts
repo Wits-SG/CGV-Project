@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { PhysicsColliderFactory, GraphicsPrimitiveFactory, Scene } from '../lib';
 import { Player } from '../constructs/Player';
-import { FuelDepot } from '../constructs/FuelDepot';
+import { HearthObjects } from '../constructs/HearthObjects';
+import { Hearth } from '../constructs/Hearth';
 
 export class SandboxScene extends Scene {
     async load(): Promise<void> {}
@@ -12,7 +13,8 @@ export class SandboxScene extends Scene {
     floor!: THREE.Mesh;
     player!: Player;
 
-    fireplacePuzzle: FuelDepot;
+    fireplacePuzzle: HearthObjects;
+    hearths: Array<Hearth>;
 
     constructor(AmmoLib: any) {
         super(
@@ -29,7 +31,14 @@ export class SandboxScene extends Scene {
         this.player = new Player(this.graphics, this.physics, this.interactions, this.userInterface, levelConfig);
         this.addConstruct(this.player);
 
-        this.fireplacePuzzle = new FuelDepot(this.graphics, this.physics, this.interactions, this.userInterface);
+        this.hearths = [];
+        for (let i = 0; i < 2; ++i) {
+            const newHearth = new Hearth(this.graphics, this.physics, this.interactions, this.userInterface);
+            this.addConstruct(newHearth);
+            this.hearths.push(newHearth);
+        }
+
+        this.fireplacePuzzle = new HearthObjects(this.graphics, this.physics, this.interactions, this.userInterface, this.hearths);
         this.addConstruct(this.fireplacePuzzle);
 
     }
@@ -37,6 +46,11 @@ export class SandboxScene extends Scene {
     create(): void {
         this.fireplacePuzzle.root.position.set(0, 0.3, 0);
         this.player.root.position.set(0, 2, 0);
+
+        for (let i = 0; i < 2; ++i) {
+            this.hearths[i].root.position.set(-15, 0, i * 5);
+            this.hearths[i].root.rotation.set(0, Math.PI / 2, 0);
+        }
     }
 
     build(): void {
