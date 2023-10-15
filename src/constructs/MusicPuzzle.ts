@@ -6,7 +6,7 @@ import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import { Crystal } from './Crystal';
 
 const numInstruments = 5;
-const standAngleOffset = Math.PI;
+const standAngleOffset = 0;
 export class MusicPuzzle extends Construct {
 
     carpet!: THREE.Mesh;
@@ -57,7 +57,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
-        console.log(this.solution);
+        //console.log(this.solution);
     }
 
     async load(): Promise<void> {
