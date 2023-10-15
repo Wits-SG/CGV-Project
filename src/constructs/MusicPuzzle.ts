@@ -26,7 +26,7 @@ export class MusicPuzzle extends Construct {
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
 
-        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['Play them']);
+        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['To unlock the crystal, play the music instruments in the correct order and create a symphony.','Hint: The music stand will guide you in the right direction.']);
         this.addConstruct(this.lectern);
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
@@ -91,7 +91,8 @@ export class MusicPuzzle extends Construct {
             const result: any = await this.graphics.loadModel('assets/djembe/scene.gltf');
             this.instrumentModels[1] = result.scene;
             this.instrumentModels[1]?.scale.setScalar(0.5);
-            this.instrumentSounds[1] = 'sound/djembe.wav'
+            this.instrumentSounds[1] = 'sound/djembe.wav';
+
             
         } catch { console.warn('Failed to find djembe model'); }
 
@@ -130,8 +131,9 @@ export class MusicPuzzle extends Construct {
         const standGeom = new THREE.BoxGeometry(1, 3, 1);
         const stand = new THREE.Mesh(standGeom, standMat);
         stand.position.set(-5, 1, 0);
+        
         stand.rotation.y = this.solution[0] * angleBetween;
-        //stand.rotation.y = Math.PI;
+        //stand.rotation.y = -Math.PI;
         this.add(stand);
         this.standModel.position.set(-5, 1, 0);
         this.standModel.scale.setScalar(0.08);
