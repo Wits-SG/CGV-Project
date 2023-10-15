@@ -7,22 +7,28 @@ particleFire.install({ THREE: THREE });
 export class Hearth extends Construct {
     fire!: any | undefined;
     colour!: number;
+    hearth!: THREE.Group;
 
     create(): void {
         this.colour = 0;
     }
 
-    async load(): Promise<void> { }
+    async load(): Promise<void> {
+        try {//fireplace model
+            const result: any = await this.graphics.loadModel('assets/fireplace/scene.gltf');
+            this.hearth = result.scene;
+        } catch { console.warn('Failed to fireplace'); }
+     }
 
     build(): void {
-        const hearthMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        const hearthGeom = new THREE.BoxGeometry(4, 8, 0.8);
-        const hearth = new THREE.Mesh(hearthGeom, hearthMat);
-        this.add(hearth);
-        this.physics.addStatic(hearth, PhysicsColliderFactory.box(1, 2, 0.5));
+
+        this.hearth.scale.set(6,6,6);
+        this.hearth.position.set(0,0,0);
+        this.add(this.hearth);
+        this.physics.addStatic(this.hearth, PhysicsColliderFactory.box(1, 2, 0.5));
 
         const fireGeom = new particleFire.Geometry(0.75, 2.5, 3000 );
-        this.interactions.addPickupSpot(hearth, 5, (placedObject: THREE.Object3D) => {
+        this.interactions.addPickupSpot(this.hearth, 5, (placedObject: THREE.Object3D) => {
             if (placedObject.userData.fireplaceColour) {
 
                 this.fire?.removeFromParent();
@@ -37,7 +43,7 @@ export class Hearth extends Construct {
             }
 
             placedObject.position.set(0, 3, 0.5);
-            hearth.add(placedObject);
+            this.hearth.add(placedObject);
 
             const litEvent = new Event('hearthLit');
             document.dispatchEvent(litEvent);
