@@ -5,6 +5,7 @@ import { Construct, GraphicsContext, PhysicsColliderFactory, PhysicsContext } fr
 import { Crystal } from './Crystal';
 import { InteractManager } from '../lib/w3ads/InteractManager';
 import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
+import { Lectern } from './Lectern';
 
 
 export class MirrorRoom extends Construct {
@@ -14,14 +15,26 @@ export class MirrorRoom extends Construct {
     wallTexture: any;
     roofTexture: any;
 
+    lectern!: Lectern;
+
+    block!: any;
+
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
 
         this.mirrorCrystal = new Crystal(graphics, physics, interactions, userInterface);
         this.addConstruct(this.mirrorCrystal);
+
+        const title = 'Mirror Puzzle';
+        const paragraphs = ["You stand in a room, crystal glistening high above. The path to your prize lies hidden in plain sight, an enigmatic challenge awaiting your might. Mirrors line the walls, and the reflection they hold offers clues to the squares, secrets untold. Leap with precision, grasp the reflection's grace; the mirror holds more information, the path it will trace."];
+        this.lectern = new Lectern(graphics, physics, interactions, userInterface, title, paragraphs);
+        this.addConstruct(this.lectern);
     }
 
     create(): void {
+
+        this.lectern.root.position.set(4,1,-5);
+        this.lectern.root.rotation.set(0, Math.PI/2 ,0);
 
     }
 
@@ -37,6 +50,13 @@ export class MirrorRoom extends Construct {
         } catch(e: any) {
             console.error(e);
         }
+
+        try {
+            const gltfData: any = await this.graphics.loadModel('assets/Square_Plinths/square_plinths.gltf');
+            this.block = gltfData.scene;
+        } catch (e: any) {
+            console.log(e);
+        }
     }
 
     build(): void {
@@ -49,11 +69,12 @@ export class MirrorRoom extends Construct {
             {x: 25, y: 9.5, z: -30}, {x: 40, y: 12, z: -30},
             {x: 40, y: 14.5, z: -15}, {x: 40, y: 17, z: 0}, {x: 25, y: 19.5, z: 0}
         ];
-        const blockGeom = new THREE.BoxGeometry(7, 0.6, 7);
-        const blockMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        // const blockGeom = new THREE.BoxGeometry(7, 0.6, 7);
+        // const blockMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 
         for (let i = 0; i < blockPositions.length; ++i) {
-            const block = new THREE.Mesh(blockGeom, blockMat);
+            const block = this.block.clone();
+            block.scale.set(0.4,0.4,0.4);
             block.position.set(
                 blockPositions[i].x, blockPositions[i].y, blockPositions[i].z
             )
