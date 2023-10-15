@@ -5,6 +5,18 @@ import { buildButton, buildSection } from "./utility";
 import { Player } from "../../constructs/Player";
 import { drawCharacterMenu, drawEffectsMenu, drawFiltersMenu } from "./Options";
 
+const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    if (minutes > 0) {
+        return `${minutes}m ${seconds}s`;
+    } else {
+
+        return `${seconds}s`;
+    }
+}
+
 export const drawPauseMenu = (ui: InterfaceContext, player: Player, levelName: string, levelKey: string, difficulty: string, numPuzzles: number, currentTime: number): number => {
     const { menu: pauseMenu, menuId: pauseMenuId } = ui.addMenu('Paused', false);
 
@@ -12,7 +24,7 @@ export const drawPauseMenu = (ui: InterfaceContext, player: Player, levelName: s
         const levelP = document.createElement('p');
         levelP.innerHTML = `<b class="font-semibold">Level</b>: ${levelName}`;
         const timeP = document.createElement('p');
-        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${Math.floor(currentTime)} s`;
+        timeP.innerHTML = `<b class="font-semibold">Current Time</b>: ${formatTime(currentTime)} s`;
         const difficultyP = document.createElement('p');
         difficultyP.innerHTML = `<b class="font-semibold">Difficulty</b>: ${difficulty}`;
         const puzzlesP = document.createElement('p');

@@ -24,12 +24,12 @@ import { SMAAPass } from 'three/addons/postprocessing/SMAAPass';
 //@ts-expect-error
 import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass';
 
-const walkSpeed = 0.05;
-const sprintSpeed = 0.1;
+const walkSpeed = 0.7;
+const sprintSpeed = 1; 
 
-const jumpHeight = 10;
-const jumpSpeed = 5;
-const jumpGravity = 10;
+const jumpHeight = 1;
+const jumpSpeed = 2.7;
+const jumpGravity = 1.1;
 
 // Building the event listeners without using anonymous functions (i.e. as class methods) loses the players instance scope in
 // "this". Losing that scope means that the methods are actually using the document scope instead of the player scope
@@ -99,7 +99,7 @@ export class Player extends Construct {
                 rgbShiftShader: false,
             },
             effects: {
-                fxaaShader: false,
+                fxaaShader: true,
                 smaaShader: false,
                 taaShader: false,
                 taaSample: 2,
@@ -107,7 +107,7 @@ export class Player extends Construct {
             video: {
                 fov: 100,
                 farRender: 1000,
-                fog: false,
+                fog: true,
             }
         }
     }
@@ -199,7 +199,7 @@ export class Player extends Construct {
         const yaw = this.body.rotation.y;
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
-        this.physics.moveCharacter(this.root, x, 0, z, this.speed);
+        this.physics.moveCharacter(this.root, x, 0, z, this.speed * delta / 1000);
 
         // character orientation and screen orientation are flipped
         const rotateAmountX = (-1 * this.mouse.x) * this.sensitivity;
