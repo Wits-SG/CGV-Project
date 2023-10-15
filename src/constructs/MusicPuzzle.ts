@@ -6,7 +6,7 @@ import { InterfaceContext } from '../lib/w3ads/InterfaceContext';
 import { Crystal } from './Crystal';
 
 const numInstruments = 5;
-const standAngleOffset = Math.PI;
+const standAngleOffset = 0;
 export class MusicPuzzle extends Construct {
 
     carpet!: THREE.Mesh;
@@ -26,7 +26,7 @@ export class MusicPuzzle extends Construct {
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
 
-        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['Play them']);
+        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['To unlock the crystal, play the music instruments in the correct order and create a symphony.','Hint: The music stand will guide you in the right direction.']);
         this.addConstruct(this.lectern);
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
@@ -57,7 +57,7 @@ export class MusicPuzzle extends Construct {
             while ( this.solution.includes(nextInstrument, 0) ) { nextInstrument = Math.floor(Math.random() * numInstruments); }
             this.solution.push( nextInstrument );
         }
-        
+        //console.log(this.solution);
     }
 
     async load(): Promise<void> {
@@ -66,10 +66,9 @@ export class MusicPuzzle extends Construct {
         catch { console.warn('Failed to find carpet'); }
 
         try { 
-            const result: any = await this.graphics.loadModel('assets/music_stand/scene.gltf');
+            const result: any = await this.graphics.loadModel('assets/music/manhasset_music_stand/scene.gltf');
             this.standModel = result.scene; 
-            // this.standModel.rotation.set(0, Math.PI + 2 * Math.PI / 4, 0);
-            
+            //this.standModel.rotation.y = Math.PI;
         }
         catch { console.warn('Failed to find stand model'); }
 
@@ -91,15 +90,18 @@ export class MusicPuzzle extends Construct {
         try {
             const result: any = await this.graphics.loadModel('assets/djembe/scene.gltf');
             this.instrumentModels[1] = result.scene;
-            this.instrumentModels[1]?.scale.setScalar(0.8);
-            this.instrumentSounds[1] = 'sound/djembe.wav'
+            this.instrumentModels[1]?.scale.setScalar(0.5);
+            this.instrumentSounds[1] = 'sound/djembe.wav';
+
+            
         } catch { console.warn('Failed to find djembe model'); }
 
         try {
             const result: any = await this.graphics.loadModel('assets/lute/scene.gltf');
             this.instrumentModels[3] = result.scene;
             this.instrumentModels[3]?.scale.setScalar(2);
-            this.instrumentModels[3]?.rotation.set(0, -Math.PI / 4, 0);
+            //this.instrumentModels[3]?.rotation.set(0, -Math.PI / 4, 0);
+            this.instrumentModels[3]?.rotation.set(0,-Math.PI/2,Math.PI/2);
             this.instrumentSounds[3] = 'sound/lute.wav';
         } catch { console.warn('Failed to find lute model'); }
 
@@ -122,17 +124,19 @@ export class MusicPuzzle extends Construct {
         this.carpet.rotation.set(-Math.PI / 2, 0, 0);
         this.add(this.carpet);
 
-        const angleBetween = Math.PI / (numInstruments - 1);
+        const angleBetween = Math.PI / (numInstruments);
         const distanceFromCenter = 9.5;
 
         const standMat = new THREE.MeshBasicMaterial({ color: 0x000099 });
         const standGeom = new THREE.BoxGeometry(1, 3, 1);
         const stand = new THREE.Mesh(standGeom, standMat);
         stand.position.set(-5, 1, 0);
+        
         stand.rotation.y = this.solution[0] * angleBetween;
+        //stand.rotation.y = -Math.PI;
         this.add(stand);
         this.standModel.position.set(-5, 1, 0);
-        this.standModel.scale.setScalar(2);
+        this.standModel.scale.setScalar(0.08);
         this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
         this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
@@ -155,10 +159,11 @@ export class MusicPuzzle extends Construct {
                     height = 2;
                     break;
                 case 2:
-                    width = 5;
+                    width = 4;
                     break;
                 case 3:
                     height = 2;
+                    
                     break;
                 case 4:
                     break;
@@ -169,7 +174,7 @@ export class MusicPuzzle extends Construct {
             const instrument = new THREE.Mesh(instrumentGeom, instrumentMat);
             instrument.position.set(
                 distanceFromCenter * Math.sin(i * angleBetween),
-                2,
+                5,
                 distanceFromCenter * Math.cos(i * angleBetween),
             )
             this.add(instrument);
@@ -187,7 +192,7 @@ export class MusicPuzzle extends Construct {
             this.physics.addStatic(instrument, PhysicsColliderFactory.box(1, 2, width / 2));
             this.interactions.addInteractable(instrument, 5, () => {
                 this.state.push(i);
-                stand.rotation.y = this.solution[this.state.length - 1] * angleBetween;                
+                stand.rotation.y = this.solution[i] * angleBetween;                
                 this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length % numInstruments] * angleBetween;
 
 
