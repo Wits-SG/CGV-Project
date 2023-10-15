@@ -159,10 +159,11 @@ export class MusicPuzzle extends Construct {
                     height = 2;
                     break;
                 case 2:
-                    width = 5;
+                    width = 4;
                     break;
                 case 3:
                     height = 2;
+                    
                     break;
                 case 4:
                     break;
@@ -173,7 +174,7 @@ export class MusicPuzzle extends Construct {
             const instrument = new THREE.Mesh(instrumentGeom, instrumentMat);
             instrument.position.set(
                 distanceFromCenter * Math.sin(i * angleBetween),
-                6,
+                5,
                 distanceFromCenter * Math.cos(i * angleBetween),
             )
             this.add(instrument);
@@ -191,7 +192,7 @@ export class MusicPuzzle extends Construct {
             this.physics.addStatic(instrument, PhysicsColliderFactory.box(1, 2, width / 2));
             this.interactions.addInteractable(instrument, 5, () => {
                 this.state.push(i);
-                stand.rotation.y = this.solution[this.state.length - 1] * angleBetween;                
+                stand.rotation.y = this.solution[i] * angleBetween;                
                 this.standModel.rotation.y = standAngleOffset + this.solution[this.state.length % numInstruments] * angleBetween;
 
 
