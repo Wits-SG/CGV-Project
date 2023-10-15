@@ -113,11 +113,7 @@ export class MirrorRoom extends Construct {
         mirrorFrame.rotation.set(0, -Math.PI/2, Math.PI);
 
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture });
-        const backWallGeom = new THREE.PlaneGeometry(40, 20);
         const sideWallGeom = new THREE.PlaneGeometry(50, 40);
-
-        const entranceWallLeft = new THREE.Mesh(backWallGeom, wallMat);
-        const entranceWallRight = new THREE.Mesh(backWallGeom, wallMat);
 
         const sideWallLeft = new THREE.Mesh(sideWallGeom, wallMat);
         const sideWallRight = new THREE.Mesh(sideWallGeom, wallMat);
@@ -126,11 +122,6 @@ export class MirrorRoom extends Construct {
 
         sideWallRight.position.set(25, 20, 50);
         sideWallRight.rotation.set(0, Math.PI, 0);
-
-        entranceWallLeft.position.set(0, 10, -30);
-        entranceWallLeft.rotation.set(0, Math.PI/2, Math.PI);
-        entranceWallRight.position.set(0, 10, 30);
-        entranceWallRight.rotation.set(0, Math.PI/2, Math.PI);
 
         const roofMat = new THREE.MeshLambertMaterial({ map: this.roofTexture });
         const roofGeom = new THREE.PlaneGeometry(54, 100);
@@ -145,17 +136,12 @@ export class MirrorRoom extends Construct {
 
         this.add(roofLight);
 
-        this.add(entranceWallLeft);
-        this.add(entranceWallRight);
-
         this.add(sideWallLeft);
         this.add(sideWallRight);
         this.add(mirrorFrame);
         this.add(roof);
         this.add(floor);
 
-        this.physics.addStatic(entranceWallLeft, PhysicsColliderFactory.box(20, 10, 0.1));
-        this.physics.addStatic(entranceWallRight, PhysicsColliderFactory.box(20, 10, 0.1));
         this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 20, 0.1));
 
