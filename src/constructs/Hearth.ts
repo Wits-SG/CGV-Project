@@ -22,11 +22,11 @@ export class Hearth extends Construct {
      }
 
     build(): void {
-        this.hearth.position.set(0,0,0);
+        this.hearth.scale.set(1.5, 1.5, 1.5);
         this.add(this.hearth);
-        this.physics.addStatic(this.hearth, PhysicsColliderFactory.box(1, 2, 0.5));
+        this.physics.addStatic(this.hearth, PhysicsColliderFactory.box(3, 2, 1.5));
 
-        const fireGeom = new particleFire.Geometry(0.75, 2.5, 3000 );
+        const fireGeom = new particleFire.Geometry( 1, 4, 5000 );
         this.interactions.addPickupSpot(this.hearth, 5, (placedObject: THREE.Object3D) => {
             if (placedObject.userData.fireplaceColour) {
 
@@ -37,7 +37,7 @@ export class Hearth extends Construct {
                 //@ts-ignore
                 fireMat.setPerspective(this.graphics.mainCamera.fov, window.innerHeight);
                 this.fire = new THREE.Points(fireGeom, fireMat);
-                this.fire.position.set(0, 0, 1);
+                this.fire.position.set(0, 1, 0);
                 this.add(this.fire); // the fire gets readded here
             }
 

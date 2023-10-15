@@ -44,8 +44,7 @@ export class HearthObjects extends Construct {
     }
 
     create(): void {
-        this.lectern.root.position.set(-2.8, 0, -9);
-        this.lectern.root.rotation.set(0, Math.PI, 0);
+        this.lectern.root.position.set(-2.8, 0, 9);
         this.crystal.root.position.set(0, -100, 0);
 
         document.addEventListener('hearthLit', this.onHearthLit);
@@ -92,7 +91,7 @@ export class HearthObjects extends Construct {
         const angleBetween = Math.PI / 4;
         const distanceFromCenter = 12;
         const tableOffset = Math.PI / 4; // just help centering the tables
-        const tableMat = new THREE.MeshBasicMaterial({ color: 0x222222 });
+        const tableMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
         const tableGeom = new THREE.BoxGeometry(2, 1.5, 2);
         for (let i = 0; i < numColours; ++i) {
             const table = new THREE.Mesh(tableGeom, tableMat);
