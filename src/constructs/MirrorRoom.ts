@@ -13,7 +13,7 @@ export class MirrorRoom extends Construct {
     mirror!: Reflector;
 
     wallTexture: any;
-    roofTexture: any;
+    floorTexture: any;
 
     lectern!: Lectern;
 
@@ -36,6 +36,7 @@ export class MirrorRoom extends Construct {
         this.lectern.root.position.set(4,1,-5);
         this.lectern.root.rotation.set(0, Math.PI/2 ,0);
 
+        this.mirrorCrystal.root.position.set(45, 3, 0);
     }
 
     async load(): Promise<void> {
@@ -46,7 +47,7 @@ export class MirrorRoom extends Construct {
         }
 
         try {
-            this.roofTexture = await this.graphics.loadTexture('assets/gray-scale-shot-textured-ceiling.jpg');
+            this.floorTexture = await this.graphics.loadTexture('assets/Flooring_Stone_001_COLOR.png');
         } catch(e: any) {
             console.error(e);
         }
@@ -64,34 +65,78 @@ export class MirrorRoom extends Construct {
 
     build(): void {
 
-        this.mirrorCrystal.root.position.set(25, 25, 0);
-
-
-        const blockPositions = [
-            {x: 10, y: 2, z: 0}, {x: 10, y: 4.5, z: -15}, {x: 10, y: 7, z: -30},
-            {x: 25, y: 9.5, z: -30}, {x: 40, y: 12, z: -30},
-            {x: 40, y: 14.5, z: -15}, {x: 40, y: 17, z: 0}, {x: 25, y: 19.5, z: 0}
+        const firstRowBlocks = [
+            { x: 20, y: -1, z: 0 } ,{ x: 20, y: -1, z: -7.5 }, { x: 20, y: -1, z: 7.5 },
         ];
-        // const blockGeom = new THREE.BoxGeometry(7, 0.6, 7);
-        // const blockMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+        const middleRowBlocks = [
+            { x: 27.5, y: -1, z: 0 }, { x: 27.5, y: -1, z: -7.5 }, { x: 27.5, y: -1, z: 7.5 },
+        ];
+        const lastRowBlocks = [
+            { x: 35, y: -1, z: 0 }, { x: 35, y: -1, z: -7.5 }, { x: 35, y: -1, z: 7.5 },
+        ];
 
-        this.block.layers.set(1);
-        for (let i = 0; i < blockPositions.length; ++i) {
-            const block = this.block.clone();
-            block.scale.set(0.4,0.4,0.4);
-            block.position.set(
-                blockPositions[i].x, blockPositions[i].y, blockPositions[i].z
+        // Front row
+        let selectedBlock = Math.floor(Math.random() * firstRowBlocks.length);
+        const firstBlock = this.block.clone();
+        firstBlock.scale.set(0.5,0.5,0.5);
+        firstBlock.position.set(
+            firstRowBlocks[selectedBlock].x, firstRowBlocks[selectedBlock].y, firstRowBlocks[selectedBlock].z
+        )
+        firstBlock.castShadow = true;
+        this.add(firstBlock);
+        this.physics.addStatic(firstBlock, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
+
+        // middle row
+        const middleUsed: Array<number> = [];
+        for (let i = 0; i < 2; ++i) {
+            selectedBlock = Math.floor(Math.random() * middleRowBlocks.length);
+            while ( middleUsed.includes(selectedBlock) ) { selectedBlock = Math.floor(Math.random() * middleRowBlocks.length); }
+            middleUsed.push( selectedBlock );
+            const middleBlock = this.block.clone();
+            middleBlock.scale.set(0.5,0.5,0.5);
+            middleBlock.position.set(
+                middleRowBlocks[selectedBlock].x, middleRowBlocks[selectedBlock].y, middleRowBlocks[selectedBlock].z
             )
-            block.castShadow = true;
-            this.add(block);
-            this.physics.addStatic(block, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
+            middleBlock.castShadow = true;
+            this.add(middleBlock);
+            this.physics.addStatic(middleBlock, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
         }
 
+        // last row
+        const lastUsed: Array<number> = [];
+        for (let i = 0; i < 2; ++i) {
+            selectedBlock = Math.floor(Math.random() * lastRowBlocks.length);
+            while ( lastUsed.includes(selectedBlock) ) { selectedBlock = Math.floor(Math.random() * lastRowBlocks.length); }
+            lastUsed.push( selectedBlock );
+            const lastBlock = this.block.clone();
+            lastBlock.scale.set(0.5,0.5,0.5);
+            lastBlock.position.set(
+                lastRowBlocks[selectedBlock].x, lastRowBlocks[selectedBlock].y, lastRowBlocks[selectedBlock].z
+            )
+            lastBlock.castShadow = true;
+            this.add(lastBlock);
+            this.physics.addStatic(lastBlock, PhysicsColliderFactory.box(3.5, 0.6, 3.5));
+        }
 
-        const floorMat = new THREE.MeshLambertMaterial({ color: 0xcccccc });
-        const floorGeom = new THREE.BoxGeometry(50, 1, 100);
-        const floor = new THREE.Mesh(floorGeom, floorMat);
-        floor.position.set(25, 0, 0);
+        const floorMat = new THREE.MeshLambertMaterial({ map: this.floorTexture });
+        const floorGeom = new THREE.BoxGeometry(15, 10, 100);
+        const floorBack = new THREE.Mesh(floorGeom, floorMat);
+        const floorForward = new THREE.Mesh(floorGeom, floorMat);
+        const floorBottom = new THREE.Mesh(floorGeom, floorMat);
+
+        floorBack.position.set(7.5, -5, 10);
+        floorBack.scale.set(1, 1, 0.9);
+        floorForward.position.set(42.5, -5, 0);
+        floorBottom.position.set(25, -15, 0);
+        floorBottom.scale.set(2.5, 1, 1); // adjust to fill the whole bottom space
+
+        const rampGeom = new THREE.BoxGeometry(10, 2, 15);
+        for (let i = 0; i < 5; ++i) {
+            const ramp = new THREE.Mesh(rampGeom, floorMat);
+            ramp.position.set(7 - 2*i, -9.5 + 2*i, -42.5);
+            this.add(ramp);
+            this.physics.addStatic(ramp, PhysicsColliderFactory.box(5, 1, 7.5));
+        }
 
         const tempMirrorGeom = new THREE.PlaneGeometry( 50, 100 );
         this.mirror = new Reflector( tempMirrorGeom, {
@@ -113,21 +158,30 @@ export class MirrorRoom extends Construct {
         mirrorFrame.rotation.set(0, -Math.PI/2, Math.PI);
 
         const wallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture });
-        const sideWallGeom = new THREE.PlaneGeometry(50, 40);
+        const sideWallGeom = new THREE.PlaneGeometry(50, 50);
 
         const sideWallLeft = new THREE.Mesh(sideWallGeom, wallMat);
         const sideWallRight = new THREE.Mesh(sideWallGeom, wallMat);
 
-        sideWallLeft.position.set(25, 20, -50);
-
-        sideWallRight.position.set(25, 20, 50);
+        sideWallLeft.position.set(25, 15, -50);
+        sideWallRight.position.set(25, 15, 50);
         sideWallRight.rotation.set(0, Math.PI, 0);
 
-        const backWallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture })
         const backWallGeom = new THREE.PlaneGeometry(20, 100);
-        const backWall = new THREE.Mesh(backWallGeom, backWallMat);
+        const backWall = new THREE.Mesh(backWallGeom, wallMat);
         backWall.rotation.set(Math.PI/2, Math.PI/2, 0);
         backWall.position.set(0, 30, 0);
+
+        const bottomWallGeom = new THREE.PlaneGeometry(5, 100);
+        const bottomWallForward = new THREE.Mesh(bottomWallGeom, wallMat);
+        const bottomWallBack = new THREE.Mesh(bottomWallGeom, wallMat);
+        
+        bottomWallForward.position.set(34.8, -2.5, 0);
+        bottomWallForward.rotation.set(Math.PI/2, -Math.PI/2, 0);
+
+        bottomWallBack.position.set(15.2, -2.5, 10);
+        bottomWallBack.rotation.set(Math.PI/2, Math.PI/2, 0);
+        bottomWallBack.scale.set(0.95, 0.9, 1);
 
         const roofLight = new THREE.PointLight(0xffffff, 4, 300, 0);
         roofLight.position.set(25, 25, 0);
@@ -138,13 +192,17 @@ export class MirrorRoom extends Construct {
         this.add(sideWallRight);
         this.add(mirrorFrame);
         this.add(backWall);
-        this.add(floor);
+        this.add(floorBack);
+        this.add(floorForward);
+        this.add(floorBottom)
 
-        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
-        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 20, 0.1));
+        this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 25, 0.1));
+        this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(25, 25, 0.1));
 
         this.physics.addStatic(mirrorFrame, PhysicsColliderFactory.box(50, 20, 0.1));
-        this.physics.addStatic(floor, PhysicsColliderFactory.box(25, 0.5, 50));
+        this.physics.addStatic(floorBack, PhysicsColliderFactory.box(7.5, 5, 45));
+        this.physics.addStatic(floorForward, PhysicsColliderFactory.box(7.5, 5, 50));
+        this.physics.addStatic(floorBottom, PhysicsColliderFactory.box(17.5, 5, 50));
 
 
         window.addEventListener('resize', () => {
