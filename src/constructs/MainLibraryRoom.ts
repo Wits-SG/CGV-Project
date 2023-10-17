@@ -104,7 +104,7 @@ export class MainLibraryConstruct extends Construct {
         this.addConstruct(this.chandeliersConstruct);
 
         this.wallLights = new WallLights(this.graphics, this.physics, this.interactions, this.userInterface);
-       this.addConstruct(this.wallLights);
+        this.addConstruct(this.wallLights);
 
         this.exitDoor = new CrystalDoor(this.graphics, this.physics, this.interactions, this.userInterface, this.numCrystals);
         this.addConstruct(this.exitDoor);
@@ -137,7 +137,7 @@ export class MainLibraryConstruct extends Construct {
         this.exitDoor.root.scale.set(1.15,1.15,1.15);
         this.chess.root.position.set(100, -10.5, 42.5);
         this.chess.root.rotation.set(0, Math.PI, 0);
-        this.mirror.root.position.set(100, -10.5, -12.5);
+        this.mirror.root.position.set(100, -10, -12.5);
         this.mirror.root.rotation.set(0, Math.PI / 2, 0);
         this.office.root.position.set(-115, -10, 0);
         this.office.root.rotation.set(0, Math.PI / 2, 0);
