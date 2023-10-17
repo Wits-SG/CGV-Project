@@ -93,7 +93,7 @@ export class MirrorRoom extends Construct {
         const floor = new THREE.Mesh(floorGeom, floorMat);
         floor.position.set(25, 0, 0);
 
-        const tempMirrorGeom = new THREE.PlaneGeometry( 98, 38 );
+        const tempMirrorGeom = new THREE.PlaneGeometry( 50, 100 );
         this.mirror = new Reflector( tempMirrorGeom, {
             clipBias: 0.003,
             textureWidth: window.innerWidth * devicePixelRatio,
@@ -102,12 +102,12 @@ export class MirrorRoom extends Construct {
         });
         const cam = this.mirror.virtualCamera;
         cam.layers.enable(1);
-        this.mirror.position.set(49.9, 19, 0);
-        this.mirror.rotation.set(0, -Math.PI/2, Math.PI);
+        this.mirror.position.set(25, 40, 0);
+        this.mirror.rotation.set(Math.PI / 2, 0, 0);
         this.add(this.mirror);
 
         const mirrorFrameGeom = new THREE.PlaneGeometry(100, 40);
-        const mirrorFrameMat = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+        const mirrorFrameMat = new THREE.MeshLambertMaterial({ map: this.wallTexture });
         const mirrorFrame = new THREE.Mesh(mirrorFrameGeom, mirrorFrameMat);
         mirrorFrame.position.set(50, 20, 0);
         mirrorFrame.rotation.set(0, -Math.PI/2, Math.PI);
@@ -123,23 +123,21 @@ export class MirrorRoom extends Construct {
         sideWallRight.position.set(25, 20, 50);
         sideWallRight.rotation.set(0, Math.PI, 0);
 
-        const roofMat = new THREE.MeshLambertMaterial({ map: this.roofTexture });
-        const roofGeom = new THREE.PlaneGeometry(54, 100);
-        const roof = new THREE.Mesh(roofGeom, roofMat);
-        roof.rotation.set(Math.PI/2, 0.38, 0);
-        roof.position.set(25, 29, 0);
+        const backWallMat = new THREE.MeshLambertMaterial({ map: this.wallTexture })
+        const backWallGeom = new THREE.PlaneGeometry(20, 100);
+        const backWall = new THREE.Mesh(backWallGeom, backWallMat);
+        backWall.rotation.set(Math.PI/2, Math.PI/2, 0);
+        backWall.position.set(0, 30, 0);
 
         const roofLight = new THREE.PointLight(0xffffff, 4, 300, 0);
         roofLight.position.set(25, 25, 0);
-
-
 
         this.add(roofLight);
 
         this.add(sideWallLeft);
         this.add(sideWallRight);
         this.add(mirrorFrame);
-        this.add(roof);
+        this.add(backWall);
         this.add(floor);
 
         this.physics.addStatic(sideWallLeft, PhysicsColliderFactory.box(25, 20, 0.1));
