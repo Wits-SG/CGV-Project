@@ -44,7 +44,7 @@ export class CrystalDoor extends Construct {
         this.add(this.exitDoor);
 
         this.interactions.addInteractable(this.root, 20, () => {
-            if (this.numFoundCrystals == this.numCrystals) {
+            if (this.numFoundCrystals >= this.numCrystals) {
                 const endLevelEvent = new Event("endLevel");
                 document.dispatchEvent(endLevelEvent);
             } else {
