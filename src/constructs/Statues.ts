@@ -401,6 +401,7 @@ export class StatuesConstruct extends Construct {
 
             chessboardGrid[row][col].add(piece);
             piece.castShadow = true;
+            piece.receiveShadow = true;
             piece.position.set(0, 0, 0);
             piece.scale.setScalar(2);
             piece.userData.pieceType = i;
