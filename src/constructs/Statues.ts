@@ -426,6 +426,7 @@ export class StatuesConstruct extends Construct {
         giantKnight.rotation.set(0, -Math.PI/4, 0);
         giantKnight.scale.set(8,8,8);
         giantKnight.castShadow = true;
+        giantKnight.receiveShadow = true;
         this.floor.add(giantKnight);
         this.physics.addStatic(giantKnight , PhysicsColliderFactory.box(3, 10, 3));
         
@@ -434,6 +435,7 @@ export class StatuesConstruct extends Construct {
         giantQueen.position.set(-22,1,-22);
         giantQueen.scale.set(8,8,8);
         giantQueen.castShadow = true;
+        giantQueen.receiveShadow = true;
         this.floor.add(giantQueen);
         this.physics.addStatic(giantQueen , PhysicsColliderFactory.box(3, 10, 3));
         
@@ -442,6 +444,7 @@ export class StatuesConstruct extends Construct {
         giantBishop.position.set(22,1,24);
         giantBishop.scale.set(8,8,8);
         giantBishop.castShadow = true;
+        giantBishop.receiveShadow = true;
         this.floor.add(giantBishop);
         this.physics.addStatic(giantBishop , PhysicsColliderFactory.box(2.5, 10, 2.5));
         
@@ -450,6 +453,7 @@ export class StatuesConstruct extends Construct {
         giantRook.position.set(-22,1,24);
         giantRook.scale.set(8,8,8);
         giantRook.castShadow = true;
+        giantRook.receiveShadow = true;
         this.floor.add(giantRook);  
         this.physics.addStatic(giantRook , PhysicsColliderFactory.box(2.5, 10, 2.5));
               
