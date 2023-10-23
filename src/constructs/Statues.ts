@@ -416,8 +416,9 @@ export class StatuesConstruct extends Construct {
         this.solution = pieceColumns.filter(val => val != -1);
 
         // Add chessboard to the scene
-        this.add(this.board);
         this.board.receiveShadow = true;
+        this.add(this.board);
+        
 
         // Corner Chess Pieces
         const giantKnight = this.knight.clone();
