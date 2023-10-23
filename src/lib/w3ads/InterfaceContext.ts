@@ -6,7 +6,7 @@ export class InterfaceContext {
 
     constructor() {
         this.root = document.createElement('div');
-        this.root.className = 'fixed left-0 top-0 z-10 grid h-screen w-screen grid-rows-[1fr_200px]';
+        this.root.className = 'fixed left-0 top-0 z-10 grid h-screen w-screen grid-rows-[1fr_200px] overflow-scroll';
 
         this.menuRoot = document.createElement('div');
         this.menuRoot.className = 'row-span-1 row-start-1 flex flex-row items-start justify-start gap-5 p-5';
