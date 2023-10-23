@@ -193,8 +193,11 @@ export class StatuesConstruct extends Construct {
         const sideWallGeom = new THREE.BoxGeometry(1,20,60);
 
         const backWall = new THREE.Mesh(backWallGeom, wallMat);
+        backWall.receiveShadow = true;
         const sideWallLeft = new THREE.Mesh(sideWallGeom, wallMat);
+        sideWallLeft.receiveShadow = true;
         const sideWallRight = new THREE.Mesh(sideWallGeom, wallMat);
+        sideWallRight.receiveShadow = true;
 
         sideWallLeft.position.set(-29.5,10,0);
         sideWallRight.position.set(29.5,10,0);
@@ -252,6 +255,7 @@ export class StatuesConstruct extends Construct {
                 const material = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
 
                 const square = new THREE.Mesh(geometry, material);
+                square.receiveShadow = true;
                 rowArray.push(square);
                 square.position.set(x, 0.2, z);
                 this.board.add(square);
