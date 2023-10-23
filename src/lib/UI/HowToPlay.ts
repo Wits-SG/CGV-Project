@@ -19,7 +19,7 @@ export const drawHowToPlay = (ui: InterfaceContext): number => {
     menu.appendChild(objectiveSection);
 
     const puzzles = [
-        { name: 'Office', description: 'Every magic library needs a wizard, and every wizard needs an office, maybe its\'t time for an office makeover.', solution: 'Place objects in order from lightest to heaviest.' },
+        { name: 'Office', description: 'Every magic library needs a wizard, and every wizard needs an office, maybe its\'t time for an office makeover.', solution: 'Place the 3 objects in order from lightest to heaviest.' },
         { name: 'Mirror', description: 'Magic mirrors are a staple, they can even show us whats really there, even if it doesn\'t seem like anything is.', solution: 'Use the mirror to find invisibile obstacles you can jump on to reach the crystal.' },
         { name: 'Chess', description: 'Chess is a game for the intellectually inclined, and our wizard here thinks himself very smart. So smart he\'s forgotten how his statues are stored...', solution: 'Place the pieces on the plinths, in the order they were on the board, read left to right.'},
         { name: 'Music', description: 'Music can calm the soul and guide us through many complex subjects, but only if the musicians have someone to guide them.', solution: 'Play the instruments in order. The conductors stand will face towards the next instrument to be played.' },
