@@ -227,6 +227,7 @@ export class MainLibraryConstruct extends Construct {
             wall.rotation.set(wallRotations[i][0],wallRotations[i][1],wallRotations[i][2]);
             this.walls.push(wall);
             this.physics.addStatic(wall,PhysicsColliderFactory.box(wallScales[i][0]/2, wallScales[i][1]/2, 0.01));
+            wall.receiveShadow = true;
             this.graphics.add(wall);
         }
         this.floors = [];
