@@ -60,7 +60,12 @@ export class StatuesConstruct extends Construct {
         this.addConstruct(this.crystal);
 
         const title = 'Chess Puzzle';
-        const paragraphs = ["Prompt: In the realm of the royal game, five subjects poised to rise to fame. Their order hidden in the field, a chessboard's secrets shall be revealed. Look to the ranks and files with care, and on the plinths, their order bear.","Hint: Begin your quest by seeking the lowest coordinates; the ranks and files shall be your guides. Patience, and a keen eye for position, shall unveil the puzzle's hidden mission."];
+        const paragraphs = ["In the realm of the royal game,", 
+        "Five subjects poised to rise to fame.", 
+        "Their order hidden in the field,", 
+        "A chessboard's secrets shall be revealed.", 
+        "Look to the ranks and files with care,", 
+        "And on the plinths, their order bear."];
         this.lectren = new Lectern(graphics, physics, interactions, userInterface, title, paragraphs);
         this.addConstruct(this.lectren);
 

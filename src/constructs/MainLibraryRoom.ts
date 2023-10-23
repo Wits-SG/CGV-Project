@@ -80,14 +80,14 @@ export class MainLibraryConstruct extends Construct {
 
         // poem for lectern from ChatGPT, thanks to Lisa :).
         this.lectern = new Lectern(this.graphics, this.physics, this.interactions, this.userInterface, 'Welcome to the Magic Library.', [
-            "In a library where magic's gleam,",
-            "A locked door guards secrets, it seems.",
-            "To break the spell, fulfill your dream,",
-            "Solve the puzzles with all your scheme.",
-            "Gather crystals, each one a key,",
-            "Unlock the knowledge, set it free.",
-            "With rhyme and reason, you shall see,",
-            "The magic library's mystery."
+            "In the library's mystic embrace,",
+            "Puzzles solved unveil your space.",
+            "With gleaming crystals, unlock the door,",
+            "Unveil the knowledge, explore once more.",
+            "Collect the gems, their radiant sheen,",
+            "On plinths they rest, a vibrant scene.",
+            "Draw near the door, destiny clear,",
+            "With crystal magic, dispel all fear."
         ]);
        this.addConstruct(this.lectern);
 
