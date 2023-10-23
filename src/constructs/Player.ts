@@ -105,7 +105,7 @@ export class Player extends Construct {
                 taaSample: 2,
             },
             video: {
-                fov: 100,
+                fov: 60,
                 farRender: 1000,
                 fog: true,
             }
