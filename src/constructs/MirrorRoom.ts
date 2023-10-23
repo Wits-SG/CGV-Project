@@ -26,7 +26,12 @@ export class MirrorRoom extends Construct {
         this.addConstruct(this.mirrorCrystal);
 
         const title = 'Mirror Puzzle';
-        const paragraphs = ["You stand in a room, crystal glistening high above. The path to your prize lies hidden in plain sight, an enigmatic challenge awaiting your might. Mirrors line the walls, and the reflection they hold offers clues to the squares, secrets untold. Leap with precision, grasp the reflection's grace; the mirror holds more information, the path it will trace."];
+        const paragraphs = ['In a chamber with a glistening prize,',
+            'Above, the mirrored ceiling\'s your guise.',
+            'Platforms reflected, secrets concealed,',
+            'Cross with precision, your fate is revealed.',
+            'Unlock the crystal, embrace its gleam,',
+            'Follow the mirrored path, fulfill your dream.'];
         this.lectern = new Lectern(graphics, physics, interactions, userInterface, title, paragraphs);
         this.addConstruct(this.lectern);
     }

@@ -28,8 +28,12 @@ export class HearthObjects extends Construct {
         this.hearths = hearths;
 
         this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Hearth and Home', [
-            'In a place with colors three, a crystal key you seek to free.',
-            'Match the objects to their hearths of hue, to unlock the door, it\'s up to you.'
+            'Amidst the tomes and shelves so wide,',
+            'Three objects wait, secrets to confide.',
+            'Choose just one, your fate\'s decree,',
+            'To all the fireplaces, carry what you see.',
+            'Place it at each hearth, in quiet mirth,',
+            'Unlock the library\'s secrets, gain a crystal\'s worth.'
         ]);
         this.addConstruct(this.lectern);
 

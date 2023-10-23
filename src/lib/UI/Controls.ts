@@ -9,6 +9,7 @@ export const drawControls = (ui: InterfaceContext): number => {
         { description: 'Walk backward', key: 's' },
         { description: 'Strafe left', key: 'a' },
         { description: 'Strafe right', key: 'd' },
+        { description: 'Jump', key: 'space' },
         { description: 'Look around', key: 'mouse' },
         { description: 'Interact', key: 'e' },
         { description: 'Place', key: 'q' },

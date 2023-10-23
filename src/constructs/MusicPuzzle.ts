@@ -26,7 +26,7 @@ export class MusicPuzzle extends Construct {
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
         super(graphics, physics, interactions, userInterface);
 
-        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['To unlock the crystal, play the music instruments in the correct order and create a symphony.','Hint: The music stand will guide you in the right direction.']);
+        this.lectern = new Lectern(graphics, physics, interactions, userInterface, 'Music', ['To find the tune that sets you free,', 'Observe the stand, your guide to be.', 'Play instruments with practiced art,', 'Unlock the crystal, make your part.']);
         this.addConstruct(this.lectern);
 
         this.crystal = new Crystal(graphics, physics, interactions, userInterface);
