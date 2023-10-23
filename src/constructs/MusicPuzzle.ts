@@ -122,6 +122,7 @@ export class MusicPuzzle extends Construct {
         const carpetGeom = new THREE.PlaneGeometry(22, 25);
         this.carpet = new THREE.Mesh(carpetGeom, carpetMat);
         this.carpet.rotation.set(-Math.PI / 2, 0, 0);
+        this.carpet.receiveShadow = true;
         this.add(this.carpet);
 
         const angleBetween = Math.PI / (numInstruments - 1); // -1 spaces it out better than just numInstruments
@@ -138,6 +139,7 @@ export class MusicPuzzle extends Construct {
         this.standModel.position.set(-5, 1, 0);
         this.standModel.scale.setScalar(0.08);
         this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
+        this.standModel.castShadow = true;
         this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
         this.interactions.addInteractable(stand, 3, () => {
@@ -178,6 +180,13 @@ export class MusicPuzzle extends Construct {
                 distanceFromCenter * Math.cos(i * angleBetween),
             )
             this.add(instrument);
+
+            // Set castShadow to true for the instrument model
+            instrument.traverse((object) => {
+                if (object instanceof THREE.Mesh) {
+                    object.castShadow = true;
+                }
+            });
 
             if (this.instrumentModels[i] !== undefined) {
                 this.instrumentModels[i]?.position.set(
