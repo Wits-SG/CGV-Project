@@ -324,18 +324,8 @@ export class Player extends Construct {
         this.graphics.resetPasses();
 
         if (this.options.effects.fxaaShader) {
-
             const fxaaPass = new ShaderPass( FXAAShader );
-            const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
-
-            const newComposer = new EffectComposer( this.graphics.renderer );
-            newComposer.addPass( this.graphics.renderPass );
-            newComposer.addPass( colourCorrectionPass );
-            this.graphics.addComposer( newComposer );
-
-            this.graphics.addPass( colourCorrectionPass );
             this.graphics.addPass( fxaaPass );
-
         }
 
         if (this.options.effects.smaaShader) {
@@ -364,10 +354,6 @@ export class Player extends Construct {
         }
 
         this.graphics.renderer.shadowMap.enabled = this.options.video.shadows;
-
-        if (this.options.filters.pixelShader) {
-            this.graphics.addPass( new RenderPixelatedPass(4, this.graphics.root, this.graphics.mainCamera ) );
-        }
 
         if (this.options.filters.dotShader) {
             const dotPass = new ShaderPass( DotScreenShader );
