@@ -215,7 +215,7 @@ export class MainLibraryConstruct extends Construct {
         const floorPositions = [[0,-10,0],[82.5,-10,0],[-65,-10,0]];
         const floorScales = [[80, 165,0],[85, 25,0],[50, 30,0]];
     
-        const ceilingPositions = [[0,10,0],[91.25,10,0],[-65,10,0]];
+        const ceilingPositions = [[0,10,0],[92.5,10,0],[-65,10,0]];
         const ceilingScales = [[80, 165,0.1],[105, 25,0.1],[50, 30,0.1]];
 
       this.walls = [];
