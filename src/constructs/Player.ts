@@ -80,7 +80,8 @@ export class Player extends Construct {
         video: {
             fov: number,
             farRender: number,
-            fog: boolean
+            fog: boolean,
+            shadows: boolean,
         }
     };
 
@@ -108,6 +109,7 @@ export class Player extends Construct {
                 fov: 60,
                 farRender: 1000,
                 fog: true,
+                shadows: true,
             }
         }
     }
@@ -359,6 +361,8 @@ export class Player extends Construct {
             //@ts-expect-error
             this.graphics.root.fog.density = 0;
         }
+
+        this.graphics.renderer.shadowMap.enabled = this.options.video.shadows;
 
         if (this.options.filters.pixelShader) {
             this.graphics.addPass( new RenderPixelatedPass(4, this.graphics.root, this.graphics.mainCamera ) );

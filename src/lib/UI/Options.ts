@@ -121,6 +121,22 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
     fovSpan.appendChild(fovLabel);
     fovSpan.appendChild(fovSlider);
 
+    const shadowSpan = document.createElement('span');
+    shadowSpan.className = 'flex flex-row justify-center items-start w-full gap-3';
+        const shadowLabel = document.createElement('label');
+        shadowLabel.htmlFor = 'shadows-check';
+        shadowLabel.textContent = 'Shadows';
+
+        const shadowCheck = document.createElement('input');
+        shadowCheck.className = 'w-5 h-5 rounded accent-rose-500';
+        shadowCheck.type = 'checkbox'; shadowCheck.id = 'shadows-check';
+        shadowCheck.checked = player.options.video.shadows;
+        shadowCheck.onchange = () => {
+            player.options.video.shadows = shadowCheck.checked;
+        }
+    shadowSpan.appendChild(shadowLabel);
+    shadowSpan.appendChild(shadowCheck);
+
     const farSpan = document.createElement('span');
     farSpan.className = 'flex flex-row justify-center items-start w-full gap-3';
         const farLabel = document.createElement('label');
@@ -165,6 +181,7 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
     menu.appendChild(fovSpan);
     menu.appendChild(farSpan);
     menu.appendChild(fogSpan);
+    menu.appendChild(shadowSpan);
     menu.appendChild(close);
 
     return menuId;
