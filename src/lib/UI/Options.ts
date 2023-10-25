@@ -138,7 +138,7 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
     shadowSpan.appendChild(shadowCheck);
 
     const farSpan = document.createElement('span');
-    farSpan.className = 'flex flex-row justify-center items-start w-full gap-3';
+    farSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
         const farLabel = document.createElement('label');
         farLabel.htmlFor = 'far-slider';
         farLabel.textContent = 'Far Render Distance';
