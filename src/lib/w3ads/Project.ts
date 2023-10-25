@@ -142,7 +142,9 @@ export class Project {
                 nextScene._build();
                 nextScene.graphics.root.traverse((obj: THREE.Object3D) => obj.frustumCulled = false);
                 nextScene.graphics.compose(); // Add the final output pass to the post processing
+                this.renderer.shadowMap.enabled = true; // Basically caching the shadowmap enabled and disabled to avoid the lag spike
                 this.renderer.render(nextScene.graphics.root, this.currentScene.graphics.mainCamera);
+                this.renderer.shadowMap.enabled = false; 
                 nextScene.graphics.root.traverse((obj: THREE.Object3D) => obj.frustumCulled = true);
 
                 this.currentScene._destroy(); // destroy the loading screen

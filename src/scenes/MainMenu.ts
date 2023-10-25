@@ -99,7 +99,7 @@ export class MainMenu extends Scene {
         floor.castShadow = true;
         floor.receiveShadow = true;
 
-        const light = new THREE.PointLight(0xffffff, 4, 60, 0);
+        const light = new THREE.PointLight(0xffffff, 8, 60, 0);
         light.position.set(0,3,0);
         light.castShadow = true;
 

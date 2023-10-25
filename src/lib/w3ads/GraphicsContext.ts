@@ -10,6 +10,10 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass';
 //@ts-expect-error
 import { Pass } from 'three/addons/postprocessing/Pass';
+//@ts-expect-error
+import { ColorCorrectionShader } from 'three/addons/shaders/ColorCorrectionShader';
+//@ts-expect-error
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass';
 
 export class GraphicsContext {
     public renderer!: THREE.WebGLRenderer;
@@ -44,6 +48,9 @@ export class GraphicsContext {
     compose() {
         this.finalComposer = new EffectComposer( this.renderer );
         this.finalComposer.addPass( this.renderPass );
+
+        const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
+        this.finalComposer.addPass( colourCorrectionPass );
 
         for (let pass of this.passes) {
             this.finalComposer.addPass( pass );

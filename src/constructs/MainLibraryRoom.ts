@@ -199,9 +199,10 @@ export class MainLibraryConstruct extends Construct {
             const x = distanceFromCenter * Math.sin(i * angleBetween);
             const z = distanceFromCenter * Math.cos(i * angleBetween);
 
+            currentPlinth.scale.setScalar(0.3);
             currentPlinth.position.set(
                 x,
-                -9,
+                -10,
                 z
             );
         }
@@ -214,7 +215,7 @@ export class MainLibraryConstruct extends Construct {
         const floorPositions = [[0,-10,0],[82.5,-10,0],[-65,-10,0]];
         const floorScales = [[80, 165,0],[85, 25,0],[50, 30,0]];
     
-        const ceilingPositions = [[0,10,0],[91.25,10,0],[-65,10,0]];
+        const ceilingPositions = [[0,10,0],[92.5,10,0],[-65,10,0]];
         const ceilingScales = [[80, 165,0.1],[105, 25,0.1],[50, 30,0.1]];
 
       this.walls = [];
@@ -256,7 +257,7 @@ export class MainLibraryConstruct extends Construct {
             this.physics.addStatic(ceiling,PhysicsColliderFactory.box(ceilingScales[i][0]/2, ceilingScales[i][0]/2, 0.01));
             this.graphics.add( ceiling);
         }
-        
+
     }
 
     update() {}

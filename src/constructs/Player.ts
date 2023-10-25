@@ -80,7 +80,8 @@ export class Player extends Construct {
         video: {
             fov: number,
             farRender: number,
-            fog: boolean
+            fog: boolean,
+            shadows: boolean,
         }
     };
 
@@ -108,6 +109,7 @@ export class Player extends Construct {
                 fov: 60,
                 farRender: 1000,
                 fog: true,
+                shadows: true,
             }
         }
     }
@@ -191,7 +193,8 @@ export class Player extends Construct {
     update(time: number, delta: number): void {
         if (!this.body) { return }
 
-        this.levelTime += delta / 1000; // convert to seconds first
+        delta = delta / 1000;
+        this.levelTime += delta;
 
         // Do vector math (trig because idk how to use quaternions / matrices properly) to determine the walking direction of the character
         const xLocal = this.direction.f - this.direction.b; // Character facing x
@@ -199,7 +202,7 @@ export class Player extends Construct {
         const yaw = this.body.rotation.y;
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
-        this.physics.moveCharacter(this.root, x, 0, z, this.speed * delta / 1000);
+        this.physics.moveCharacter(this.root, x, 0, z, this.speed * delta);
 
         // character orientation and screen orientation are flipped
         const rotateAmountX = (-1 * this.mouse.x) * this.sensitivity;
@@ -321,18 +324,8 @@ export class Player extends Construct {
         this.graphics.resetPasses();
 
         if (this.options.effects.fxaaShader) {
-
             const fxaaPass = new ShaderPass( FXAAShader );
-            const colourCorrectionPass = new ShaderPass( ColorCorrectionShader );
-
-            const newComposer = new EffectComposer( this.graphics.renderer );
-            newComposer.addPass( this.graphics.renderPass );
-            newComposer.addPass( colourCorrectionPass );
-            this.graphics.addComposer( newComposer );
-
-            this.graphics.addPass( colourCorrectionPass );
             this.graphics.addPass( fxaaPass );
-
         }
 
         if (this.options.effects.smaaShader) {
@@ -360,9 +353,7 @@ export class Player extends Construct {
             this.graphics.root.fog.density = 0;
         }
 
-        if (this.options.filters.pixelShader) {
-            this.graphics.addPass( new RenderPixelatedPass(4, this.graphics.root, this.graphics.mainCamera ) );
-        }
+        this.graphics.renderer.shadowMap.enabled = this.options.video.shadows;
 
         if (this.options.filters.dotShader) {
             const dotPass = new ShaderPass( DotScreenShader );

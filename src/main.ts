@@ -1,7 +1,6 @@
 //@ts-ignore
 import AmmoLib from './ammo/ammo.js'; 
 import { Project, Scene } from './lib/index';
-import { SandboxScene } from './scenes/Sandbox.js';
 import { MainMenu } from './scenes/MainMenu.js';
 import { LoadingScreen } from './scenes/Loading.js';
 import { LevelOne } from './scenes/Level1.js';
@@ -17,7 +16,6 @@ AmmoLib().then(function (result: any) {
         ['level1', LevelOne],
         ['level2', LevelTwo],
         ['level3', LevelThree],
-        ['sandbox', SandboxScene], 
     ]);
 
     // Ignoring unused variable

@@ -55,15 +55,6 @@ export class CrystalDoor extends Construct {
         this.add(this.exitDoor);
 
         for (let i = 0; i < this.numCrystals; i++) {
-            /*
-            const plinthMat = new THREE.MeshLambertMaterial({
-                color: 0xffffff
-            });
-            const plinthGeom = new THREE.BoxGeometry(1, 2, 1);
-            const plinth = new THREE.Mesh(plinthGeom, plinthMat);
-            */
-            //this.graphics.add(plinth);
-            //this.crystalPlinths.push(plinth);
             const plinth = this.plinths.clone();
             plinth.scale.set(0.2,0.15,0.2);
             this.graphics.add(plinth);

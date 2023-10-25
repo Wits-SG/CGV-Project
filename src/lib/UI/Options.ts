@@ -121,8 +121,24 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
     fovSpan.appendChild(fovLabel);
     fovSpan.appendChild(fovSlider);
 
+    const shadowSpan = document.createElement('span');
+    shadowSpan.className = 'flex flex-row justify-center items-start w-full gap-3';
+        const shadowLabel = document.createElement('label');
+        shadowLabel.htmlFor = 'shadows-check';
+        shadowLabel.textContent = 'Shadows';
+
+        const shadowCheck = document.createElement('input');
+        shadowCheck.className = 'w-5 h-5 rounded accent-rose-500';
+        shadowCheck.type = 'checkbox'; shadowCheck.id = 'shadows-check';
+        shadowCheck.checked = player.options.video.shadows;
+        shadowCheck.onchange = () => {
+            player.options.video.shadows = shadowCheck.checked;
+        }
+    shadowSpan.appendChild(shadowLabel);
+    shadowSpan.appendChild(shadowCheck);
+
     const farSpan = document.createElement('span');
-    farSpan.className = 'flex flex-row justify-center items-start w-full gap-3';
+    farSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
         const farLabel = document.createElement('label');
         farLabel.htmlFor = 'far-slider';
         farLabel.textContent = 'Far Render Distance';
@@ -165,6 +181,7 @@ export const drawCharacterMenu = (ui: InterfaceContext, player: Player): number 
     menu.appendChild(fovSpan);
     menu.appendChild(farSpan);
     menu.appendChild(fogSpan);
+    menu.appendChild(shadowSpan);
     menu.appendChild(close);
 
     return menuId;
@@ -174,23 +191,6 @@ export const drawFiltersMenu = (ui: InterfaceContext, player: Player): number =>
     const { menu, menuId } = ui.addMenu('Filters', false);   
 
     const section = buildSection('');
-        const pixelSpan = document.createElement('span');
-        pixelSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
-            const pixelLabel = document.createElement('label');
-            pixelLabel.htmlFor = 'pixel-check';
-            pixelLabel.textContent = 'Pixelate';
-
-            const pixelCheck = document.createElement('input');
-            pixelCheck.className = 'w-5 h-5 rounded accent-rose-500';
-            pixelCheck.type = 'checkbox'; pixelCheck.id = 'pixel-check';
-            pixelCheck.checked = player.options.filters.pixelShader;
-            pixelCheck.onchange = () => {
-                player.options.filters.pixelShader = pixelCheck.checked;
-            }
-
-        pixelSpan.appendChild(pixelLabel);
-        pixelSpan.appendChild(pixelCheck);
-
         const dotSpan = document.createElement('span');
         dotSpan.className = 'flex flex-row justify-start items-start w-full gap-3';
             const dotLabel = document.createElement('label');
@@ -225,7 +225,6 @@ export const drawFiltersMenu = (ui: InterfaceContext, player: Player): number =>
         rgbShiftSpan.appendChild(rgbShiftLabel);
         rgbShiftSpan.appendChild(rgbShiftCheck);
 
-    section.appendChild(pixelSpan);
     section.appendChild(dotSpan);
     section.appendChild(rgbShiftSpan);
 
