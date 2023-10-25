@@ -193,7 +193,8 @@ export class Player extends Construct {
     update(time: number, delta: number): void {
         if (!this.body) { return }
 
-        this.levelTime += delta / 1000; // convert to seconds first
+        delta = delta / 1000;
+        this.levelTime += delta;
 
         // Do vector math (trig because idk how to use quaternions / matrices properly) to determine the walking direction of the character
         const xLocal = this.direction.f - this.direction.b; // Character facing x
@@ -201,7 +202,7 @@ export class Player extends Construct {
         const yaw = this.body.rotation.y;
         const x = xLocal * Math.cos(2 * Math.PI - yaw) + zLocal * Math.cos(2 * Math.PI - (yaw - Math.PI / 2));
         const z = xLocal * Math.sin(2 * Math.PI - yaw) + zLocal * Math.sin(2 * Math.PI - (yaw - Math.PI / 2));
-        this.physics.moveCharacter(this.root, x, 0, z, this.speed * delta / 1000);
+        this.physics.moveCharacter(this.root, x, 0, z, this.speed * delta);
 
         // character orientation and screen orientation are flipped
         const rotateAmountX = (-1 * this.mouse.x) * this.sensitivity;
