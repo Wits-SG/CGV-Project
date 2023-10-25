@@ -57,12 +57,13 @@ export class Staircase extends Construct {
 
             step.position.set(x, y, z);
             step.rotation.y = -currentAngle;
+            step.castShadow = true;
             staircaseGroup.add(step);
             this.physics.addStatic(step, PhysicsColliderFactory.box(3.2, 0.35, 1.2));
 
             currentAngle += angleIncrement;
         }
-
+        staircaseGroup.castShadow = true;
         this.add(staircaseGroup);
         for (let step of staircaseGroup.children) {
             this.physics.addStatic(step, PhysicsColliderFactory.box(3.2, 0.35, 1.2));
