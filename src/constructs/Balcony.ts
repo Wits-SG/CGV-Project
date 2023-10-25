@@ -29,6 +29,7 @@ export class Balcony extends Construct {
         const material = new THREE.MeshLambertMaterial({ map: this.texture });
         const balcony = new THREE.Mesh(geometry, material);
         balcony.position.set(0, 5.25, -11);
+        balcony.castShadow = true;
         this.add(balcony);
         this.physics.addStatic(balcony,PhysicsColliderFactory.box(8, 0.25 , 4.7));
     }

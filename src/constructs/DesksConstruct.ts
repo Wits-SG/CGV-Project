@@ -140,23 +140,6 @@ export class DesksConstruct extends Construct {
                 this.physics.addStatic(deskBox,PhysicsColliderFactory.box(5/2,1, 1));
                 this.root.remove(deskBox);
         }
-        
-        this.lights = [];
-        this.lightStates = [];
-        let lightZ = -60;
-        for ( let i = 0; i < 4; i ++ ) {
-                if(i==3){
-                    lightZ+=20;
-                }
-                const light = new THREE.PointLight( 0xfae5ac, 100, 0.0,1.35);
-                light.position.set(0, 1.85, lightZ);
-                //light.castShadow = true;
-                this.lights.push(light);
-                this.lightStates.push(true);
-                this.add( light );
-                lightZ+=20;
-        }
-
 
     }
 

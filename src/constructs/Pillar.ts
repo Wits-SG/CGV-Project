@@ -45,6 +45,7 @@ export class Pillars extends Construct {
         positions.forEach(pos => {
             const pillar = new THREE.Mesh(geometry, material);
             pillar.position.set(pos.x, 2.5, pos.z);
+            pillar.castShadow = true;
             this.add(pillar);
             this.physics.addStatic(pillar, PhysicsColliderFactory.box(1, 2.5, 1));
         });

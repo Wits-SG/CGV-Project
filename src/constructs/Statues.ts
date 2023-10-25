@@ -188,8 +188,9 @@ export class StatuesConstruct extends Construct {
         const geometry = new THREE.BoxGeometry(60, 1, 60);
         const floorTexture = new THREE.MeshLambertMaterial({ color: 0x566573, side: THREE.DoubleSide });
         this.floor = new THREE.Mesh(geometry, floorTexture);
-        this.add(this.floor);
         this.floor.receiveShadow = true;
+        this.floor.position.set(0, -0.5,0);
+        this.add(this.floor);
         this.physics.addStatic(this.floor, PhysicsColliderFactory.box(30, 0.5, 30));
 
         // Wall and roof parameters
@@ -216,8 +217,9 @@ export class StatuesConstruct extends Construct {
         this.physics.addStatic(sideWallRight, PhysicsColliderFactory.box(1, 10, 30));
         this.physics.addStatic(backWall, PhysicsColliderFactory.box(30, 10, 1));
 
-        const roofLightCenter = new THREE.PointLight(0xFCAE70, 10, 250 ,0);
-        roofLightCenter.position.set(0,19,0);
+        const roofLightCenter = new THREE.PointLight(0xFCAE70, 15, 80, 0);
+        roofLightCenter.castShadow = true;
+        roofLightCenter.position.set(0,18,0);
 
         const roofMat = new THREE.MeshLambertMaterial({ color: 0x999999});
         const roofGeom = new THREE.PlaneGeometry(60,60);

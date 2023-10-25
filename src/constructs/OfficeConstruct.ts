@@ -265,25 +265,26 @@ export class OfficeConstruct extends Construct {
 
         this.floor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.2, 50), new THREE.MeshLambertMaterial({ map: this.floorTexture }));
         this.floor.position.set(0,-0.1,0);
+        this.floor.castShadow = true;
         this.add(this.floor);
         this.physics.addStatic(this.floor,PhysicsColliderFactory.box(15, 0.1 , 25));
 
         // walls
 
-        const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 13.2, 50), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
-        wallL.position.set(-15,6.6,0);
+        const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 20, 50), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
+        wallL.position.set(-15,10,0);
         this.add(wallL);
-        this.physics.addStatic(wallL,PhysicsColliderFactory.box(0.5, 6.6 , 25));
+        this.physics.addStatic(wallL,PhysicsColliderFactory.box(0.5, 10 , 25));
 
-        const wallR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 13.2, 50), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
-        wallR.position.set(15,6.6,0);
+        const wallR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 20, 50), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
+        wallR.position.set(15,10,0);
         this.add(wallR);
-        this.physics.addStatic(wallR,PhysicsColliderFactory.box(0.5, 6.6 , 25));
+        this.physics.addStatic(wallR,PhysicsColliderFactory.box(0.5, 10 , 25));
 
-        const wallB = new THREE.Mesh(new THREE.BoxGeometry(30, 13.2, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
-        wallB.position.set(0,6.6,-24.95);
+        const wallB = new THREE.Mesh(new THREE.BoxGeometry(30, 20, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
+        wallB.position.set(0,10,-24.95);
         this.add(wallB);
-        this.physics.addStatic(wallB,PhysicsColliderFactory.box(15, 6.6 , 0.5));
+        this.physics.addStatic(wallB,PhysicsColliderFactory.box(15, 10 , 0.5));
 
         // const wallF = new THREE.Mesh(new THREE.BoxGeometry(30, 13.2, 0.1), new THREE.MeshBasicMaterial({ map: this.wallTexture }));
         // wallF.position.set(0,6.6,24.95);
@@ -292,27 +293,29 @@ export class OfficeConstruct extends Construct {
 
         // small room walls 
 
-        const wallLf = new THREE.Mesh(new THREE.BoxGeometry(10, 13.2, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
-        wallLf.position.set(10,6.6,-14.7);
+        const wallLf = new THREE.Mesh(new THREE.BoxGeometry(10, 20, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
+        wallLf.position.set(10,10,-14.7);
         this.add(wallLf);
-        this.physics.addStatic(wallLf,PhysicsColliderFactory.box(6, 6.6 , 0.5));
+        this.physics.addStatic(wallLf,PhysicsColliderFactory.box(6, 10 , 0.5));
 
-        const wallRf = new THREE.Mesh(new THREE.BoxGeometry(10, 13.2, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
-        wallRf.position.set(-10,6.6,-14.7);
+        const wallRf = new THREE.Mesh(new THREE.BoxGeometry(10, 20, 0.1), new THREE.MeshLambertMaterial({ map: this.wallTexture }));
+        wallRf.position.set(-10,10,-14.7);
         this.add(wallRf);
-        this.physics.addStatic(wallRf,PhysicsColliderFactory.box(6, 6.6 , 0.5));
+        this.physics.addStatic(wallRf,PhysicsColliderFactory.box(6, 10, 0.5));
 
         // small room roof
 
         const smallRoof = new THREE.Mesh(new THREE.BoxGeometry(30, 0.5, 10.5), new THREE.MeshLambertMaterial({ map: this.smallRoofTexture }));
         smallRoof.position.set(0,5.24,-20);
+        smallRoof.castShadow = true;
         this.add(smallRoof);
         this.physics.addStatic(smallRoof,PhysicsColliderFactory.box(15, 0.25 , 5.25));
 
         // large room roof
 
         const largeRoof = new THREE.Mesh(new THREE.BoxGeometry(30, 0.5, 50), new THREE.MeshLambertMaterial({ map: this.roofTexture }));
-        largeRoof.position.set(0,13.45,0);
+        largeRoof.position.set(0,20,0);
+        largeRoof.castShadow = true;
         this.add(largeRoof);
         this.physics.addStatic(largeRoof,PhysicsColliderFactory.box(15, 0.25 , 25));
 
@@ -320,6 +323,7 @@ export class OfficeConstruct extends Construct {
 
         const upperFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.1, 10.5), new THREE.MeshLambertMaterial({ map: this.floorTexture }));
         upperFloor.position.set(0,5.47,-20);
+        upperFloor.castShadow = true;
         this.add(upperFloor);
 
         // invisible blocks
@@ -351,16 +355,19 @@ export class OfficeConstruct extends Construct {
 
         // Lighting
 
-        const roomLight = new THREE.PointLight(0xfae5ac, 200, 0, 1.1);
-        roomLight.position.set(0, 10, 0);
+        const roomLight = new THREE.PointLight(0xfae5ac, 20,  80, 0.1);
+        roomLight.position.set(0, 17, 10);
+        roomLight.castShadow = true;
         this.add(roomLight);
 
-        const backroomLight = new THREE.PointLight(0xfae5ac, 70, 0, 1.1);
-        backroomLight.position.set(0, 0, -19);
+        const backroomLight = new THREE.PointLight(0xfae5ac, 10, 40, 0.1);
+        backroomLight.position.set(0, -1, -19);
+        backroomLight.castShadow = true;
         this.add(backroomLight);
 
-        const upstairsLight = new THREE.PointLight(0xfae5ac, 90, 0, 1.1);
-        upstairsLight.position.set(0, 6, -19);
+        const upstairsLight = new THREE.PointLight(0xfae5ac, 20, 60, 0.1);
+        upstairsLight.position.set(0, 19, -19);
+        upstairsLight.castShadow = true;
         this.add(upstairsLight);
 
         // **** BUILD MODELS **** //
@@ -370,12 +377,14 @@ export class OfficeConstruct extends Construct {
         this.bookShelfOffice.scale.set(2,2,2); 
         this.bookShelfOffice.position.set(14.2, 0, 20);
         this.bookShelfOffice.rotateY(-Math.PI);
+        this.bookShelfOffice.castShadow = true;
         this.add(this.bookShelfOffice);
 
         const secondBookShelfOffice = this.bookShelfOffice.clone();
         secondBookShelfOffice.scale.set(2,2,2); 
         secondBookShelfOffice.position.set(-14.2,0,-19);
         secondBookShelfOffice.rotateY(Math.PI);
+        secondBookShelfOffice.castShadow = true;
         this.add(secondBookShelfOffice);
 
         //  -- bookShelfOffice Physics --
@@ -397,10 +406,12 @@ export class OfficeConstruct extends Construct {
         this.alchemyShelf.scale.set(0.003,0.003,0.003); 
         this.alchemyShelf.position.set(14.2, 3, 7);
         this.alchemyShelf.rotateY(Math.PI);
+        this.alchemyShelf.castShadow = true;
         this.add(this.alchemyShelf);
 
         const alchemyShelf2 = this.alchemyShelf.clone();
         alchemyShelf2.position.set(14.2, 3, -20);
+        alchemyShelf2.castShadow = true;
         this.add(alchemyShelf2);
 
         //  -- alchemyShelf Physics --
@@ -421,6 +432,7 @@ export class OfficeConstruct extends Construct {
 
         this.firePlace.scale.set(0.01,0.01,0.01); 
         this.firePlace.position.set(0, 1.3, -23.9);
+        this.firePlace.castShadow = true;
         this.add(this.firePlace);
 
         //  -- firePlace Physics --
@@ -436,10 +448,12 @@ export class OfficeConstruct extends Construct {
         this.table.scale.set(2,2,2); 
         this.table.position.set(0, 0, 5);
         this.table.rotateY(-Math.PI/2);
+        this.table.castShadow = true;
         this.add(this.table);
 
         const upstairsTable = this.table.clone();
         upstairsTable.position.set(0,5.45,-20);
+        upstairsTable.castShadow = true;
         this.add(upstairsTable);
 
          //  -- table Physics --
@@ -461,11 +475,13 @@ export class OfficeConstruct extends Construct {
 
         this.carpet = new THREE.Mesh(new THREE.BoxGeometry(7, 0.01, 5), new THREE.MeshLambertMaterial({ map: this.carpetTexture }));
         this.carpet.position.set(0,0,5);
+        this.carpetTexture.receiveShadow = true;
         this.add(this.carpet);
         this.physics.addStatic(this.floor,PhysicsColliderFactory.box(15, 0.1 , 25));
 
         const secondCarpet = this.carpet.clone();
         secondCarpet.position.set(0, 5.53, -20);
+        secondCarpet.receiveShadow = true;
         this.add(secondCarpet);
 
 
