@@ -9,6 +9,7 @@ export class Chandeliers extends Construct {
     ChandelierGeometry!: THREE.BufferGeometry;
     ChandelierMaterial!: THREE.MeshLambertMaterial;
     lights!: Array<THREE.PointLight>;
+    //lights!: Array<THREE.SpotLight>;
     
 
     constructor(graphics: GraphicsContext, physics: PhysicsContext, interactions: InteractManager, userInterface: InterfaceContext) {
@@ -24,7 +25,7 @@ export class Chandeliers extends Construct {
         matrix.compose( position, quaternion, scale );
 
         const mesh = new THREE.InstancedMesh( this.ChandelierGeometry, this.ChandelierMaterial, 7);
-        let chandelierZ = -62.5;
+        let chandelierZ = -70;
         position.z = chandelierZ;
         for ( let i = 0; i < 5; i ++ ) {
             position.x = 0;
@@ -83,18 +84,20 @@ export class Chandeliers extends Construct {
         this.drawChandeliers();
 
         this.lights = [];
-        let center = -62.5;
+        let center = -70;
         for ( let i = 0; i < 5; i ++ ) {
-                const light = new THREE.PointLight( 0xfae5ac, 300, 0, 1.1);
-                light.position.set(0,-0.15,center);
+                const light = new THREE.PointLight( 0xfae5ac, 15.5, 0, 0.4);
+                light.castShadow = true;
+                light.position.set(0,-2.5,center);
                 this.lights.push(light);
                 this.add( light );
             center+=32.5;
         }
         let corridorLightX = 100;
         for ( let i = 0; i < 2; i ++ ) {
-            const light = new THREE.PointLight( 0xfae5ac, 300, 0, 1.1);
-            light.position.set(corridorLightX,-0.15,0);
+            const light = new THREE.PointLight( 0xfae5ac, 50, 0, 1);
+            light.castShadow = true;
+            light.position.set(corridorLightX,-2.5,0);
             this.lights.push(light);
             this.add( light );
             corridorLightX=-60;
@@ -105,6 +108,7 @@ export class Chandeliers extends Construct {
 
 
     update(): void {
+
     }
 
 

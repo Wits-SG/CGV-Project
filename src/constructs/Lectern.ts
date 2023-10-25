@@ -38,6 +38,7 @@ export class Lectern extends Construct {
     }
 
     build(): void {
+        this.lectern.castShadow = true;
         this.add(this.lectern);
 
         this.interactions.addInteractable(this.root, 5, () => {
