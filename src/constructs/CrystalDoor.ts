@@ -32,6 +32,7 @@ export class CrystalDoor extends Construct {
         try {
             const gltfData: any = await this.graphics.loadModel('assets/Crystal_Plinths/crystal_plinth.gltf');
             this.plinths = gltfData.scene;
+            this.plinths.traverse((obj: THREE.Object3D) => obj.castShadow = true);
         } catch (e: any) {
             console.log(e);
         }
