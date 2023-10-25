@@ -130,18 +130,16 @@ export class MusicPuzzle extends Construct {
         const standMat = new THREE.MeshBasicMaterial({ color: 0x000099 });
         const standGeom = new THREE.BoxGeometry(1, 3, 1);
         const stand = new THREE.Mesh(standGeom, standMat);
-        stand.position.set(-5, 1, 0);
+        stand.position.set(-5, 0, 0);
         
-        stand.rotation.y = this.solution[0] * angleBetween;
-        //stand.rotation.y = -Math.PI;
         this.add(stand);
-        this.standModel.position.set(-5, 1, 0);
-        this.standModel.scale.setScalar(0.08);
+        this.standModel.position.set(-5, 0, 0);
+        this.standModel.scale.setScalar(0.1);
         this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
         this.standModel.castShadow = true;
         this.add(this.standModel);
         this.physics.addStatic(stand, PhysicsColliderFactory.box(0.5, 1.5, 0.5));
-        this.interactions.addInteractable(stand, 3, () => {
+        this.interactions.addInteractable(this.standModel, 5, () => {
             this.state = [];
             stand.rotation.y = this.solution[0] * angleBetween;
             this.standModel.rotation.y = standAngleOffset + this.solution[0] * angleBetween;
