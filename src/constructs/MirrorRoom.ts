@@ -152,7 +152,7 @@ export class MirrorRoom extends Construct {
         });
         const cam = this.mirror.virtualCamera;
         cam.layers.enable(1);
-        this.mirror.position.set(25, 40, 0);
+        this.mirror.position.set(25, 20, 0);
         this.mirror.rotation.set(Math.PI / 2, 0, 0);
         this.add(this.mirror);
 
@@ -188,7 +188,7 @@ export class MirrorRoom extends Construct {
         bottomWallBack.rotation.set(Math.PI/2, Math.PI/2, 0);
         bottomWallBack.scale.set(0.95, 0.9, 1);
 
-        const roofLight = new THREE.PointLight(0xffffff, 4, 300, 0);
+        const roofLight = new THREE.PointLight(0xffffff, 4, 30, 2);
         roofLight.position.set(25, 25, 0);
 
         this.add(roofLight);

@@ -119,6 +119,10 @@ export class Reflector extends THREE.Mesh {
 
         this.virtualCamera.updateMatrixWorld();
         this.virtualCamera.projectionMatrix.copy( camera.projectionMatrix );
+        // Update camera matrix to cover more visible space then the player camera
+        this.virtualCamera.fov = 120;
+        this.virtualCamera.aspect = 3;
+        this.virtualCamera.updateProjectionMatrix();
 
         // Update the texture matrix
         this.textureMatrix.set(

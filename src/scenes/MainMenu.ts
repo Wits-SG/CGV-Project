@@ -101,6 +101,7 @@ export class MainMenu extends Scene {
 
         const light = new THREE.PointLight(0xffffff, 4, 60, 0);
         light.position.set(0,3,0);
+        light.castShadow = true;
 
         this.graphics.add(light);
         this.graphics.add(floor);
@@ -118,7 +119,7 @@ export class MainMenu extends Scene {
 
             this.door.crystalPlinths[i].position.set(
                 x,
-                2,
+                .5,
                 z
             );
             this.crystals[i].root.position.set(x, 4, z);
