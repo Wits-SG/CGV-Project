@@ -16,12 +16,6 @@ export const drawMainMenu = (ui: InterfaceContext, developers: any, assets: any)
     const controlsMenuId = drawControls(ui);
 
     const playSection = buildSection('');
-        const sandboxButton = buildButton('Play Sandbox', () => {
-            const event = new CustomEvent("changeScene", { detail: `sandbox`});
-            document.dispatchEvent(event);
-        });
-        playSection.appendChild(sandboxButton);
-
         const levelMenuIds = drawLevelMenu(ui, [
             '8f3f4b29-38a7-4b13-baa2-95fde6530d7f',
             'f39a8262-ee35-4e9a-92a4-0e43848a7d74',
