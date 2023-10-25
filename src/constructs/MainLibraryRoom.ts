@@ -199,9 +199,10 @@ export class MainLibraryConstruct extends Construct {
             const x = distanceFromCenter * Math.sin(i * angleBetween);
             const z = distanceFromCenter * Math.cos(i * angleBetween);
 
+            currentPlinth.scale.setScalar(0.3);
             currentPlinth.position.set(
                 x,
-                -9,
+                -10,
                 z
             );
         }
