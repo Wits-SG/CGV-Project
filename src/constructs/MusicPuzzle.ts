@@ -100,7 +100,6 @@ export class MusicPuzzle extends Construct {
             const result: any = await this.graphics.loadModel('assets/lute/scene.gltf');
             this.instrumentModels[3] = result.scene;
             this.instrumentModels[3]?.scale.setScalar(2);
-            //this.instrumentModels[3]?.rotation.set(0, -Math.PI / 4, 0);
             this.instrumentModels[3]?.rotation.set(0,-Math.PI/2,Math.PI/2);
             this.instrumentSounds[3] = 'sound/lute.wav';
         } catch { console.warn('Failed to find lute model'); }

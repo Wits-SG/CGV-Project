@@ -41,10 +41,6 @@ export class HearthObjects extends Construct {
         this.addConstruct(this.crystal);
 
         this.objectModels = [];
-        /*
-        for (let i = 0; i < 3; ++i) {
-            this.objectModels.push(undefined);
-        }*/
     }
 
     create(): void {

@@ -257,27 +257,6 @@ export class MainLibraryConstruct extends Construct {
             this.graphics.add( ceiling);
         }
 
-        /*this.lightHemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff,0.5);
-        this.lightHemisphere.color.setHSL(0.6, 0.6, 0.6);
-        this.lightHemisphere.groundColor.setHSL(0.1, 1, 0.4);
-        this.lightHemisphere.position.set(0, 100, 0);
-        
-        this.lightDirectional = new THREE.DirectionalLight(0xffffff, 0.5);
-        this.lightDirectional.color.setHSL(0.1, 1, 0.95);
-        this.lightDirectional.position.set(0, 20, 100);
-        this.lightDirectional.position.multiplyScalar(100);
-        this.lightDirectional.castShadow = true;
-        this.lightDirectional.shadow.mapSize.width = 2048;
-        this.lightDirectional.shadow.mapSize.height = 2048;
-
-        this.lightDirectional.shadow.camera.left = -50;
-        this.lightDirectional.shadow.camera.right = 50;
-        this.lightDirectional.shadow.camera.top = 50;
-        this.lightDirectional.shadow.camera.bottom = -50;
-
-        this.graphics.add(this.lightHemisphere);
-        this.graphics.add(this.lightDirectional);*/
-        
     }
 
     update() {}
